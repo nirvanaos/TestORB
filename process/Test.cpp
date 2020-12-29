@@ -87,7 +87,7 @@ void test_interface (I1_ptr p)
 
 void test_performance (I1_ptr p)
 {
-	for (int i = 0; i < 1000000; ++i)
+	for (int i = 0; i < 10000; ++i)
 		p->op1 (2);
 	release (p);
 }
@@ -125,7 +125,7 @@ protected:
 
 	static I1_ptr incarnate (I1_ptr obj)
 	{
-		return obj;
+		return I1::_duplicate (obj);
 	}
 
 	static I1_ptr incarnate ()
@@ -186,7 +186,7 @@ protected:
 
 	static I3_ptr incarnate (I3_ptr obj)
 	{
-		return obj;
+		return I3::_duplicate (obj);
 	}
 
 	static I3_ptr incarnate ()
