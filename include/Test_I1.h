@@ -61,7 +61,7 @@ struct Type <::Test::MyException::Data> :
 {};
 
 BRIDGE_BEGIN (::Test::I1, "IDL:Test/I1:1.0")
-BASE_STRUCT_ENTRY (CORBA::Object, CORBA_Object)
+BASE_STRUCT_ENTRY (Object, CORBA_Object)
 BRIDGE_EPV
 Long (*op1) (Bridge < ::Test::I1>*, Long p1, Interface*);
 void (*throw_no_implement) (Bridge < ::Test::I1>*, Interface*);
@@ -79,7 +79,7 @@ public:
 	Long op1 (Long p1);
 	void throw_no_implement ();
 	::Test::I1_var object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
-	String string_op (CORBA::String_in, CORBA::String_out, CORBA::String_inout);
+	String string_op (String_in, String_out, String_inout);
 	::Test::SeqLong seq_op (Type <::Test::SeqLong>::C_in in_s, ::Test::SeqLong_out out_s, ::Test::SeqLong_inout inout_s);
 	Any any_op (Any_in, Any_out, Any_inout);
 };
@@ -128,7 +128,7 @@ template <class T>
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
-	Type <Sequence <Long> >::C_ret _ret = (_b._epv ().epv.seq_op) (&_b, &in_s, &out_s, &inout_s, &_env);
+	Type < ::Test::SeqLong>::C_ret _ret = (_b._epv ().epv.seq_op) (&_b, &in_s, &out_s, &inout_s, &_env);
 	_env.check ();
 	return _ret;
 }
