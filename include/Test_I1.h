@@ -27,12 +27,6 @@ class MyException : public CORBA::UserException
 public:
 	DECLARE_EXCEPTION (MyException);
 
-	struct Data
-	{
-		CORBA::Nirvana::String param;
-	}
-	data_;
-
 	const CORBA::Nirvana::String& param () const
 	{
 		return data_.param;
@@ -42,6 +36,14 @@ public:
 	{
 		data_.param = val;
 	}
+
+	struct Data
+	{
+		CORBA::Nirvana::String param;
+	};
+
+private:
+	Data data_;
 };
 
 }
@@ -59,6 +61,12 @@ template <>
 struct Type <::Test::MyException::Data> :
 	TypeVarLen <::Test::MyException::Data, Type <String>::has_check>
 {};
+
+template <>
+struct Definitions < ::Test::I1>
+{
+	// Interface definitions will be here
+};
 
 BRIDGE_BEGIN (::Test::I1, "IDL:Test/I1:1.0")
 BASE_STRUCT_ENTRY (Object, CORBA_Object)
