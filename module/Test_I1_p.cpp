@@ -6,21 +6,21 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
-struct MarshalTraits <::Test::MyException::Data>
+struct MarshalTraits <::Test::MyException::_Data>
 {
 	static const bool has_marshal = true;
 
-	static void marshal_in (const ::Test::MyException::Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::Data>& dst) NIRVANA_NOEXCEPT
+	static void marshal_in (const ::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst) NIRVANA_NOEXCEPT
 	{
 		_marshal_in (src.param, marshaler, dst.param);
 	}
 
-	static void marshal_out (::Test::MyException::Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::Data>& dst) NIRVANA_NOEXCEPT
+	static void marshal_out (::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst) NIRVANA_NOEXCEPT
 	{
 		_marshal_out (src.param, marshaler, dst.param);
 	}
 
-	static void unmarshal (const ABI <::Test::MyException::Data>& src, Unmarshal_ptr unmarshaler, ::Test::MyException::Data& dst) NIRVANA_NOEXCEPT
+	static void unmarshal (const ABI <::Test::MyException::_Data>& src, Unmarshal_ptr unmarshaler, ::Test::MyException::_Data& dst) NIRVANA_NOEXCEPT
 	{
 		_unmarshal (src.param, unmarshaler, dst.param);
 	}

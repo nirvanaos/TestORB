@@ -29,21 +29,21 @@ public:
 
 	const CORBA::Nirvana::String& param () const
 	{
-		return data_.param;
+		return _data.param;
 	}
 
 	void param (const CORBA::Nirvana::String& val)
 	{
-		data_.param = val;
+		_data.param = val;
 	}
 
-	struct Data
+	struct _Data
 	{
 		CORBA::Nirvana::String param;
 	};
 
 private:
-	Data data_;
+	_Data _data;
 };
 
 }
@@ -52,14 +52,14 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
-struct ABI <::Test::MyException::Data>
+struct ABI <::Test::MyException::_Data>
 {
 	ABI <String> param;
 };
 
 template <>
-struct Type <::Test::MyException::Data> :
-	TypeVarLen <::Test::MyException::Data, Type <String>::has_check>
+struct Type <::Test::MyException::_Data> :
+	TypeVarLen <::Test::MyException::_Data, Type <String>::has_check>
 {};
 
 template <>
