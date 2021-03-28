@@ -22,24 +22,24 @@ extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_SeqLong;
 
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_MyException;
 
-class MyException : public CORBA::UserException
+class MyException : public ::CORBA::UserException
 {
 public:
 	DECLARE_EXCEPTION (MyException);
 
-	const std::string& param () const
+	::CORBA::Nirvana::Type <std::string>::Member_ret param () const
 	{
 		return _data.param;
 	}
 
-	void param (const std::string& val)
+	void param (::CORBA::Nirvana::Type <std::string>::C_in val)
 	{
 		_data.param = val;
 	}
 
 	struct _Data
 	{
-		std::string param;
+		::CORBA::Nirvana::Type <std::string>::Member_type param;
 	};
 
 	virtual void* __data () NIRVANA_NOEXCEPT
