@@ -27,20 +27,25 @@ class MyException : public CORBA::UserException
 public:
 	DECLARE_EXCEPTION (MyException);
 
-	const CORBA::Nirvana::String& param () const
+	const std::string& param () const
 	{
 		return _data.param;
 	}
 
-	void param (const CORBA::Nirvana::String& val)
+	void param (const std::string& val)
 	{
 		_data.param = val;
 	}
 
 	struct _Data
 	{
-		CORBA::Nirvana::String param;
+		std::string param;
 	};
+
+	virtual void* __data () NIRVANA_NOEXCEPT
+	{
+		return &_data;
+	}
 
 private:
 	_Data _data;
@@ -87,7 +92,7 @@ public:
 	Long op1 (Long p1);
 	void throw_no_implement ();
 	::Test::I1_var object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
-	String string_op (String_in, String_out, String_inout);
+	std::string string_op (String_in, String_out, String_inout);
 	::Test::SeqLong seq_op (Type <::Test::SeqLong>::C_in in_s, ::Test::SeqLong_out out_s, ::Test::SeqLong_inout inout_s);
 	Any any_op (Any_in, Any_out, Any_inout);
 };
