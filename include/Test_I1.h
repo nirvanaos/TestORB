@@ -37,17 +37,28 @@ public:
 		_data.param = val;
 	}
 
+	::CORBA::Nirvana::Type <bool>::Member_ret bparam () const
+	{
+		return _data.bparam;
+	}
+
+	void bparam (::CORBA::Nirvana::Type <bool>::C_in val)
+	{
+		_data.bparam = val;
+	}
+
 	struct _Data
 	{
 		::CORBA::Nirvana::Type <std::string>::Member_type param;
+		::CORBA::Nirvana::Type <bool>::Member_type bparam;
 	};
 
+private:
 	virtual void* __data () NIRVANA_NOEXCEPT
 	{
 		return &_data;
 	}
 
-private:
 	_Data _data;
 };
 
@@ -59,7 +70,8 @@ namespace Nirvana {
 template <>
 struct ABI <::Test::MyException::_Data>
 {
-	ABI <String> param;
+	Type <Type <std::string>::Member_type>::ABI_type param;
+	Type <Type <bool>::Member_type>::ABI_type bparam;
 };
 
 template <>
