@@ -76,8 +76,14 @@ struct ABI <::Test::MyException::_Data>
 
 template <>
 struct Type <::Test::MyException::_Data> :
-	TypeVarLen <::Test::MyException::_Data, Type <String>::has_check>
-{};
+	TypeVarLen <::Test::MyException::_Data, Type <Type <std::string>::Member_type>::has_check>
+{
+	static void check (const ABI_type& val)
+	{
+		Type <Type <std::string>::Member_type>::check (val.param);
+		Type <Type <bool>::Member_type>::check (val.bparam);
+	}
+};
 
 template <>
 struct Definitions < ::Test::I1>
