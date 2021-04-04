@@ -1,11 +1,11 @@
-#include "I1_portable.h"
+#include "I1_factory_portable.h"
 #include "Test_I1_factory_s.h"
 #include "PortableI1.h"
 
 namespace Test {
 
-class I1_portable :
-	public ::CORBA::Nirvana::ServantStatic <I1_portable, I1_factory>
+class I1_factory_portable :
+	public ::CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_portable>
 {
 public:
 	static I1_var create (CORBA::Long addendum)
@@ -16,4 +16,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I1_portable)
+NIRVANA_STATIC_EXP (Test, I1_factory_portable)

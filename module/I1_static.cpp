@@ -8,7 +8,7 @@
 namespace Test {
 
 class I1_static :
-	public ::CORBA::Nirvana::ServantStatic <I1_static, I1>,
+	public ::CORBA::servant_traits <I1>::ServantStatic <I1_static>,
 	public ImplI1
 {
 public:

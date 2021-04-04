@@ -8,7 +8,7 @@ namespace Test {
 // Static implementation
 
 class I3_static :
-	public CORBA::Nirvana::ServantStatic <I3_static, I3>,
+	public CORBA::servant_traits <I3>::ServantStatic <I3_static>,
 	public ImplI1
 {
 public:

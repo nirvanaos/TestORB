@@ -9,7 +9,7 @@ namespace Test {
 // Dynamic implementation
 
 class DynamicI1 :
-	public CORBA::Nirvana::Servant <DynamicI1, I1>,
+	public CORBA::servant_traits <I1>::Servant <DynamicI1>,
 	public ImplI1
 {
 public:

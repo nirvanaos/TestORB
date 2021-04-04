@@ -1,4 +1,4 @@
-#include "I1_tied.h"
+#include "I1_factory_tied.h"
 #include "ImplI1.h"
 #include "Test_I1_s.h"
 #include "Test_I1_factory_s.h"
@@ -29,8 +29,8 @@ private:
 	CORBA::Long addendum_;
 };
 
-class I1_tied :
-	public ::CORBA::Nirvana::ServantStatic <I1_tied, I1_factory>
+class I1_factory_tied :
+	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_tied>
 {
 public:
 	static I1_var create (CORBA::Long addendum)
@@ -62,5 +62,5 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I1_tied)
+NIRVANA_STATIC_EXP (Test, I1_factory_tied)
 NIRVANA_STATIC_EXP (Test, I1_tied_derived)

@@ -1,11 +1,11 @@
-#include "I1_dynamic.h"
+#include "I1_factory_dynamic.h"
 #include "Test_I1_factory_s.h"
 #include "DynamicI1.h"
 
 namespace Test {
 
-class I1_dynamic :
-	public ::CORBA::Nirvana::ServantStatic <I1_dynamic, I1_factory>
+class I1_factory_dynamic :
+	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_dynamic>
 {
 public:
 	static I1_var create (CORBA::Long addendum)
@@ -16,4 +16,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP(Test, I1_dynamic)
+NIRVANA_STATIC_EXP(Test, I1_factory_dynamic)

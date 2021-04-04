@@ -1,11 +1,11 @@
 #include "I1_static.h"
-#include "I1_dynamic.h"
-#include "I1_portable.h"
-#include "I1_tied.h"
+#include "I1_factory_dynamic.h"
+#include "I1_factory_portable.h"
+#include "I1_factory_tied.h"
 #include "I3_static.h"
-#include "I3_dynamic.h"
-#include "I3_portable.h"
-#include "I3_tied.h"
+#include "I3_factory_dynamic.h"
+#include "I3_factory_portable.h"
+#include "I3_factory_tied.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
 
@@ -94,15 +94,15 @@ void test_performance (I1_ptr p)
 
 // The fixture for testing simple interface.
 
-typedef ::testing::Types <I1_dynamic
+typedef ::testing::Types <I1_factory_dynamic
 #ifndef TEST_NO_POA
-	, I1_portable
+	, I1_factory_portable
 #endif
 #ifndef TEST_NO_STATIC
 	, I1_static
 #endif
 #ifndef TEST_NO_TIED
-	, I1_tied
+	, I1_factory_tied
 	, I1_tied_derived
 #endif
 > ServantTypesI1;
@@ -155,15 +155,15 @@ TYPED_TEST (TestORB_I1, Exception)
 
 // The fixture for testing complex interface.
 
-typedef ::testing::Types <I3_dynamic
+typedef ::testing::Types <I3_factory_dynamic
 #ifndef TEST_NO_POA
-	, I3_portable
+	, I3_factory_portable
 #endif
 #ifndef TEST_NO_STATIC
 	, I3_static
 #endif
 #ifndef TEST_NO_TIED
-	, I3_tied
+	, I3_factory_tied
 	, I3_tied_derived
 #endif
 > ServantTypesI3;
