@@ -10,19 +10,19 @@ struct MarshalTraits <::Test::MyException::_Data>
 {
 	static const bool has_marshal = true;
 
-	static void marshal_in (const ::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst) NIRVANA_NOEXCEPT
+	static void marshal_in (const ::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst)
 	{
 		_marshal_in (src.param, marshaler, dst.param);
 		_marshal_in (src.bparam, marshaler, dst.bparam);
 	}
 
-	static void marshal_out (::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst) NIRVANA_NOEXCEPT
+	static void marshal_out (::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst)
 	{
 		_marshal_out (src.param, marshaler, dst.param);
 		_marshal_out (src.bparam, marshaler, dst.bparam);
 	}
 
-	static void unmarshal (const ABI <::Test::MyException::_Data>& src, Unmarshal_ptr unmarshaler, ::Test::MyException::_Data& dst) NIRVANA_NOEXCEPT
+	static void unmarshal (const ABI <::Test::MyException::_Data>& src, Unmarshal_ptr unmarshaler, ::Test::MyException::_Data& dst)
 	{
 		_unmarshal (src.param, unmarshaler, dst.param);
 		_unmarshal (src.bparam, unmarshaler, dst.bparam);
@@ -31,7 +31,7 @@ struct MarshalTraits <::Test::MyException::_Data>
 
 template <>
 class TypeCodeException <::Test::MyException> :
-	public TypeCodeExceptionImpl <::Test::MyException, 1>
+	public TypeCodeExceptionImpl <::Test::MyException, 2>
 {};
 
 template <>
@@ -453,4 +453,4 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I1>::metadata_ = {
 
 NIRVANA_EXPORT (_exp_Test_TC_SeqLong, "Test/_tc_SeqLong", CORBA::TypeCode, CORBA::Nirvana::TypeCodeSequence <CORBA::Long, &CORBA::_tc_long>)
 NIRVANA_EXPORT (_exp_Test_TC_MyException, Test::MyException::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException>)
-NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <Test::I1>)
+NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <::Test::I1>)
