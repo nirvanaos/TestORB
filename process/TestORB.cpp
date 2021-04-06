@@ -93,6 +93,7 @@ TEST_F (TestORB, TypeCode)
 {
 	EXPECT_EQ (_tc_MyException->kind (), TCKind::tk_except);
 	EXPECT_STREQ (_tc_MyException->id (), "IDL:Test/MyException:1.0");
+	EXPECT_STREQ (_tc_MyException->name (), "MyException");
 	EXPECT_EQ (_tc_MyException->member_count (), 2);
 	EXPECT_STREQ (_tc_MyException->member_name (0), "param");
 	EXPECT_STREQ (_tc_MyException->member_name (1), "bparam");
@@ -101,6 +102,7 @@ TEST_F (TestORB, TypeCode)
 
 	EXPECT_EQ (_tc_MyStruct->kind (), TCKind::tk_struct);
 	EXPECT_STREQ (_tc_MyStruct->id (), "IDL:Test/MyStruct:1.0");
+	EXPECT_STREQ (_tc_MyStruct->name (), "MyStruct");
 	EXPECT_EQ (_tc_MyStruct->member_count (), 2);
 	EXPECT_STREQ (_tc_MyStruct->member_name (0), "ws_member");
 	EXPECT_STREQ (_tc_MyStruct->member_name (1), "l_member");
