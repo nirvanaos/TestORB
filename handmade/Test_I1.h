@@ -86,6 +86,30 @@ struct Type <::Test::MyException::_Data> :
 };
 
 template <>
+struct MarshalTraits <::Test::MyException::_Data>
+{
+	static const bool has_marshal = true;
+
+	static void marshal_in (const ::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst)
+	{
+		_marshal_in (src.param, marshaler, dst.param);
+		_marshal_in (src.bparam, marshaler, dst.bparam);
+	}
+
+	static void marshal_out (::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst)
+	{
+		_marshal_out (src.param, marshaler, dst.param);
+		_marshal_out (src.bparam, marshaler, dst.bparam);
+	}
+
+	static void unmarshal (const ABI <::Test::MyException::_Data>& src, Unmarshal_ptr unmarshaler, ::Test::MyException::_Data& dst)
+	{
+		_unmarshal (src.param, unmarshaler, dst.param);
+		_unmarshal (src.bparam, unmarshaler, dst.bparam);
+	}
+};
+
+template <>
 struct Definitions < ::Test::I1>
 {
 	// Interface definitions will be here
