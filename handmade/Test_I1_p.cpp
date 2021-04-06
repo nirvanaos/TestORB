@@ -6,14 +6,21 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
-class TypeCodeException <::Test::MyException> :
-	public TypeCodeExceptionImpl <::Test::MyException, 2>
-{};
-
-template <>
-const Parameter TypeCodeMembers <TypeCodeException <::Test::MyException> >::members_ [] = {
+const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
 	{ "param", _tc_string },
 	{ "bparam", _tc_boolean }
+};
+
+template <>
+const char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1.0";
+
+template <>
+const Char TypeCodeName < ::Test::MyStruct>::name_ [] = "MyStruct";
+
+template <>
+const Parameter TypeCodeMembers < ::Test::MyStruct>::members_ [] = {
+	{ "ws_member", _tc_wstring },
+	{ "l_member", _tc_long }
 };
 
 IMPLEMENT_PROXY_FACTORY(::Test, I1);
@@ -427,6 +434,7 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I1>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_TC_SeqLong, "Test/_tc_SeqLong", CORBA::TypeCode, CORBA::Nirvana::TypeCodeSequence <CORBA::Long, &CORBA::_tc_long>)
-NIRVANA_EXPORT (_exp_Test_TC_MyException, Test::MyException::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException>)
+NIRVANA_EXPORT (_exp_Test_TC_SeqLong, "Test/_tc_SeqLong", CORBA::TypeCode, CORBA::Nirvana::TypeCodeSequence <CORBA::Long, CORBA::Nirvana::TypeCodeImport <&CORBA::_tc_long> >)
+NIRVANA_EXPORT (_exp_Test_TC_MyException, Test::MyException::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
+NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf < Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
 NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <::Test::I1>)

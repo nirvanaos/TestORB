@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace Test;
+using namespace CORBA;
 
 /*
 void must_not_compile1 (const Test::I3_var& var)
@@ -86,6 +87,25 @@ TEST_F (TestORB, Environment)
 	ex = ne2.exception ();
 	ASSERT_TRUE (ex);
 	EXPECT_STREQ (ex->_name (), ::Test::MyException::__name ());
+}
+
+TEST_F (TestORB, TypeCode)
+{
+	EXPECT_EQ (_tc_MyException->kind (), TCKind::tk_except);
+	EXPECT_STREQ (_tc_MyException->id (), "IDL:Test/MyException:1.0");
+	EXPECT_EQ (_tc_MyException->member_count (), 2);
+	EXPECT_STREQ (_tc_MyException->member_name (0), "param");
+	EXPECT_STREQ (_tc_MyException->member_name (1), "bparam");
+	EXPECT_EQ (_tc_MyException->member_type (0)->kind (), TCKind::tk_string);
+	EXPECT_EQ (_tc_MyException->member_type (1)->kind (), TCKind::tk_boolean);
+
+	EXPECT_EQ (_tc_MyStruct->kind (), TCKind::tk_struct);
+	EXPECT_STREQ (_tc_MyStruct->id (), "IDL:Test/MyStruct:1.0");
+	EXPECT_EQ (_tc_MyStruct->member_count (), 2);
+	EXPECT_STREQ (_tc_MyStruct->member_name (0), "ws_member");
+	EXPECT_STREQ (_tc_MyStruct->member_name (1), "l_member");
+	EXPECT_EQ (_tc_MyStruct->member_type (0)->kind (), TCKind::tk_wstring);
+	EXPECT_EQ (_tc_MyStruct->member_type (1)->kind (), TCKind::tk_long);
 }
 
 }

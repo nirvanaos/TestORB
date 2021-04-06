@@ -109,6 +109,93 @@ struct MarshalTraits <::Test::MyException::_Data>
 	}
 };
 
+}
+}
+
+namespace Test {
+
+class MyStruct
+{
+public:
+	MyStruct () :
+		_l_member (0)
+	{}
+	MyStruct (const MyStruct&) = default;
+	MyStruct (MyStruct&&) = default;
+	MyStruct& operator = (const MyStruct&) = default;
+	MyStruct& operator = (MyStruct&&) = default;
+
+	::CORBA::Nirvana::Type <std::wstring>::Member_ret ws_member () const
+	{
+		return _ws_member;
+	}
+	void ws_member (::CORBA::Nirvana::Type <std::wstring>::C_in val)
+	{
+		_ws_member = val;
+	}
+
+	::CORBA::Nirvana::Type <int32_t>::Member_ret l_member () const
+	{
+		return _l_member;
+	}
+	void l_member (::CORBA::Nirvana::Type <int32_t>::C_in val)
+	{
+		_l_member = val;
+	}
+
+private:
+	friend struct ::CORBA::Nirvana::MarshalTraits <MyStruct>;
+	::CORBA::Nirvana::Type <std::wstring>::Member_type _ws_member;
+	::CORBA::Nirvana::Type <int32_t>::Member_type _l_member;
+};
+extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyStruct;
+
+}
+
+namespace CORBA {
+namespace Nirvana {
+
+template <>
+struct ABI < ::Test::MyStruct>
+{
+	Type <Type < std::wstring>::Member_type>::ABI_type ws_member;
+	Type <Type < int32_t>::Member_type>::ABI_type l_member;
+};
+
+template <>
+struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
+	Type <Type < std::wstring>::Member_type>::has_check>
+{
+	static void check (const ABI_type& val)
+	{
+		Type <Type < std::wstring>::Member_type>::check (val.ws_member);
+		Type <Type < int32_t>::Member_type>::check (val.l_member);
+	}
+};
+
+template <> struct MarshalTraits < ::Test::MyStruct>
+{
+	static const bool has_marshal = true;
+
+	static void marshal_in (const ::Test::MyStruct& src, Marshal_ptr marshaler, Type < ::Test::MyStruct>::ABI_type& dst)
+	{
+		_marshal_in (src._ws_member, marshaler, dst.ws_member);
+		_marshal_in (src._l_member, marshaler, dst.l_member);
+	}
+
+	static void marshal_out (::Test::MyStruct& src, Marshal_ptr marshaler, Type < ::Test::MyStruct>::ABI_type& dst)
+	{
+		_marshal_out (src._ws_member, marshaler, dst.ws_member);
+		_marshal_out (src._l_member, marshaler, dst.l_member);
+	}
+
+	static void unmarshal (const Type < ::Test::MyStruct>::ABI_type& src, Unmarshal_ptr unmarshaler, ::Test::MyStruct& dst)
+	{
+		_unmarshal (src.ws_member, unmarshaler, dst._ws_member);
+		_unmarshal (src.l_member, unmarshaler, dst._l_member);
+	}
+};
+
 template <>
 struct Definitions < ::Test::I1>
 {
