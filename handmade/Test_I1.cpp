@@ -8,7 +8,7 @@ namespace Test {
 DEFINE_USER_EXCEPTION (MyException, "IDL:Test/MyException:1.0")
 
 NIRVANA_OLF_SECTION extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode>
-_tc_SeqLong = { ::Nirvana::OLF_IMPORT_INTERFACE, "Test/_tc_SeqLong", ::CORBA::TypeCode::repository_id_ };
+_tc_SeqLong = { ::Nirvana::OLF_IMPORT_INTERFACE, CORBA::Nirvana::RepIdOf <Test::_TD_SeqLong>::repository_id_, ::CORBA::TypeCode::repository_id_ };
 
 NIRVANA_OLF_SECTION extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode>
 _tc_MyStruct = { ::Nirvana::OLF_IMPORT_INTERFACE, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, ::CORBA::TypeCode::repository_id_ };

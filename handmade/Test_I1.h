@@ -4,23 +4,45 @@
 
 #include <CORBA/CORBA.h>
 
+// typedef sequence <long> SeqLong;
+
 namespace Test {
 
-class I1;
-typedef CORBA::Nirvana::I_ptr <I1> I1_ptr;
-typedef CORBA::Nirvana::I_var <I1> I1_var;
-typedef CORBA::Nirvana::I_out <I1> I1_out;
-
-extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
-
-typedef CORBA::Nirvana::Sequence <CORBA::Long> SeqLong;
-typedef CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
-typedef CORBA::Nirvana::Type <SeqLong>::C_out SeqLong_out;
-typedef CORBA::Nirvana::Type <SeqLong>::C_inout SeqLong_inout;
-
+typedef std::vector <CORBA::Long> SeqLong;
+class _TD_SeqLong;
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_SeqLong;
 
-extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_MyException;
+}
+
+namespace CORBA {
+namespace Nirvana {
+
+template <>
+struct Type < ::Test::_TD_SeqLong> : Type <CORBA::Nirvana::Sequence <CORBA::Long, 0> >
+{
+	static TypeCode_ptr type_code ()
+	{
+		return ::Test::_tc_SeqLong;
+	}
+};
+
+template <>
+const char RepIdOf < ::Test::_TD_SeqLong>::repository_id_ [] = "IDL:Test/SeqLong:1.0";
+
+}
+}
+
+namespace Test {
+
+typedef CORBA::Nirvana::Type <_TD_SeqLong>::C_var SeqLong_var;
+typedef CORBA::Nirvana::Type <_TD_SeqLong>::C_out SeqLong_out;
+typedef CORBA::Nirvana::Type <_TD_SeqLong>::C_inout SeqLong_inout;
+
+}
+
+// MyException
+
+namespace Test {
 
 class MyException : public ::CORBA::UserException
 {
@@ -61,6 +83,8 @@ private:
 
 	_Data _data;
 };
+
+extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_MyException;
 
 }
 
@@ -112,6 +136,8 @@ struct MarshalTraits <::Test::MyException::_Data>
 }
 }
 
+// struct MyStruct
+
 namespace Test {
 
 class MyStruct
@@ -156,6 +182,9 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
+const char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1.0";
+
+template <>
 struct ABI < ::Test::MyStruct>
 {
 	Type <Type < std::wstring>::Member_type>::ABI_type ws_member;
@@ -170,6 +199,11 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 	{
 		Type <Type < std::wstring>::Member_type>::check (val.ws_member);
 		Type <Type < int32_t>::Member_type>::check (val.l_member);
+	}
+
+	static TypeCode_ptr type_code ()
+	{
+		return ::Test::_tc_MyStruct;
 	}
 };
 
@@ -196,6 +230,25 @@ template <> struct MarshalTraits < ::Test::MyStruct>
 	}
 };
 
+}
+}
+
+// interface I1
+
+namespace Test {
+
+class I1;
+typedef CORBA::Nirvana::I_ptr <I1> I1_ptr;
+typedef CORBA::Nirvana::I_var <I1> I1_var;
+typedef CORBA::Nirvana::I_out <I1> I1_out;
+
+extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
+
+}
+
+namespace CORBA {
+namespace Nirvana {
+
 template <>
 struct Definitions < ::Test::I1>
 {
@@ -209,7 +262,7 @@ Long (*op1) (Bridge < ::Test::I1>*, Long p1, Interface*);
 void (*throw_no_implement) (Bridge < ::Test::I1>*, Interface*);
 Interface* (*object_op) (Bridge < ::Test::I1>*, Interface* in_obj, Interface** out_obj, Interface** inout_obj, Interface*);
 ABI_ret <String> (*string_op) (Bridge < ::Test::I1>*, ABI_in <String> in_s, ABI_out <String> out_s, ABI_inout <String> inout_s, Interface*);
-ABI_ret < ::Test::SeqLong> (*seq_op) (Bridge < ::Test::I1>*, ABI_in < ::Test::SeqLong> in_s, ABI_out < ::Test::SeqLong> out_s, ABI_inout < ::Test::SeqLong> inout_s, Interface*);
+Type <::Test::_TD_SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::_TD_SeqLong>::ABI_in in_s, Type <::Test::_TD_SeqLong>::ABI_out out_s, Type <::Test::_TD_SeqLong>::ABI_inout inout_s, Interface*);
 ABI_ret <Any> (*any_op) (Bridge < ::Test::I1>*, ABI_in <Any>, ABI_out <Any>, ABI_inout <Any>, Interface*);
 BRIDGE_END ()
 
@@ -222,7 +275,7 @@ public:
 	void throw_no_implement ();
 	::Test::I1_var object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
 	std::string string_op (String_in, String_out, String_inout);
-	::Test::SeqLong seq_op (Type <::Test::SeqLong>::C_in in_s, ::Test::SeqLong_out out_s, ::Test::SeqLong_inout inout_s);
+	::Test::SeqLong seq_op (Type <::Test::_TD_SeqLong>::C_in in_s, Type <::Test::_TD_SeqLong>::C_out out_s, Type <::Test::_TD_SeqLong>::C_inout inout_s);
 	Any any_op (Any_in, Any_out, Any_inout);
 };
 
@@ -266,11 +319,11 @@ std::string Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::Str
 }
 
 template <class T>
-::Test::SeqLong Client <T, ::Test::I1>::seq_op (Type <::Test::SeqLong>::C_in in_s, ::Test::SeqLong_out out_s, ::Test::SeqLong_inout inout_s)
+::Test::SeqLong Client <T, ::Test::I1>::seq_op (Type <::Test::_TD_SeqLong>::C_in in_s, Type <::Test::_TD_SeqLong>::C_out out_s, Type <::Test::_TD_SeqLong>::C_inout inout_s)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
-	Type < ::Test::SeqLong>::C_ret _ret = (_b._epv ().epv.seq_op) (&_b, &in_s, &out_s, &inout_s, &_env);
+	Type <::Test::_TD_SeqLong>::C_ret _ret ((_b._epv ().epv.seq_op) (&_b, &in_s, &out_s, &inout_s, &_env));
 	_env.check ();
 	return _ret;
 }

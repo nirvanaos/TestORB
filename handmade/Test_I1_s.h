@@ -62,16 +62,16 @@ protected:
 		return ABI_ret <std::string> ();
 	}
 
-	static ABI_ret < ::Test::SeqLong> _seq_op (Bridge < ::Test::I1>* _b, ABI_in < ::Test::SeqLong> in_s, ABI_out < ::Test::SeqLong> out_s, ABI_inout < ::Test::SeqLong> inout_s, Interface* _env)
+	static Type <::Test::_TD_SeqLong>::ABI_ret _seq_op (Bridge < ::Test::I1>* _b, Type <::Test::_TD_SeqLong>::ABI_in in_s, Type <::Test::_TD_SeqLong>::ABI_out out_s, Type <::Test::_TD_SeqLong>::ABI_inout inout_s, Interface* _env)
 	{
 		try {
-			return Type < ::Test::SeqLong>::ret (S::_implementation (_b).seq_op (Type < ::Test::SeqLong>::in (in_s), Type < ::Test::SeqLong>::out (out_s), Type < ::Test::SeqLong>::inout (inout_s)));
+			return Type < ::Test::_TD_SeqLong>::ret (S::_implementation (_b).seq_op (Type < ::Test::_TD_SeqLong>::in (in_s), Type < ::Test::_TD_SeqLong>::out (out_s), Type < ::Test::_TD_SeqLong>::inout (inout_s)));
 		} catch (const Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
 		}
-		return ABI_ret < ::Test::SeqLong> ();
+		return ABI_ret < ::Test::_TD_SeqLong> ();
 	}
 
 	static ABI_ret <Any> _any_op (Bridge < ::Test::I1>* _b, ABI_in <Any> in_any, ABI_out <Any> out_any, ABI_inout <Any> inout_any, Interface* _env)

@@ -2,29 +2,17 @@
 #include "Test_I1_s.h"
 #include <CORBA/Proxy/Proxy.h>
 
-namespace Test {
-
-class _TC_SeqLong;
-
-}
-
 namespace CORBA {
 namespace Nirvana {
 
 template <>
-const char RepIdOf < ::Test::_TC_SeqLong>::repository_id_ [] = "IDL:Test/SeqLong:1.0";
-
-template <>
-const Char TypeCodeName < ::Test::_TC_SeqLong>::name_ [] = "SeqLong";
+const Char TypeCodeName < ::Test::_TD_SeqLong>::name_ [] = "SeqLong";
 
 template <>
 const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
 	{ "param", _tc_string },
 	{ "bparam", _tc_boolean }
 };
-
-template <>
-const char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1.0";
 
 template <>
 const Char TypeCodeName < ::Test::MyStruct>::name_ [] = "MyStruct";
@@ -183,16 +171,16 @@ struct ProxyTraits <::Test::I1>
 
 	struct seq_op_in
 	{
-		ABI <Test::SeqLong> in_s;
-		ABI <Test::SeqLong> inout_s;
+		Type <Sequence <Long> >::ABI_type in_s;
+		Type <Sequence <Long> >::ABI_type inout_s;
 	};
 	static const Parameter seq_op_in_params_ [2];
 
 	struct seq_op_out
 	{
-		ABI <Test::SeqLong> out_s;
-		ABI <Test::SeqLong> inout_s;
-		ABI <Test::SeqLong> _ret;
+		Type <Sequence <Long> >::ABI_type out_s;
+		Type <Sequence <Long> >::ABI_type inout_s;
+		Type <Sequence <Long> >::ABI_type _ret;
 	};
 	static const Parameter seq_op_out_params_ [2];
 
@@ -446,7 +434,7 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I1>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_TC_SeqLong, CORBA::Nirvana::RepIdOf < Test::_TC_SeqLong>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef < Test::_TC_SeqLong, CORBA::Nirvana::TypeCodeSequence <CORBA::Long> >)
+NIRVANA_EXPORT (_exp_Test_TC_SeqLong, CORBA::Nirvana::RepIdOf < Test::_TD_SeqLong>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef < Test::_TD_SeqLong, CORBA::Nirvana::Sequence <CORBA::Long> >)
 NIRVANA_EXPORT (_exp_Test_TC_MyException, Test::MyException::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
 NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf < Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
 NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <::Test::I1>)
