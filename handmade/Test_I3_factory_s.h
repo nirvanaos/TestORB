@@ -46,7 +46,7 @@ const Bridge < ::Test::I3_factory>::EPV Skeleton <S, ::Test::I3_factory>::epv_ =
 // Static implementation
 template <class S>
 class ServantStatic <S, ::Test::I3_factory> :
-	public ImplementationStatic <S, ::Test::I3_factory>
+	public ImplementationLocalStatic <S, ::Test::I3_factory>
 {};
 
 }

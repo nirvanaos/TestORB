@@ -42,6 +42,15 @@ template <class T>
 	return _ret;
 }
 
+template <>
+struct Type <I_var < ::Test::I3_factory> > : TypeLocalObject < ::Test::I3_factory>
+{
+	static TypeCode_ptr type_code ()
+	{
+		return ::Test::_tc_I3_factory;
+	}
+};
+
 }
 }
 

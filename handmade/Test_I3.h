@@ -44,6 +44,15 @@ Long Client <T, ::Test::I3>::op3 (Long p1)
 	return _ret;
 }
 
+template <>
+struct Type <I_var < ::Test::I3> > : TypeLocalObject < ::Test::I3>
+{
+	static TypeCode_ptr type_code ()
+	{
+		return ::Test::_tc_I3;
+	}
+};
+
 }
 }
 

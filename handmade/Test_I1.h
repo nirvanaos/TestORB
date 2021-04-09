@@ -107,26 +107,20 @@ struct Type <::Test::MyException::_Data> :
 		Type <Type <std::string>::Member_type>::check (val.param);
 		Type <Type <bool>::Member_type>::check (val.bparam);
 	}
-};
 
-template <>
-struct MarshalTraits <::Test::MyException::_Data>
-{
-	static const bool has_marshal = true;
-
-	static void marshal_in (const ::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst)
+	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
 		_marshal_in (src.param, marshaler, dst.param);
 		_marshal_in (src.bparam, marshaler, dst.bparam);
 	}
 
-	static void marshal_out (::Test::MyException::_Data& src, Marshal_ptr marshaler, ABI <::Test::MyException::_Data>& dst)
+	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
 		_marshal_out (src.param, marshaler, dst.param);
 		_marshal_out (src.bparam, marshaler, dst.bparam);
 	}
 
-	static void unmarshal (const ABI <::Test::MyException::_Data>& src, Unmarshal_ptr unmarshaler, ::Test::MyException::_Data& dst)
+	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
 	{
 		_unmarshal (src.param, unmarshaler, dst.param);
 		_unmarshal (src.bparam, unmarshaler, dst.bparam);
@@ -170,7 +164,7 @@ public:
 	}
 
 private:
-	friend struct ::CORBA::Nirvana::MarshalTraits <MyStruct>;
+	friend struct ::CORBA::Nirvana::Type <MyStruct>;
 	::CORBA::Nirvana::Type <std::wstring>::Member_type _ws_member;
 	::CORBA::Nirvana::Type <int32_t>::Member_type _l_member;
 };
@@ -205,25 +199,20 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 	{
 		return ::Test::_tc_MyStruct;
 	}
-};
 
-template <> struct MarshalTraits < ::Test::MyStruct>
-{
-	static const bool has_marshal = true;
-
-	static void marshal_in (const ::Test::MyStruct& src, Marshal_ptr marshaler, Type < ::Test::MyStruct>::ABI_type& dst)
+	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
 		_marshal_in (src._ws_member, marshaler, dst.ws_member);
 		_marshal_in (src._l_member, marshaler, dst.l_member);
 	}
 
-	static void marshal_out (::Test::MyStruct& src, Marshal_ptr marshaler, Type < ::Test::MyStruct>::ABI_type& dst)
+	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
 		_marshal_out (src._ws_member, marshaler, dst.ws_member);
 		_marshal_out (src._l_member, marshaler, dst.l_member);
 	}
 
-	static void unmarshal (const Type < ::Test::MyStruct>::ABI_type& src, Unmarshal_ptr unmarshaler, ::Test::MyStruct& dst)
+	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
 	{
 		_unmarshal (src.ws_member, unmarshaler, dst._ws_member);
 		_unmarshal (src.l_member, unmarshaler, dst._l_member);
@@ -248,6 +237,15 @@ extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
 
 namespace CORBA {
 namespace Nirvana {
+
+template <>
+struct Type <I_var < ::Test::I1> > : TypeObject < ::Test::I1>
+{
+	static TypeCode_ptr type_code ()
+	{
+		return ::Test::_tc_I1;
+	}
+};
 
 template <>
 struct Definitions < ::Test::I1>
