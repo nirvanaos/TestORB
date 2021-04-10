@@ -434,7 +434,7 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I1>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_TC_SeqLong, CORBA::Nirvana::RepIdOf < Test::_TD_SeqLong>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef < Test::_TD_SeqLong, CORBA::Nirvana::Sequence <CORBA::Long> >)
-NIRVANA_EXPORT (_exp_Test_TC_MyException, Test::MyException::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
-NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf < Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
+NIRVANA_EXPORT (_exp_Test_TC_SeqLong, CORBA::Nirvana::RepIdOf <Test::_TD_SeqLong>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef < Test::_TD_SeqLong, CORBA::Nirvana::Sequence <CORBA::Long> >)
+NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
+NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
 NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <::Test::I1>)

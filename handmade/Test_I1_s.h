@@ -50,7 +50,7 @@ protected:
 		return 0;
 	}
 
-	static ABI_ret <String> _string_op (Bridge < ::Test::I1>* _b, ABI_in <String> in_s, ABI_out <String> out_s, ABI_inout <String> inout_s, Interface* _env)
+	static Type <String>::ABI_ret _string_op (Bridge < ::Test::I1>* _b, ABI_in <String> in_s, ABI_out <String> out_s, ABI_inout <String> inout_s, Interface* _env)
 	{
 		try {
 			return Type <String>::ret (S::_implementation (_b).string_op (Type <String>::in (in_s), Type <String>::out (out_s), Type <String>::inout (inout_s)));
@@ -59,7 +59,7 @@ protected:
 		} catch (...) {
 			set_unknown_exception (_env);
 		}
-		return ABI_ret <std::string> ();
+		return Type <String>::ret ();
 	}
 
 	static Type <::Test::_TD_SeqLong>::ABI_ret _seq_op (Bridge < ::Test::I1>* _b, Type <::Test::_TD_SeqLong>::ABI_in in_s, Type <::Test::_TD_SeqLong>::ABI_out out_s, Type <::Test::_TD_SeqLong>::ABI_inout inout_s, Interface* _env)
@@ -71,7 +71,7 @@ protected:
 		} catch (...) {
 			set_unknown_exception (_env);
 		}
-		return ABI_ret < ::Test::_TD_SeqLong> ();
+		return Type < ::Test::_TD_SeqLong>::ret ();
 	}
 
 	static ABI_ret <Any> _any_op (Bridge < ::Test::I1>* _b, ABI_in <Any> in_any, ABI_out <Any> out_any, ABI_inout <Any> inout_any, Interface* _env)
@@ -83,7 +83,7 @@ protected:
 		} catch (...) {
 			set_unknown_exception (_env);
 		}
-		return ABI_ret <Any> ();
+		return Type <Any>::ret ();
 	}
 };
 

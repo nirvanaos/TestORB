@@ -92,7 +92,10 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
-struct ABI <::Test::MyException::_Data>
+const Char RepIdOf < ::Test::MyException>::repository_id_ [] = "IDL:Test/MyException:1.0";
+
+template <>
+struct ABI < ::Test::MyException::_Data>
 {
 	Type <Type <std::string>::Member_type>::ABI_type param;
 	Type <Type <bool>::Member_type>::ABI_type bparam;
