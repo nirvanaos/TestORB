@@ -68,11 +68,11 @@ public:
 };
 
 const Parameter ProxyTraits <::Test::I1_factory>::create_in_params_ [1] = {
-	{ "addendum", ::CORBA::_tc_long }
+	{ "addendum", Type <Long>::type_code }
 };
 
 const Operation ProxyTraits <::Test::I1_factory>::operations_ [] = {
-	{ "create", { create_in_params_, countof (create_in_params_) }, {0, 0}, ::Test::_tc_I1, RqProcWrapper <::Test::I1_factory, create_request> }
+	{ "create", { create_in_params_, countof (create_in_params_) }, {0, 0}, TypeI < ::Test::I1>::type_code, RqProcWrapper <::Test::I1_factory, create_request> }
 };
 
 const Char* const ProxyTraits <::Test::I1_factory>::interfaces_ [] = {

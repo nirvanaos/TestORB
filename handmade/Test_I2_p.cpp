@@ -53,11 +53,11 @@ public:
 };
 
 const Parameter ProxyTraits <::Test::I2>::op2_in_params_ [1] = {
-	{ "p1", ::CORBA::_tc_long }
+	{ "p1", Type <Long>::type_code }
 };
 
 const Operation ProxyTraits <::Test::I2>::operations_ [] = {
-	{ "op2", { op2_in_params_, countof (op2_in_params_) }, {0, 0}, ::CORBA::_tc_long, RqProcWrapper <::Test::I2, op2_request> }
+	{ "op2", { op2_in_params_, countof (op2_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper <::Test::I2, op2_request> }
 };
 
 const Char* const ProxyTraits <::Test::I2>::interfaces_ [] = {

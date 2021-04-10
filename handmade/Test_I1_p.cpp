@@ -10,8 +10,8 @@ const Char TypeCodeName < ::Test::_TD_SeqLong>::name_ [] = "SeqLong";
 
 template <>
 const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
-	{ "param", _tc_string },
-	{ "bparam", _tc_boolean }
+	{ "param", Type <String>::type_code },
+	{ "bparam", Type <Boolean>::type_code }
 };
 
 template <>
@@ -19,8 +19,8 @@ const Char TypeCodeName < ::Test::MyStruct>::name_ [] = "MyStruct";
 
 template <>
 const Parameter TypeCodeMembers < ::Test::MyStruct>::members_ [] = {
-	{ "ws_member", _tc_wstring },
-	{ "l_member", _tc_long }
+	{ "ws_member", Type <WString>::type_code },
+	{ "l_member", Type <Long>::type_code }
 };
 
 IMPLEMENT_PROXY_FACTORY(::Test, I1);
@@ -369,56 +369,56 @@ public:
 };
 
 const Parameter ProxyTraits <::Test::I1>::op1_in_params_ [1] = {
-	{ "p1", ::CORBA::_tc_long }
+	{ "p1", Type <Long>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::object_op_in_params_ [2] = {
-	{ "in_obj", ::Test::_tc_I1 },
-	{ "inout_obj", ::Test::_tc_I1 }
+	{ "in_obj", Type <I_var < ::Test::I1> >::type_code },
+	{ "inout_obj", Type <I_var < ::Test::I1> >::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::object_op_out_params_ [2] = {
-	{ "out_obj", ::Test::_tc_I1 },
-	{ "inout_obj", ::Test::_tc_I1 }
+	{ "out_obj", Type <I_var < ::Test::I1> >::type_code },
+	{ "inout_obj", Type <I_var < ::Test::I1> >::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::string_op_in_params_ [2] = {
-	{ "in_s", _tc_string },
-	{ "inout_s", _tc_string }
+	{ "in_s", Type <String>::type_code },
+	{ "inout_s", Type <String>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::string_op_out_params_ [2] = {
-	{ "out_s", _tc_string },
-	{ "inout_s", _tc_string }
+	{ "out_s", Type <String>::type_code },
+	{ "inout_s", Type <String>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::seq_op_in_params_ [2] = {
-	{ "in_s", Test::_tc_SeqLong },
-	{ "inout_s", Test::_tc_SeqLong }
+	{ "in_s", Type <Test::SeqLong>::type_code },
+	{ "inout_s", Type <Test::SeqLong>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::seq_op_out_params_ [2] = {
-	{ "out_s", Test::_tc_SeqLong },
-	{ "inout_s", Test::_tc_SeqLong }
+	{ "out_s", Type <Test::SeqLong>::type_code },
+	{ "inout_s", Type <Test::SeqLong>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::any_op_in_params_ [2] = {
-	{ "in_any", _tc_any },
-	{ "inout_any", _tc_any }
+	{ "in_any", Type <Any>::type_code },
+	{ "inout_any", Type <Any>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::any_op_out_params_ [2] = {
-	{ "out_any", _tc_any },
-	{ "inout_any", _tc_any }
+	{ "out_any", Type <Any>::type_code },
+	{ "inout_any", Type <Any>::type_code }
 };
 
 const Operation ProxyTraits <::Test::I1>::operations_ [] = {
-	{ "op1", { op1_in_params_, countof (op1_in_params_) }, {0, 0}, ::CORBA::_tc_long, RqProcWrapper <::Test::I1, op1_request> },
-	{ "throw_no_implement", { 0, 0 }, {0, 0}, ::CORBA::_tc_void, RqProcWrapper <::Test::I1, throw_no_implement_request> },
-	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, ::Test::_tc_I1, RqProcWrapper <::Test::I1, object_op_request> },
-	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, _tc_string, RqProcWrapper <::Test::I1, string_op_request> },
-	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, ::Test::_tc_SeqLong, RqProcWrapper <::Test::I1, seq_op_request> },
-	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, _tc_any, RqProcWrapper <::Test::I1, any_op_request> }
+	{ "op1", { op1_in_params_, countof (op1_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper <::Test::I1, op1_request> },
+	{ "throw_no_implement", { 0, 0 }, {0, 0}, Type <void>::type_code, RqProcWrapper <::Test::I1, throw_no_implement_request> },
+	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type <I_var < ::Test::I1> >::type_code, RqProcWrapper <::Test::I1, object_op_request> },
+	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, Type <String>::type_code, RqProcWrapper <::Test::I1, string_op_request> },
+	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, Type < ::Test::SeqLong>::type_code, RqProcWrapper <::Test::I1, seq_op_request> },
+	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, Type <Any>::type_code, RqProcWrapper <::Test::I1, any_op_request> }
 };
 
 const Char* const ProxyTraits <::Test::I1>::interfaces_ [] = {
