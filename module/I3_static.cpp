@@ -1,3 +1,4 @@
+#include <CORBA/Server.h>
 #include "I3_static.h"
 #include "ImplI1.h"
 #include "Test_I3_s.h"

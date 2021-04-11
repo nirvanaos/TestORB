@@ -1,5 +1,6 @@
-#include "I1_factory_portable.h"
+#include <CORBA/Server.h>
 #include "Test_I1_factory_s.h"
+#include "I1_factory_portable.h"
 #include "PortableI1.h"
 
 namespace Test {
