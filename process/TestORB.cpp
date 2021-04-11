@@ -122,6 +122,7 @@ TEST_F (TestORB, TypeCode)
 
 	EXPECT_FALSE (_tc_SeqLong->equal (seq));
 	EXPECT_TRUE (_tc_SeqLong->equivalent (seq));
+	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
 
 	TypeCode_var l = seq->content_type ();
 	EXPECT_EQ (l->kind (), TCKind::tk_long);
