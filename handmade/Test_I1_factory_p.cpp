@@ -36,7 +36,7 @@ struct ProxyTraits <::Test::I1_factory>
 
 		// Marshal output
 		create_out& _out = *(create_out*)_out_params;
-		Marshal_ptr _m = _call->marshaler ();
+		Marshal_var _m = _call->marshaler ();
 		_marshal_out (_ret, _m, _out._ret);
 	}
 };

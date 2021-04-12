@@ -107,7 +107,7 @@ struct ProxyTraits <::Test::I1>
 
 		// Marshal output
 		object_op_out& _out = *(object_op_out*)_out_ptr;
-		Marshal_ptr _m = _call->marshaler ();
+		Marshal_var _m = _call->marshaler ();
 		_marshal_out (out_obj, _m, _out.out_obj);
 		_marshal_out (inout_obj, _m, _out.inout_obj);
 		_marshal_out (_ret, _m, _out._ret);
@@ -161,7 +161,7 @@ struct ProxyTraits <::Test::I1>
 
 		// Marshal output
 		string_op_out& _out = *(string_op_out*)_out_ptr;
-		Marshal_ptr _m = _call->marshaler ();
+		Marshal_var _m = _call->marshaler ();
 		_marshal_out (out_s, _m, _out.out_s);
 		_marshal_out (inout_s, _m, _out.inout_s);
 		_marshal_out (_ret, _m, _out._ret);
@@ -215,7 +215,7 @@ struct ProxyTraits <::Test::I1>
 
 		// Marshal output
 		seq_op_out& _out = *(seq_op_out*)_out_ptr;
-		Marshal_ptr _m = _call->marshaler ();
+		Marshal_var _m = _call->marshaler ();
 		_marshal_out (out_s, _m, _out.out_s);
 		_marshal_out (inout_s, _m, _out.inout_s);
 		_marshal_out (_ret, _m, _out._ret);
@@ -269,7 +269,7 @@ struct ProxyTraits <::Test::I1>
 
 		// Marshal output
 		any_op_out& _out = *(any_op_out*)_out_ptr;
-		Marshal_ptr _m = _call->marshaler ();
+		Marshal_var _m = _call->marshaler ();
 		_marshal_out (out_any, _m, _out.out_any);
 		_marshal_out (inout_any, _m, _out.inout_any);
 		_marshal_out (_ret, _m, _out._ret);
