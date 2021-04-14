@@ -2,45 +2,18 @@
 #ifndef IDL_TEST_I1_H_
 #define IDL_TEST_I1_H_
 
+namespace Test {
+
 // typedef sequence <long> SeqLong;
 
-namespace Test {
+typedef ::CORBA::Nirvana::Vector < ::CORBA::Long> SeqLong;
+extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_SeqLong;
 
-typedef std::vector <CORBA::Long> SeqLong;
-class _TD_SeqLong;
-extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_SeqLong;
+typedef ::CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
+typedef ::CORBA::Nirvana::Type <SeqLong>::C_out SeqLong_out;
+typedef ::CORBA::Nirvana::Type <SeqLong>::C_inout SeqLong_inout;
 
-}
-
-namespace CORBA {
-namespace Nirvana {
-
-template <>
-struct Type < ::Test::_TD_SeqLong> : Type <CORBA::Nirvana::Sequence <CORBA::Long, 0> >
-{
-	static TypeCode_ptr type_code ()
-	{
-		return ::Test::_tc_SeqLong;
-	}
-};
-
-template <>
-const char RepIdOf < ::Test::_TD_SeqLong>::repository_id_ [] = "IDL:Test/SeqLong:1.0";
-
-}
-}
-
-namespace Test {
-
-typedef CORBA::Nirvana::Type <_TD_SeqLong>::C_var SeqLong_var;
-typedef CORBA::Nirvana::Type <_TD_SeqLong>::C_out SeqLong_out;
-typedef CORBA::Nirvana::Type <_TD_SeqLong>::C_inout SeqLong_inout;
-
-}
-
-// MyException
-
-namespace Test {
+// exception MyException
 
 class MyException : public ::CORBA::UserException
 {
@@ -261,7 +234,7 @@ Long (*op1) (Bridge < ::Test::I1>*, Long p1, Interface*);
 void (*throw_no_implement) (Bridge < ::Test::I1>*, Interface*);
 Interface* (*object_op) (Bridge < ::Test::I1>*, Interface* in_obj, Interface** out_obj, Interface** inout_obj, Interface*);
 ABI_ret <String> (*string_op) (Bridge < ::Test::I1>*, ABI_in <String> in_s, ABI_out <String> out_s, ABI_inout <String> inout_s, Interface*);
-Type <::Test::_TD_SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::_TD_SeqLong>::ABI_in in_s, Type <::Test::_TD_SeqLong>::ABI_out out_s, Type <::Test::_TD_SeqLong>::ABI_inout inout_s, Interface*);
+Type < ::Test::SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::SeqLong>::ABI_in in_s, Type <::Test::SeqLong>::ABI_out out_s, Type <::Test::SeqLong>::ABI_inout inout_s, Interface*);
 ABI_ret <Any> (*any_op) (Bridge < ::Test::I1>*, ABI_in <Any>, ABI_out <Any>, ABI_inout <Any>, Interface*);
 BRIDGE_END ()
 
@@ -274,7 +247,7 @@ public:
 	void throw_no_implement ();
 	::Test::I1_var object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
 	std::string string_op (String_in, String_out, String_inout);
-	::Test::SeqLong seq_op (Type <::Test::_TD_SeqLong>::C_in in_s, Type <::Test::_TD_SeqLong>::C_out out_s, Type <::Test::_TD_SeqLong>::C_inout inout_s);
+	Type < ::Test::SeqLong>::Var_type seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
 	Any any_op (Any_in, Any_out, Any_inout);
 };
 
@@ -318,11 +291,11 @@ std::string Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::Str
 }
 
 template <class T>
-::Test::SeqLong Client <T, ::Test::I1>::seq_op (Type <::Test::_TD_SeqLong>::C_in in_s, Type <::Test::_TD_SeqLong>::C_out out_s, Type <::Test::_TD_SeqLong>::C_inout inout_s)
+Type < ::Test::SeqLong>::Var_type Client <T, ::Test::I1>::seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
-	Type <::Test::_TD_SeqLong>::C_ret _ret ((_b._epv ().epv.seq_op) (&_b, &in_s, &out_s, &inout_s, &_env));
+	Type < ::Test::SeqLong>::C_ret _ret ((_b._epv ().epv.seq_op) (&_b, &in_s, &out_s, &inout_s, &_env));
 	_env.check ();
 	return _ret;
 }
