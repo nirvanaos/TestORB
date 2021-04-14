@@ -1,3 +1,4 @@
+#include <CORBA/CORBA.h>
 #include <Test_I3.h>
 #include <gtest/gtest.h>
 #include "TestORB.h"

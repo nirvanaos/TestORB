@@ -2,8 +2,6 @@
 #ifndef IDL_TEST_I1_H_
 #define IDL_TEST_I1_H_
 
-#include <CORBA/CORBA.h>
-
 // typedef sequence <long> SeqLong;
 
 namespace Test {
@@ -47,7 +45,7 @@ namespace Test {
 class MyException : public ::CORBA::UserException
 {
 public:
-	DECLARE_EXCEPTION (MyException);
+	NIRVANA_EXCEPTION_DCL (MyException);
 
 	::CORBA::Nirvana::Type <std::string>::Member_ret param () const
 	{

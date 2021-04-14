@@ -1,8 +1,6 @@
 #ifndef IDL_TEST_I2_H_
 #define IDL_TEST_I2_H_
 
-#include <CORBA/CORBA.h>
-
 namespace Test {
 
 class I2;

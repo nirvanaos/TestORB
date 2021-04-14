@@ -1,6 +1,7 @@
 #ifndef NIRVANA_TESTORB_IMPLI1_H_
 #define NIRVANA_TESTORB_IMPLI1_H_
 
+#include <CORBA/CORBA.h>
 #include "Test_I1.h"
 
 namespace Test {
