@@ -6,7 +6,7 @@ namespace Test {
 
 // typedef sequence <long> SeqLong;
 
-typedef ::CORBA::Nirvana::Vector < ::CORBA::Long> SeqLong;
+typedef ::CORBA::Nirvana::Sequence < ::CORBA::Long> SeqLong;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_SeqLong;
 
 typedef ::CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
