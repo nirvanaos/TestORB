@@ -43,7 +43,7 @@ template <class T>
 }
 
 template <>
-struct Type <I_var < ::Test::I1_factory> > : TypeObject < ::Test::I1_factory>
+struct Type < ::Test::I1_factory> : TypeObject < ::Test::I1_factory>
 {
 	static TypeCode_ptr type_code ()
 	{

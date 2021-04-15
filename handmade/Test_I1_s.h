@@ -41,7 +41,7 @@ protected:
 	static Interface* _object_op (Bridge < ::Test::I1>* _b, Interface* in_obj, Interface** out_obj, Interface** inout_obj, Interface* _env)
 	{
 		try {
-			return TypeI < ::Test::I1>::ret (S::_implementation (_b).object_op (TypeI < ::Test::I1>::in (in_obj), TypeI < ::Test::I1>::out (out_obj), TypeI < ::Test::I1>::inout (inout_obj)));
+			return Type < ::Test::I1>::ret (S::_implementation (_b).object_op (Type < ::Test::I1>::in (in_obj), Type < ::Test::I1>::out (out_obj), Type < ::Test::I1>::inout (inout_obj)));
 		} catch (const Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
@@ -50,7 +50,7 @@ protected:
 		return 0;
 	}
 
-	static Type <String>::ABI_ret _string_op (Bridge < ::Test::I1>* _b, ABI_in <String> in_s, ABI_out <String> out_s, ABI_inout <String> inout_s, Interface* _env)
+	static Type <String>::ABI_ret _string_op (Bridge < ::Test::I1>* _b, Type <String>::ABI_in in_s, Type <String>::ABI_out out_s, Type <String>::ABI_inout inout_s, Interface* _env)
 	{
 		try {
 			return Type <String>::ret (S::_implementation (_b).string_op (Type <String>::in (in_s), Type <String>::out (out_s), Type <String>::inout (inout_s)));
@@ -74,7 +74,7 @@ protected:
 		return Type < ::Test::SeqLong>::ret ();
 	}
 
-	static ABI_ret <Any> _any_op (Bridge < ::Test::I1>* _b, ABI_in <Any> in_any, ABI_out <Any> out_any, ABI_inout <Any> inout_any, Interface* _env)
+	static Type <Any>::ABI_ret _any_op (Bridge < ::Test::I1>* _b, Type <Any>::ABI_in in_any, Type <Any>::ABI_out out_any, Type <Any>::ABI_inout inout_any, Interface* _env)
 	{
 		try {
 			return Type <Any>::ret (S::_implementation (_b).any_op (Type <Any>::in (in_any), Type <Any>::out (out_any), Type <Any>::inout (inout_any)));

@@ -45,7 +45,7 @@ Long Client <T, ::Test::I3>::op3 (Long p1)
 }
 
 template <>
-struct Type <I_var < ::Test::I3> > : TypeLocalObject < ::Test::I3>
+struct Type < ::Test::I3> : TypeLocalObject < ::Test::I3>
 {
 	static TypeCode_ptr type_code ()
 	{

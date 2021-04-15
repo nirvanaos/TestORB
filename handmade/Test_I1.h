@@ -42,8 +42,8 @@ public:
 
 	struct _Data
 	{
-		::CORBA::Nirvana::Type <std::string>::Member_type param;
-		::CORBA::Nirvana::Type <bool>::Member_type bparam;
+		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Member_type param;
+		::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_type bparam;
 	};
 
 private:
@@ -68,8 +68,8 @@ const Char RepIdOf < ::Test::MyException>::repository_id_ [] = "IDL:Test/MyExcep
 template <>
 struct ABI < ::Test::MyException::_Data>
 {
-	Type <Type <std::string>::Member_type>::ABI_type param;
-	Type <Type <bool>::Member_type>::ABI_type bparam;
+	Type <Type <String>::Member_type>::ABI_type param;
+	Type <Type <Boolean>::Member_type>::ABI_type bparam;
 };
 
 template <>
@@ -78,26 +78,26 @@ struct Type <::Test::MyException::_Data> :
 {
 	static void check (const ABI_type& val)
 	{
-		Type <Type <std::string>::Member_type>::check (val.param);
-		Type <Type <bool>::Member_type>::check (val.bparam);
+		Type <Type <String>::Member_type>::check (val.param);
+		Type <Type <Boolean>::Member_type>::check (val.bparam);
 	}
 
 	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
-		_marshal_in (src.param, marshaler, dst.param);
-		_marshal_in (src.bparam, marshaler, dst.bparam);
+		Type <Type <String>::Member_type>::marshal_in (src.param, marshaler, dst.param);
+		Type <Type <Boolean>::Member_type>::marshal_in (src.bparam, marshaler, dst.bparam);
 	}
 
 	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
-		_marshal_out (src.param, marshaler, dst.param);
-		_marshal_out (src.bparam, marshaler, dst.bparam);
+		Type <Type <String>::Member_type>::marshal_out (src.param, marshaler, dst.param);
+		Type <Type <Boolean>::Member_type>::marshal_out (src.bparam, marshaler, dst.bparam);
 	}
 
 	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
 	{
-		_unmarshal (src.param, unmarshaler, dst.param);
-		_unmarshal (src.bparam, unmarshaler, dst.bparam);
+		Type <Type <String>::Member_type>::unmarshal (src.param, unmarshaler, dst.param);
+		Type <Type <Boolean>::Member_type>::unmarshal (src.bparam, unmarshaler, dst.bparam);
 	}
 };
 
@@ -119,28 +119,28 @@ public:
 	MyStruct& operator = (const MyStruct&) = default;
 	MyStruct& operator = (MyStruct&&) = default;
 
-	::CORBA::Nirvana::Type <std::wstring>::Member_ret ws_member () const
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member_ret ws_member () const
 	{
 		return _ws_member;
 	}
-	void ws_member (::CORBA::Nirvana::Type <std::wstring>::C_in val)
+	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::C_in val)
 	{
 		_ws_member = val;
 	}
 
-	::CORBA::Nirvana::Type <int32_t>::Member_ret l_member () const
+	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_ret l_member () const
 	{
 		return _l_member;
 	}
-	void l_member (::CORBA::Nirvana::Type <int32_t>::C_in val)
+	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::C_in val)
 	{
 		_l_member = val;
 	}
 
 private:
 	friend struct ::CORBA::Nirvana::Type <MyStruct>;
-	::CORBA::Nirvana::Type <std::wstring>::Member_type _ws_member;
-	::CORBA::Nirvana::Type <int32_t>::Member_type _l_member;
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member_type _ws_member;
+	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_type _l_member;
 };
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyStruct;
 
@@ -155,18 +155,18 @@ const char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1
 template <>
 struct ABI < ::Test::MyStruct>
 {
-	Type <Type < std::wstring>::Member_type>::ABI_type ws_member;
-	Type <Type < int32_t>::Member_type>::ABI_type l_member;
+	Type <Type <WString>::Member_type>::ABI_type ws_member;
+	Type <Type <Long>::Member_type>::ABI_type l_member;
 };
 
 template <>
 struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
-	Type <Type < std::wstring>::Member_type>::has_check>
+	Type <Type <WString>::Member_type>::has_check>
 {
 	static void check (const ABI_type& val)
 	{
-		Type <Type < std::wstring>::Member_type>::check (val.ws_member);
-		Type <Type < int32_t>::Member_type>::check (val.l_member);
+		Type <Type <WString>::Member_type>::check (val.ws_member);
+		Type <Type <Long>::Member_type>::check (val.l_member);
 	}
 
 	static TypeCode_ptr type_code ()
@@ -176,20 +176,20 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 
 	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
-		_marshal_in (src._ws_member, marshaler, dst.ws_member);
-		_marshal_in (src._l_member, marshaler, dst.l_member);
+		Type <Type <WString>::Member_type>::marshal_in (src._ws_member, marshaler, dst.ws_member);
+		Type <Type <Long>::Member_type>::marshal_in (src._l_member, marshaler, dst.l_member);
 	}
 
 	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
-		_marshal_out (src._ws_member, marshaler, dst.ws_member);
-		_marshal_out (src._l_member, marshaler, dst.l_member);
+		Type <Type <WString>::Member_type>::marshal_out (src._ws_member, marshaler, dst.ws_member);
+		Type <Type <Long>::Member_type>::marshal_out (src._l_member, marshaler, dst.l_member);
 	}
 
 	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
 	{
-		_unmarshal (src.ws_member, unmarshaler, dst._ws_member);
-		_unmarshal (src.l_member, unmarshaler, dst._l_member);
+		Type <Type <WString>::Member_type>::unmarshal (src.ws_member, unmarshaler, dst._ws_member);
+		Type <Type <Long>::Member_type>::unmarshal (src.l_member, unmarshaler, dst._l_member);
 	}
 };
 
@@ -213,7 +213,7 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
-struct Type <I_var < ::Test::I1> > : TypeObject < ::Test::I1>
+struct Type < ::Test::I1> : TypeObject < ::Test::I1>
 {
 	static TypeCode_ptr type_code ()
 	{
@@ -233,9 +233,9 @@ BRIDGE_EPV
 Long (*op1) (Bridge < ::Test::I1>*, Long p1, Interface*);
 void (*throw_no_implement) (Bridge < ::Test::I1>*, Interface*);
 Interface* (*object_op) (Bridge < ::Test::I1>*, Interface* in_obj, Interface** out_obj, Interface** inout_obj, Interface*);
-ABI_ret <String> (*string_op) (Bridge < ::Test::I1>*, ABI_in <String> in_s, ABI_out <String> out_s, ABI_inout <String> inout_s, Interface*);
+Type <String>::ABI_ret (*string_op) (Bridge < ::Test::I1>*, Type <String>::ABI_in in_s, Type <String>::ABI_out out_s, Type <String>::ABI_inout inout_s, Interface*);
 Type < ::Test::SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::SeqLong>::ABI_in in_s, Type <::Test::SeqLong>::ABI_out out_s, Type <::Test::SeqLong>::ABI_inout inout_s, Interface*);
-ABI_ret <Any> (*any_op) (Bridge < ::Test::I1>*, ABI_in <Any>, ABI_out <Any>, ABI_inout <Any>, Interface*);
+Type <Any>::ABI_ret (*any_op) (Bridge < ::Test::I1>*, Type <Any>::ABI_in, Type <Any>::ABI_out, Type <Any>::ABI_inout, Interface*);
 BRIDGE_END ()
 
 template <class T>

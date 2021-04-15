@@ -18,7 +18,7 @@ protected:
 	static Interface* _create (Bridge < ::Test::I1_factory>* _b, Long addendum, Interface* _env)
 	{
 		try {
-			return TypeI < ::Test::I1>::ret (S::_implementation (_b).create (addendum));
+			return Type < ::Test::I1>::ret (S::_implementation (_b).create (addendum));
 		} catch (const Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {

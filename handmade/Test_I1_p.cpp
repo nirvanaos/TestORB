@@ -92,8 +92,8 @@ struct ProxyTraits <::Test::I1>
 			I_var <::Test::I1> in_obj;
 
 			// Unmarshal in and inout
-			_unmarshal (_in.in_obj, _u, in_obj);
-			_unmarshal (_in.inout_obj, _u, inout_obj);
+			Type < ::Test::I1>::unmarshal (_in.in_obj, _u, in_obj);
+			Type < ::Test::I1>::unmarshal (_in.inout_obj, _u, inout_obj);
 
 			// Release resources
 			_u = Unmarshal::_nil ();
@@ -107,9 +107,9 @@ struct ProxyTraits <::Test::I1>
 		// Marshal output
 		object_op_out& _out = *(object_op_out*)_out_ptr;
 		Marshal_var _m = _call->marshaler ();
-		_marshal_out (out_obj, _m, _out.out_obj);
-		_marshal_out (inout_obj, _m, _out.inout_obj);
-		_marshal_out (_ret, _m, _out._ret);
+		Type < ::Test::I1>::marshal_out (out_obj, _m, _out.out_obj);
+		Type < ::Test::I1>::marshal_out (inout_obj, _m, _out.inout_obj);
+		Type < ::Test::I1>::marshal_out (_ret, _m, _out._ret);
 	}
 
 	// string string_op (string in_s, out string out_s, inout string inout_s);
@@ -146,8 +146,8 @@ struct ProxyTraits <::Test::I1>
 			String in_s;
 
 			// Unmarshal in and inout
-			_unmarshal (_in.in_s, _u, in_s);
-			_unmarshal (_in.inout_s, _u, inout_s);
+			Type <String>::unmarshal (_in.in_s, _u, in_s);
+			Type <String>::unmarshal (_in.inout_s, _u, inout_s);
 
 			// Release resources
 			_u = Unmarshal::_nil ();
@@ -161,9 +161,9 @@ struct ProxyTraits <::Test::I1>
 		// Marshal output
 		string_op_out& _out = *(string_op_out*)_out_ptr;
 		Marshal_var _m = _call->marshaler ();
-		_marshal_out (out_s, _m, _out.out_s);
-		_marshal_out (inout_s, _m, _out.inout_s);
-		_marshal_out (_ret, _m, _out._ret);
+		Type <String>::marshal_out (out_s, _m, _out.out_s);
+		Type <String>::marshal_out (inout_s, _m, _out.inout_s);
+		Type <String>::marshal_out (_ret, _m, _out._ret);
 	}
 
 	// SeqLong seq_op (SeqLong in_s, out SeqLong out_s, inout SeqLong inout_s);
@@ -200,8 +200,8 @@ struct ProxyTraits <::Test::I1>
 			Test::SeqLong in_s;
 
 			// Unmarshal in and inout
-			_unmarshal (_in.in_s, _u, in_s);
-			_unmarshal (_in.inout_s, _u, inout_s);
+			Type < ::Test::SeqLong>::unmarshal (_in.in_s, _u, in_s);
+			Type < ::Test::SeqLong>::unmarshal (_in.inout_s, _u, inout_s);
 
 			// Release resources
 			_u = Unmarshal::_nil ();
@@ -215,9 +215,9 @@ struct ProxyTraits <::Test::I1>
 		// Marshal output
 		seq_op_out& _out = *(seq_op_out*)_out_ptr;
 		Marshal_var _m = _call->marshaler ();
-		_marshal_out (out_s, _m, _out.out_s);
-		_marshal_out (inout_s, _m, _out.inout_s);
-		_marshal_out (_ret, _m, _out._ret);
+		Type < ::Test::SeqLong>::marshal_out (out_s, _m, _out.out_s);
+		Type < ::Test::SeqLong>::marshal_out (inout_s, _m, _out.inout_s);
+		Type < ::Test::SeqLong>::marshal_out (_ret, _m, _out._ret);
 	}
 
 	// any any_op (any in_any, out any out_any, inout any inout_any);
@@ -254,8 +254,8 @@ struct ProxyTraits <::Test::I1>
 			Any in_any;
 
 			// Unmarshal in and inout
-			_unmarshal (_in.in_any, _u, in_any);
-			_unmarshal (_in.inout_any, _u, inout_any);
+			Type <Any>::unmarshal (_in.in_any, _u, in_any);
+			Type <Any>::unmarshal (_in.inout_any, _u, inout_any);
 
 			// Release resources
 			_u = Unmarshal::_nil ();
@@ -269,9 +269,9 @@ struct ProxyTraits <::Test::I1>
 		// Marshal output
 		any_op_out& _out = *(any_op_out*)_out_ptr;
 		Marshal_var _m = _call->marshaler ();
-		_marshal_out (out_any, _m, _out.out_any);
-		_marshal_out (inout_any, _m, _out.inout_any);
-		_marshal_out (_ret, _m, _out._ret);
+		Type <Any>::marshal_out (out_any, _m, _out.out_any);
+		Type <Any>::marshal_out (inout_any, _m, _out.inout_any);
+		Type <Any>::marshal_out (_ret, _m, _out._ret);
 	}
 };
 
@@ -306,15 +306,15 @@ public:
 	{
 		Traits::object_op_in _in;
 		Marshal_var _m = _target ()->create_marshaler ();
-		_marshal_in (in_obj, _m, _in.in_obj);
-		_marshal_in (inout_obj, _m, _in.inout_obj);
+		Type < ::Test::I1>::marshal_in (in_obj, _m, _in.in_obj);
+		Type < ::Test::I1>::marshal_in (inout_obj, _m, _in.inout_obj);
 		Traits::object_op_out _out;
 		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 2 },
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
-		_unmarshal (_out.out_obj, _u, out_obj);
-		_unmarshal (_out.inout_obj, _u, inout_obj);
+		Type < ::Test::I1>::unmarshal (_out.out_obj, _u, out_obj);
+		Type < ::Test::I1>::unmarshal (_out.inout_obj, _u, inout_obj);
 		::Test::I1_var _ret;
-		_unmarshal (_out._ret, _u, _ret);
+		Type < ::Test::I1>::unmarshal (_out._ret, _u, _ret);
 		return _ret;
 	}
 
@@ -322,15 +322,15 @@ public:
 	{
 		Traits::string_op_in _in;
 		Marshal_var _m = _target ()->create_marshaler ();
-		_marshal_in (in_s, _m, _in.in_s);
-		_marshal_in (inout_s, _m, _in.inout_s);
+		Type <String>::marshal_in (in_s, _m, _in.in_s);
+		Type <String>::marshal_in (inout_s, _m, _in.inout_s);
 		Traits::string_op_out _out;
 		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 3 },
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
-		_unmarshal (_out.out_s, _u, out_s);
-		_unmarshal (_out.inout_s, _u, inout_s);
+		Type <String>::unmarshal (_out.out_s, _u, out_s);
+		Type <String>::unmarshal (_out.inout_s, _u, inout_s);
 		String _ret;
-		_unmarshal (_out._ret, _u, _ret);
+		Type <String>::unmarshal (_out._ret, _u, _ret);
 		return _ret;
 	}
 
@@ -338,15 +338,15 @@ public:
 	{
 		Traits::seq_op_in _in;
 		Marshal_var _m = _target ()->create_marshaler ();
-		_marshal_in (in_s, _m, _in.in_s);
-		_marshal_in (inout_s, _m, _in.inout_s);
+		Type < ::Test::SeqLong>::marshal_in (in_s, _m, _in.in_s);
+		Type < ::Test::SeqLong>::marshal_in (inout_s, _m, _in.inout_s);
 		Traits::seq_op_out _out;
 		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 4 },
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
-		_unmarshal (_out.out_s, _u, out_s);
-		_unmarshal (_out.inout_s, _u, inout_s);
+		Type < ::Test::SeqLong>::unmarshal (_out.out_s, _u, out_s);
+		Type < ::Test::SeqLong>::unmarshal (_out.inout_s, _u, inout_s);
 		Test::SeqLong _ret;
-		_unmarshal (_out._ret, _u, _ret);
+		Type < ::Test::SeqLong>::unmarshal (_out._ret, _u, _ret);
 		return _ret;
 	}
 
@@ -354,15 +354,15 @@ public:
 	{
 		Traits::any_op_in _in;
 		Marshal_var _m = _target ()->create_marshaler ();
-		_marshal_in (in_any, _m, _in.in_any);
-		_marshal_in (inout_any, _m, _in.inout_any);
+		Type <Any>::marshal_in (in_any, _m, _in.in_any);
+		Type <Any>::marshal_in (inout_any, _m, _in.inout_any);
 		Traits::any_op_out _out;
 		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 5 },
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
-		_unmarshal (_out.out_any, _u, out_any);
-		_unmarshal (_out.inout_any, _u, inout_any);
+		Type <Any>::unmarshal (_out.out_any, _u, out_any);
+		Type <Any>::unmarshal (_out.inout_any, _u, inout_any);
 		Any _ret;
-		_unmarshal (_out._ret, _u, _ret);
+		Type <Any>::unmarshal (_out._ret, _u, _ret);
 		return _ret;
 	}
 };
@@ -372,13 +372,13 @@ const Parameter ProxyTraits <::Test::I1>::op1_in_params_ [1] = {
 };
 
 const Parameter ProxyTraits <::Test::I1>::object_op_in_params_ [2] = {
-	{ "in_obj", Type <I_var < ::Test::I1> >::type_code },
-	{ "inout_obj", Type <I_var < ::Test::I1> >::type_code }
+	{ "in_obj", Type < ::Test::I1>::type_code },
+	{ "inout_obj", Type < ::Test::I1>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::object_op_out_params_ [2] = {
-	{ "out_obj", Type <I_var < ::Test::I1> >::type_code },
-	{ "inout_obj", Type <I_var < ::Test::I1> >::type_code }
+	{ "out_obj", Type < ::Test::I1>::type_code },
+	{ "inout_obj", Type < ::Test::I1>::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::string_op_in_params_ [2] = {
@@ -414,7 +414,7 @@ const Parameter ProxyTraits <::Test::I1>::any_op_out_params_ [2] = {
 const Operation ProxyTraits <::Test::I1>::operations_ [] = {
 	{ "op1", { op1_in_params_, countof (op1_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper <::Test::I1, op1_request> },
 	{ "throw_no_implement", { 0, 0 }, {0, 0}, Type <void>::type_code, RqProcWrapper <::Test::I1, throw_no_implement_request> },
-	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type <I_var < ::Test::I1> >::type_code, RqProcWrapper <::Test::I1, object_op_request> },
+	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type < ::Test::I1>::type_code, RqProcWrapper <::Test::I1, object_op_request> },
 	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, Type <String>::type_code, RqProcWrapper <::Test::I1, string_op_request> },
 	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, TypeAlias < &::Test::_tc_SeqLong>::type_code, RqProcWrapper <::Test::I1, seq_op_request> },
 	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, Type <Any>::type_code, RqProcWrapper <::Test::I1, any_op_request> }

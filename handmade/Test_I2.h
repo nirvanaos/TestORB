@@ -40,7 +40,7 @@ Long Client <T, ::Test::I2>::op2 (Long p1)
 }
 
 template <>
-struct Type <I_var < ::Test::I2> > : TypeObject < ::Test::I2>
+struct Type < ::Test::I2> : TypeObject < ::Test::I2>
 {
 	static TypeCode_ptr type_code ()
 	{

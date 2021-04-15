@@ -37,7 +37,7 @@ struct ProxyTraits <::Test::I3_factory>
 		// Marshal output
 		create_out& _out = *(create_out*)_out_params;
 		Marshal_var _m = _call->marshaler ();
-		_marshal_out (_ret, _m, _out._ret);
+		Type < ::Test::I3>::marshal_out (_ret, _m, _out._ret);
 	}
 };
 
@@ -62,7 +62,7 @@ public:
 		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 0 },
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
 		::Test::I3_var _ret;
-		_unmarshal (_out._ret, _u, _ret);
+		Type < ::Test::I3>::unmarshal (_out._ret, _u, _ret);
 		return _ret;
 	}
 };
@@ -72,7 +72,7 @@ const Parameter ProxyTraits <::Test::I3_factory>::create_in_params_ [1] = {
 };
 
 const Operation ProxyTraits <::Test::I3_factory>::operations_ [] = {
-	{ "create", { create_in_params_, countof (create_in_params_) }, {0, 0}, TypeI < ::Test::I3>::type_code, RqProcWrapper <::Test::I3_factory, create_request> }
+	{ "create", { create_in_params_, countof (create_in_params_) }, {0, 0}, Type < ::Test::I3>::type_code, RqProcWrapper <::Test::I3_factory, create_request> }
 };
 
 const Char* const ProxyTraits <::Test::I3_factory>::interfaces_ [] = {
