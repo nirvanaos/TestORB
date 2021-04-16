@@ -20,28 +20,38 @@ class MyException : public ::CORBA::UserException
 public:
 	NIRVANA_EXCEPTION_DCL (MyException);
 
-	::CORBA::Nirvana::Type <std::string>::Member_ret param () const
+	::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Member_ret param () const
 	{
 		return _data.param;
 	}
-
-	void param (::CORBA::Nirvana::Type <std::string>::C_in val)
+	void param (const ::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Var_type& val)
 	{
 		_data.param = val;
 	}
+	void param (::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Var_type&& val)
+	{
+		_data.param = std::move (val);
+	}
 
-	::CORBA::Nirvana::Type <bool>::Member_ret bparam () const
+	::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_ret bparam () const
 	{
 		return _data.bparam;
 	}
-
-	void bparam (::CORBA::Nirvana::Type <bool>::C_in val)
+	void bparam (const ::CORBA::Nirvana::Type < ::CORBA::Boolean>::Var_type& val)
 	{
 		_data.bparam = val;
 	}
 
 	struct _Data
 	{
+		_Data () :
+			bparam (::CORBA::FALSE)
+		{}
+		_Data (const _Data&) = default;
+		_Data (_Data&&) = default;
+		_Data& operator = (const _Data&) = default;
+		_Data& operator = (_Data&&) = default;
+
 		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Member_type param;
 		::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_type bparam;
 	};
@@ -123,16 +133,20 @@ public:
 	{
 		return _ws_member;
 	}
-	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::C_in val)
+	void ws_member (const ::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var_type& val)
 	{
 		_ws_member = val;
+	}
+	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var_type&& val)
+	{
+		_ws_member = std::move (val);
 	}
 
 	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_ret l_member () const
 	{
 		return _l_member;
 	}
-	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::C_in val)
+	void l_member (const ::CORBA::Nirvana::Type < ::CORBA::Long>::Var_type& val)
 	{
 		_l_member = val;
 	}
@@ -227,36 +241,36 @@ struct Definitions < ::Test::I1>
 	// Interface definitions will be here
 };
 
-BRIDGE_BEGIN (::Test::I1, "IDL:Test/I1:1.0")
-BASE_STRUCT_ENTRY (Object, CORBA_Object)
-BRIDGE_EPV
+NIRVANA_BRIDGE_BEGIN (::Test::I1, "IDL:Test/I1:1.0")
+NIRVANA_BASE_ENTRY (Object, CORBA_Object)
+NIRVANA_BRIDGE_EPV
 Long (*op1) (Bridge < ::Test::I1>*, Long p1, Interface*);
 void (*throw_no_implement) (Bridge < ::Test::I1>*, Interface*);
 Interface* (*object_op) (Bridge < ::Test::I1>*, Interface* in_obj, Interface** out_obj, Interface** inout_obj, Interface*);
 Type <String>::ABI_ret (*string_op) (Bridge < ::Test::I1>*, Type <String>::ABI_in in_s, Type <String>::ABI_out out_s, Type <String>::ABI_inout inout_s, Interface*);
 Type < ::Test::SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::SeqLong>::ABI_in in_s, Type <::Test::SeqLong>::ABI_out out_s, Type <::Test::SeqLong>::ABI_inout inout_s, Interface*);
 Type <Any>::ABI_ret (*any_op) (Bridge < ::Test::I1>*, Type <Any>::ABI_in, Type <Any>::ABI_out, Type <Any>::ABI_inout, Interface*);
-BRIDGE_END ()
+NIRVANA_BRIDGE_END ()
 
 template <class T>
 class Client <T, ::Test::I1> :
 	public T
 {
 public:
-	Long op1 (Long p1);
+	Type <Long>::Var_type op1 (Long p1);
 	void throw_no_implement ();
-	::Test::I1_var object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
-	std::string string_op (String_in, String_out, String_inout);
+	Type < ::Test::I1>::Var_type object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
+	Type <String>::Var_type string_op (String_in, String_out, String_inout);
 	Type < ::Test::SeqLong>::Var_type seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
-	Any any_op (Any_in, Any_out, Any_inout);
+	Type <Any>::Var_type any_op (Any_in, Any_out, Any_inout);
 };
 
 template <class T>
-Long Client <T, ::Test::I1>::op1 (Long p1)
+Type <Long>::Var_type Client <T, ::Test::I1>::op1 (Long p1)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
-	Long _ret = (_b._epv ().epv.op1) (&_b, p1, &_env);
+	Type <Long>::C_ret _ret = (_b._epv ().epv.op1) (&_b, p1, &_env);
 	_env.check ();
 	return _ret;
 }
@@ -271,17 +285,17 @@ void Client <T, ::Test::I1>::throw_no_implement ()
 }
 
 template <class T>
-::Test::I1_var Client <T, ::Test::I1>::object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj)
+Type < ::Test::I1>::Var_type Client <T, ::Test::I1>::object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
-	I_ret < ::Test::I1> _ret = (_b._epv ().epv.object_op) (&_b, &in_obj, &out_obj, &inout_obj, &_env);
+	Type < ::Test::I1>::C_ret _ret = (_b._epv ().epv.object_op) (&_b, &in_obj, &out_obj, &inout_obj, &_env);
 	_env.check ();
 	return _ret;
 }
 
 template <class T>
-std::string Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::String_out out_s, CORBA::String_inout inout_s)
+Type <String>::Var_type Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::String_out out_s, CORBA::String_inout inout_s)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -301,7 +315,7 @@ Type < ::Test::SeqLong>::Var_type Client <T, ::Test::I1>::seq_op (Type <::Test::
 }
 
 template <class T>
-Any Client <T, ::Test::I1>::any_op (Any_in in_any, Any_out out_any, Any_inout inout_any)
+Type <Any>::Var_type Client <T, ::Test::I1>::any_op (Any_in in_any, Any_out out_any, Any_inout inout_any)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));

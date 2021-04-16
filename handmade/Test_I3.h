@@ -18,13 +18,13 @@ extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I3;
 namespace CORBA {
 namespace Nirvana {
 
-BRIDGE_BEGIN (::Test::I3, "IDL:Test/I3:1.0")
-BASE_STRUCT_ENTRY (CORBA::Object, CORBA_Object)
-BASE_STRUCT_ENTRY (::Test::I1, Test_I1)
-BASE_STRUCT_ENTRY (::Test::I2, Test_I2)
-BRIDGE_EPV
+NIRVANA_BRIDGE_BEGIN (::Test::I3, "IDL:Test/I3:1.0")
+NIRVANA_BASE_ENTRY (CORBA::Object, CORBA_Object)
+NIRVANA_BASE_ENTRY (::Test::I1, Test_I1)
+NIRVANA_BASE_ENTRY (::Test::I2, Test_I2)
+NIRVANA_BRIDGE_EPV
 Long (*op3) (Bridge < ::Test::I3>*, Long p1, Interface*);
-BRIDGE_END ()
+NIRVANA_BRIDGE_END ()
 
 template <class T>
 class Client <T, ::Test::I3> :
