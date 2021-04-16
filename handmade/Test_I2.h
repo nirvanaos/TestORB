@@ -6,7 +6,6 @@ namespace Test {
 class I2;
 typedef ::CORBA::Nirvana::I_ptr <I2> I2_ptr;
 typedef ::CORBA::Nirvana::I_var <I2> I2_var;
-typedef ::CORBA::Nirvana::I_out <I2> I2_out;
 
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I2;
 

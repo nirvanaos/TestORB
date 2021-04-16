@@ -8,10 +8,7 @@ namespace Test {
 
 typedef ::CORBA::Nirvana::Sequence < ::CORBA::Long> SeqLong;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_SeqLong;
-
 typedef ::CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
-typedef ::CORBA::Nirvana::Type <SeqLong>::C_out SeqLong_out;
-typedef ::CORBA::Nirvana::Type <SeqLong>::C_inout SeqLong_inout;
 
 // exception MyException
 
@@ -24,7 +21,7 @@ public:
 	{
 		return _data.param;
 	}
-	void param (const ::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Var_type& val)
+	void param (::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Const_type val)
 	{
 		_data.param = val;
 	}
@@ -37,7 +34,7 @@ public:
 	{
 		return _data.bparam;
 	}
-	void bparam (const ::CORBA::Nirvana::Type < ::CORBA::Boolean>::Var_type& val)
+	void bparam (::CORBA::Nirvana::Type < ::CORBA::Boolean>::Const_type val)
 	{
 		_data.bparam = val;
 	}
@@ -118,6 +115,8 @@ struct Type <::Test::MyException::_Data> :
 
 namespace Test {
 
+class I1;
+
 class MyStruct
 {
 public:
@@ -133,7 +132,7 @@ public:
 	{
 		return _ws_member;
 	}
-	void ws_member (const ::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var_type& val)
+	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Const_type val)
 	{
 		_ws_member = val;
 	}
@@ -146,15 +145,29 @@ public:
 	{
 		return _l_member;
 	}
-	void l_member (const ::CORBA::Nirvana::Type < ::CORBA::Long>::Var_type& val)
+	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::Const_type val)
 	{
 		_l_member = val;
+	}
+
+	::CORBA::Nirvana::TypeItf <I1>::Member_ret itf () const
+	{
+		return _itf;
+	}
+	void itf (::CORBA::Nirvana::TypeItf <I1>::Const_type& val)
+	{
+		_itf = val;
+	}
+	void itf (::CORBA::Nirvana::TypeItf <I1>::Var_type&& val)
+	{
+		_itf = std::move (val);
 	}
 
 private:
 	friend struct ::CORBA::Nirvana::Type <MyStruct>;
 	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member_type _ws_member;
 	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_type _l_member;
+	::CORBA::Nirvana::TypeItf <I1>::Member_type _itf;
 };
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyStruct;
 
@@ -171,6 +184,7 @@ struct ABI < ::Test::MyStruct>
 {
 	Type <Type <WString>::Member_type>::ABI_type ws_member;
 	Type <Type <Long>::Member_type>::ABI_type l_member;
+	Type <TypeItf < ::Test::I1>::Member_type>::ABI_type itf;
 };
 
 template <>
@@ -181,6 +195,7 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 	{
 		Type <Type <WString>::Member_type>::check (val.ws_member);
 		Type <Type <Long>::Member_type>::check (val.l_member);
+		Type <TypeItf < ::Test::I1>::Member_type>::check (val.itf);
 	}
 
 	static TypeCode_ptr type_code ()
@@ -192,33 +207,34 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 	{
 		Type <Type <WString>::Member_type>::marshal_in (src._ws_member, marshaler, dst.ws_member);
 		Type <Type <Long>::Member_type>::marshal_in (src._l_member, marshaler, dst.l_member);
+		Type <TypeItf < ::Test::I1>::Member_type>::marshal_in (src._itf, marshaler, dst.itf);
 	}
 
 	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
 		Type <Type <WString>::Member_type>::marshal_out (src._ws_member, marshaler, dst.ws_member);
 		Type <Type <Long>::Member_type>::marshal_out (src._l_member, marshaler, dst.l_member);
+		Type <TypeItf < ::Test::I1>::Member_type>::marshal_out (src._itf, marshaler, dst.itf);
 	}
 
 	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
 	{
 		Type <Type <WString>::Member_type>::unmarshal (src.ws_member, unmarshaler, dst._ws_member);
 		Type <Type <Long>::Member_type>::unmarshal (src.l_member, unmarshaler, dst._l_member);
+		Type <TypeItf < ::Test::I1>::Member_type>::unmarshal (src.itf, unmarshaler, dst._itf);
 	}
 };
 
 }
 }
 
-// interface I1
-
 namespace Test {
 
-class I1;
-typedef CORBA::Nirvana::I_ptr <I1> I1_ptr;
-typedef CORBA::Nirvana::I_var <I1> I1_var;
-typedef CORBA::Nirvana::I_out <I1> I1_out;
+typedef ::CORBA::Nirvana::Type <MyStruct>::C_var MyStruct_var;
 
+// interface I1
+
+class I1;
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
 
 }
@@ -259,7 +275,7 @@ class Client <T, ::Test::I1> :
 public:
 	Type <Long>::Var_type op1 (Long p1);
 	void throw_no_implement ();
-	Type < ::Test::I1>::Var_type object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj);
+	TypeItf < ::Test::I1>::Var_type object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj);
 	Type <String>::Var_type string_op (String_in, String_out, String_inout);
 	Type < ::Test::SeqLong>::Var_type seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
 	Type <Any>::Var_type any_op (Any_in, Any_out, Any_inout);
@@ -285,7 +301,7 @@ void Client <T, ::Test::I1>::throw_no_implement ()
 }
 
 template <class T>
-Type < ::Test::I1>::Var_type Client <T, ::Test::I1>::object_op (I_in < ::Test::I1> in_obj, I_out < ::Test::I1> out_obj, I_inout < ::Test::I1> inout_obj)
+TypeItf < ::Test::I1>::Var_type Client <T, ::Test::I1>::object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -331,6 +347,9 @@ namespace Test {
 
 class I1 : public CORBA::Nirvana::ClientInterface <I1, ::CORBA::Object>
 {};
+
+typedef CORBA::Nirvana::I_ptr <I1> I1_ptr;
+typedef CORBA::Nirvana::I_var <I1> I1_var;
 
 }
 

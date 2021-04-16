@@ -9,7 +9,6 @@ namespace Test {
 class I1_factory;
 typedef CORBA::Nirvana::I_ptr <I1_factory> I1_factory_ptr;
 typedef CORBA::Nirvana::I_var <I1_factory> I1_factory_var;
-typedef CORBA::Nirvana::I_out <I1_factory> I1_factory_out;
 
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1_factory;
 
