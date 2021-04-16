@@ -10,6 +10,12 @@ typedef ::CORBA::Nirvana::Sequence < ::CORBA::Long> SeqLong;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_SeqLong;
 typedef ::CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
 
+// typedef SeqLong MyAlias;
+
+typedef SeqLong MyAlias;
+extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyAlias;
+typedef SeqLong_var MyAlias_var;
+
 // exception MyException
 
 class MyException : public ::CORBA::UserException
@@ -116,6 +122,9 @@ struct Type <::Test::MyException::_Data> :
 namespace Test {
 
 class I1;
+typedef CORBA::Nirvana::TypeItf <I1>::C_ptr I1_ptr;
+typedef CORBA::Nirvana::TypeItf <I1>::C_var I1_var;
+extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
 
 class MyStruct
 {
@@ -235,6 +244,8 @@ typedef ::CORBA::Nirvana::Type <MyStruct>::C_var MyStruct_var;
 // interface I1
 
 class I1;
+typedef CORBA::Nirvana::TypeItf <I1>::C_ptr I1_ptr;
+typedef CORBA::Nirvana::TypeItf <I1>::C_var I1_var;
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
 
 }
@@ -347,9 +358,6 @@ namespace Test {
 
 class I1 : public CORBA::Nirvana::ClientInterface <I1, ::CORBA::Object>
 {};
-
-typedef CORBA::Nirvana::I_ptr <I1> I1_ptr;
-typedef CORBA::Nirvana::I_var <I1> I1_var;
 
 }
 

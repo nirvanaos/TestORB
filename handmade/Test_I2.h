@@ -4,10 +4,9 @@
 namespace Test {
 
 class I2;
-typedef ::CORBA::Nirvana::I_ptr <I2> I2_ptr;
-typedef ::CORBA::Nirvana::I_var <I2> I2_var;
-
-extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I2;
+typedef ::CORBA::Nirvana::TypeItf <I2>::C_ptr I2_ptr;
+typedef ::CORBA::Nirvana::TypeItf <I2>::C_var I2_var;
+extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_I2;
 
 }
 

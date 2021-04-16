@@ -7,9 +7,8 @@
 namespace Test {
 
 class I3;
-typedef ::CORBA::Nirvana::I_ptr <I3> I3_ptr;
-typedef ::CORBA::Nirvana::I_var <I3> I3_var;
-
+typedef ::CORBA::Nirvana::TypeItf <I3>::C_ptr I3_ptr;
+typedef ::CORBA::Nirvana::TypeItf <I3>::C_var I3_var;
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I3;
 
 }

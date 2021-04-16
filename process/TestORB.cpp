@@ -113,12 +113,26 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_MyStruct->member_type (0)->kind (), TCKind::tk_wstring);
 	EXPECT_EQ (_tc_MyStruct->member_type (1)->kind (), TCKind::tk_long);
 
-	EXPECT_EQ (_tc_SeqLong->kind (), TCKind::tk_sequence);
-	EXPECT_EQ (_tc_SeqLong->length (), 0);
-	TypeCode_var l = _tc_SeqLong->content_type ();
+	EXPECT_EQ (_tc_SeqLong->kind (), TCKind::tk_alias);
+	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
+	EXPECT_EQ (_tc_SeqLong->name (), "SeqLong");
+	
+	TypeCode_var seq = _tc_SeqLong->content_type ();
+	EXPECT_EQ (seq->kind (), TCKind::tk_sequence);
+	EXPECT_EQ (seq->length (), 0);
+
+	EXPECT_FALSE (_tc_SeqLong->equal (seq));
+	EXPECT_TRUE (_tc_SeqLong->equivalent (seq));
+	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
+
+	TypeCode_var l = seq->content_type ();
 	EXPECT_EQ (l->kind (), TCKind::tk_long);
 
-	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
+	EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
+	EXPECT_EQ (_tc_MyAlias->id (), "IDL:Test/MyAlias:1.0");
+	EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
+	EXPECT_TRUE (_tc_MyAlias->content_type ()->equal (_tc_SeqLong));
+	EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
 }
 
 }

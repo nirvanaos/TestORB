@@ -6,6 +6,8 @@ module Test {
 
 typedef sequence <long> SeqLong;
 
+typedef SeqLong MyAlias;
+
 exception MyException
 {
 	string param;

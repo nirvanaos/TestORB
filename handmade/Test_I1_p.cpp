@@ -2,7 +2,31 @@
 #include <CORBA/Proxy/Proxy.h>
 #include "Test_I1_s.h"
 
-NIRVANA_EXPORT (_exp_Test_TC_SeqLong, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeSequence <CORBA::Long>)
+// SeqLong
+
+extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_SeqLong_TC;
+
+template <>
+class CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC> : 
+	public CORBA::Nirvana::TypeCodeTypeDefImpl <&_exp_Test_SeqLong_TC, CORBA::Nirvana::Sequence <CORBA::Long> >
+{};
+
+const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC> >::name_ [] = "SeqLong";
+
+NIRVANA_EXPORT (_exp_Test_SeqLong_TC, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC>)
+
+// MyAlias
+
+extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_MyAlias_TC;
+
+template <>
+class CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC> :
+	public CORBA::Nirvana::TypeCodeTypeDefImpl <&_exp_Test_MyAlias_TC, CORBA::Nirvana::Alias <&Test::_tc_SeqLong> >
+{};
+
+const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC> >::name_ [] = "MyAlias";
+
+NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
 
 namespace CORBA {
 namespace Nirvana {
@@ -392,13 +416,13 @@ const Parameter ProxyTraits <::Test::I1>::string_op_out_params_ [2] = {
 };
 
 const Parameter ProxyTraits <::Test::I1>::seq_op_in_params_ [2] = {
-	{ "in_s", TypeAlias < &::Test::_tc_SeqLong>::type_code },
-	{ "inout_s", TypeAlias < &::Test::_tc_SeqLong>::type_code }
+	{ "in_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code },
+	{ "inout_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::seq_op_out_params_ [2] = {
-	{ "out_s", TypeAlias < &::Test::_tc_SeqLong>::type_code },
-	{ "inout_s", TypeAlias < &::Test::_tc_SeqLong>::type_code }
+	{ "out_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code },
+	{ "inout_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code }
 };
 
 const Parameter ProxyTraits <::Test::I1>::any_op_in_params_ [2] = {
@@ -416,7 +440,7 @@ const Operation ProxyTraits <::Test::I1>::operations_ [] = {
 	{ "throw_no_implement", { 0, 0 }, {0, 0}, Type <void>::type_code, RqProcWrapper <::Test::I1, throw_no_implement_request> },
 	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type < ::Test::I1>::type_code, RqProcWrapper <::Test::I1, object_op_request> },
 	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, Type <String>::type_code, RqProcWrapper <::Test::I1, string_op_request> },
-	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, TypeAlias < &::Test::_tc_SeqLong>::type_code, RqProcWrapper <::Test::I1, seq_op_request> },
+	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code, RqProcWrapper <::Test::I1, seq_op_request> },
 	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, Type <Any>::type_code, RqProcWrapper <::Test::I1, any_op_request> }
 };
 
