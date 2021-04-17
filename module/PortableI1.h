@@ -27,7 +27,7 @@ public:
 		throw CORBA::NO_IMPLEMENT ();
 	}
 
-	virtual I1_ptr object_op (I1_ptr in_obj, I1_var& out_obj, I1_var& inout_obj)
+	virtual I1_var object_op (I1_ptr in_obj, I1_var& out_obj, I1_var& inout_obj)
 	{
 		return ImplI1::object_op (in_obj, out_obj, inout_obj);
 	}

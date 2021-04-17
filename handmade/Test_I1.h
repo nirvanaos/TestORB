@@ -268,9 +268,9 @@ NIRVANA_BRIDGE_EPV
 Long (*op1) (Bridge < ::Test::I1>*, Long p1, Interface*);
 void (*throw_no_implement) (Bridge < ::Test::I1>*, Interface*);
 Interface* (*object_op) (Bridge < ::Test::I1>*, Interface* in_obj, Interface** out_obj, Interface** inout_obj, Interface*);
-Type <String>::ABI_ret (*string_op) (Bridge < ::Test::I1>*, Type <String>::ABI_in in_s, Type <String>::ABI_out out_s, Type <String>::ABI_inout inout_s, Interface*);
-Type < ::Test::SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::SeqLong>::ABI_in in_s, Type <::Test::SeqLong>::ABI_out out_s, Type <::Test::SeqLong>::ABI_inout inout_s, Interface*);
-Type <Any>::ABI_ret (*any_op) (Bridge < ::Test::I1>*, Type <Any>::ABI_in, Type <Any>::ABI_out, Type <Any>::ABI_inout, Interface*);
+Type <String>::ABI_ret (*string_op) (Bridge < ::Test::I1>*, Type <String>::ABI_in in_s, Type <String>::ABI_out out_s, Type <String>::ABI_out inout_s, Interface*);
+Type < ::Test::SeqLong>::ABI_ret (*seq_op) (Bridge < ::Test::I1>*, Type <::Test::SeqLong>::ABI_in in_s, Type <::Test::SeqLong>::ABI_out out_s, Type <::Test::SeqLong>::ABI_out inout_s, Interface*);
+Type <Any>::ABI_ret (*any_op) (Bridge < ::Test::I1>*, Type <Any>::ABI_in, Type <Any>::ABI_out, Type <Any>::ABI_out, Interface*);
 NIRVANA_BRIDGE_END ()
 
 template <class T>

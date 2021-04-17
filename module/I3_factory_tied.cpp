@@ -12,11 +12,11 @@ class TiedI3 :
 	public ImplI1
 {
 public:
-	TiedI3 (CORBA::Long addendum) :
+	TiedI3 (int32_t addendum) :
 		addendum_ (addendum)
 	{}
 
-	CORBA::Long op1 (CORBA::Long p1) const
+	int32_t op1 (int32_t p1) const
 	{
 		return p1 + addendum_;
 	}
@@ -26,18 +26,28 @@ public:
 		throw CORBA::NO_IMPLEMENT ();
 	}
 
-	CORBA::Long op2 (CORBA::Long p1) const
+	int32_t addendum () const
+	{
+		return addendum_;
+	}
+
+	void addendum (int32_t a)
+	{
+		addendum_ = a;
+	}
+
+	int32_t op2 (int32_t p1) const
 	{
 		return p1 + 2 * addendum_;
 	}
 
-	CORBA::Long op3 (CORBA::Long p1) const
+	int32_t op3 (int32_t p1) const
 	{
 		return p1 + 3 * addendum_;
 	}
 
 private:
-	CORBA::Long addendum_;
+	int32_t addendum_;
 };
 
 class I3_factory_tied :

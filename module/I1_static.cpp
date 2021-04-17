@@ -29,7 +29,9 @@ public:
 	}
 
 	void addendum (int32_t)
-	{}
+	{
+		throw CORBA::NO_IMPLEMENT ();
+	}
 };
 
 }

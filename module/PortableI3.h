@@ -27,7 +27,7 @@ public:
 		throw CORBA::NO_IMPLEMENT ();
 	}
 
-	virtual I1_ptr object_op (I1_ptr in_obj, I1_var& out_obj, I1_var& inout_obj)
+	virtual I1_var object_op (I1_ptr in_obj, I1_var& out_obj, I1_var& inout_obj)
 	{
 		return ImplI1::object_op (in_obj, out_obj, inout_obj);
 	}
@@ -45,6 +45,16 @@ public:
 	virtual CORBA::Any any_op (const CORBA::Any& in_a, CORBA::Any& out_a, CORBA::Any& inout_a)
 	{
 		return ImplI1::any_op (in_a, out_a, inout_a);
+	}
+
+	virtual int32_t addendum ()
+	{
+		return addendum_;
+	}
+
+	virtual void addendum (int32_t a)
+	{
+		addendum_ = a;
 	}
 
 	virtual CORBA::Long op2 (CORBA::Long p1)

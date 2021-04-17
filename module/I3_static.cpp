@@ -23,6 +23,16 @@ public:
 		throw CORBA::NO_IMPLEMENT ();
 	}
 
+	static int32_t addendum ()
+	{
+		return TestORB::MAGIC_CONST;
+	}
+
+	void addendum (int32_t)
+	{
+		throw CORBA::NO_IMPLEMENT ();
+	}
+
 	static CORBA::Long op2 (CORBA::Long p1)
 	{
 		return p1 + 2 * TestORB::MAGIC_CONST;
