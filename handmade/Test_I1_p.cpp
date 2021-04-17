@@ -11,6 +11,7 @@ class CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC> :
 	public CORBA::Nirvana::TypeCodeTypeDefImpl <&_exp_Test_SeqLong_TC, CORBA::Nirvana::Sequence <CORBA::Long> >
 {};
 
+template <>
 const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC> >::name_ [] = "SeqLong";
 
 NIRVANA_EXPORT (_exp_Test_SeqLong_TC, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC>)
@@ -24,6 +25,7 @@ class CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC> :
 	public CORBA::Nirvana::TypeCodeTypeDefImpl <&_exp_Test_MyAlias_TC, CORBA::Nirvana::Alias <&Test::_tc_SeqLong> >
 {};
 
+template <>
 const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC> >::name_ [] = "MyAlias";
 
 NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
@@ -197,16 +199,16 @@ struct ProxyTraits <::Test::I1>
 
 	struct seq_op_in
 	{
-		Type < ::Test::SeqLong>::ABI_type in_s;
-		Type < ::Test::SeqLong>::ABI_type inout_s;
+		Type < ::Test::SeqLong>::ABI in_s;
+		Type < ::Test::SeqLong>::ABI inout_s;
 	};
 	static const Parameter seq_op_in_params_ [2];
 
 	struct seq_op_out
 	{
-		Type < ::Test::SeqLong>::ABI_type out_s;
-		Type < ::Test::SeqLong>::ABI_type inout_s;
-		Type < ::Test::SeqLong>::ABI_type _ret;
+		Type < ::Test::SeqLong>::ABI out_s;
+		Type < ::Test::SeqLong>::ABI inout_s;
+		Type < ::Test::SeqLong>::ABI _ret;
 	};
 	static const Parameter seq_op_out_params_ [2];
 

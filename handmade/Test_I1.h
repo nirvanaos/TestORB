@@ -25,7 +25,7 @@ public:
 	{
 		_data._param = val;
 	}
-	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Var_type&& val)
+	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Var&& val)
 	{
 		_data._param = std::move (val);
 	}
@@ -74,33 +74,33 @@ const Char RepIdOf < ::Test::MyException>::repository_id_ [] = "IDL:Test/MyExcep
 template <>
 struct ABI < ::Test::MyException::_Data>
 {
-	Type <Type <String>::Member_type>::ABI_type param;
-	Type <Type <Boolean>::Member_type>::ABI_type bparam;
+	Type <Type <String>::Member_type>::ABI param;
+	Type <Type <Boolean>::Member_type>::ABI bparam;
 };
 
 template <>
 struct Type < ::Test::MyException::_Data> :
 	TypeVarLen < ::Test::MyException::_Data, Type <Type <String>::Member_type>::has_check>
 {
-	static void check (const ABI_type& val)
+	static void check (const ABI& val)
 	{
 		Type <Type <String>::Member_type>::check (val.param);
 		Type <Type <Boolean>::Member_type>::check (val.bparam);
 	}
 
-	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
+	static void marshal_in (const Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
 		Type <Type <String>::Member_type>::marshal_in (src._param, marshaler, dst.param);
 		Type <Type <Boolean>::Member_type>::marshal_in (src._bparam, marshaler, dst.bparam);
 	}
 
-	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
+	static void marshal_out (Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
 		Type <Type <String>::Member_type>::marshal_out (src._param, marshaler, dst.param);
 		Type <Type <Boolean>::Member_type>::marshal_out (src._bparam, marshaler, dst.bparam);
 	}
 
-	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
+	static void unmarshal (const ABI& src, Unmarshal_ptr unmarshaler, Var& dst)
 	{
 		Type <Type <String>::Member_type>::unmarshal (src.param, unmarshaler, dst._param);
 		Type <Type <Boolean>::Member_type>::unmarshal (src.bparam, unmarshaler, dst._bparam);
@@ -138,7 +138,7 @@ public:
 	{
 		_ws_member = val;
 	}
-	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var_type&& val)
+	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var&& val)
 	{
 		_ws_member = std::move (val);
 	}
@@ -160,7 +160,7 @@ public:
 	{
 		_itf = val;
 	}
-	void itf (::CORBA::Nirvana::TypeItf <I1>::Var_type&& val)
+	void itf (::CORBA::Nirvana::TypeItf <I1>::Var&& val)
 	{
 		_itf = std::move (val);
 	}
@@ -185,16 +185,16 @@ const Char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1
 template <>
 struct ABI < ::Test::MyStruct>
 {
-	Type <Type <WString>::Member_type>::ABI_type ws_member;
-	Type <Type <Long>::Member_type>::ABI_type l_member;
-	Type <TypeItf < ::Test::I1>::Member_type>::ABI_type itf;
+	Type <Type <WString>::Member_type>::ABI ws_member;
+	Type <Type <Long>::Member_type>::ABI l_member;
+	Type <TypeItf < ::Test::I1>::Member_type>::ABI itf;
 };
 
 template <>
 struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 	Type <Type <WString>::Member_type>::has_check>
 {
-	static void check (const ABI_type& val)
+	static void check (const ABI& val)
 	{
 		Type <Type <WString>::Member_type>::check (val.ws_member);
 		Type <Type <Long>::Member_type>::check (val.l_member);
@@ -206,21 +206,21 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 		return ::Test::_tc_MyStruct;
 	}
 
-	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
+	static void marshal_in (const Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
 		Type <Type <WString>::Member_type>::marshal_in (src._ws_member, marshaler, dst.ws_member);
 		Type <Type <Long>::Member_type>::marshal_in (src._l_member, marshaler, dst.l_member);
 		Type <TypeItf < ::Test::I1>::Member_type>::marshal_in (src._itf, marshaler, dst.itf);
 	}
 
-	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
+	static void marshal_out (Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
 		Type <Type <WString>::Member_type>::marshal_out (src._ws_member, marshaler, dst.ws_member);
 		Type <Type <Long>::Member_type>::marshal_out (src._l_member, marshaler, dst.l_member);
 		Type <TypeItf < ::Test::I1>::Member_type>::marshal_out (src._itf, marshaler, dst.itf);
 	}
 
-	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
+	static void unmarshal (const ABI& src, Unmarshal_ptr unmarshaler, Var& dst)
 	{
 		Type <Type <WString>::Member_type>::unmarshal (src.ws_member, unmarshaler, dst._ws_member);
 		Type <Type <Long>::Member_type>::unmarshal (src.l_member, unmarshaler, dst._l_member);
@@ -278,16 +278,16 @@ class Client <T, ::Test::I1> :
 	public T
 {
 public:
-	Type <Long>::Var_type op1 (Long p1);
+	Type <Long>::Var op1 (Long p1);
 	void throw_no_implement ();
-	TypeItf < ::Test::I1>::Var_type object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj);
-	Type <String>::Var_type string_op (String_in, String_out, String_inout);
-	Type < ::Test::SeqLong>::Var_type seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
-	Type <Any>::Var_type any_op (Any_in, Any_out, Any_inout);
+	TypeItf < ::Test::I1>::Var object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj);
+	Type <String>::Var string_op (String_in, String_out, String_inout);
+	Type < ::Test::SeqLong>::Var seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
+	Type <Any>::Var any_op (Any_in, Any_out, Any_inout);
 };
 
 template <class T>
-Type <Long>::Var_type Client <T, ::Test::I1>::op1 (Long p1)
+Type <Long>::Var Client <T, ::Test::I1>::op1 (Long p1)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -306,7 +306,7 @@ void Client <T, ::Test::I1>::throw_no_implement ()
 }
 
 template <class T>
-TypeItf < ::Test::I1>::Var_type Client <T, ::Test::I1>::object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj)
+TypeItf < ::Test::I1>::Var Client <T, ::Test::I1>::object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -316,7 +316,7 @@ TypeItf < ::Test::I1>::Var_type Client <T, ::Test::I1>::object_op (TypeItf < ::T
 }
 
 template <class T>
-Type <String>::Var_type Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::String_out out_s, CORBA::String_inout inout_s)
+Type <String>::Var Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::String_out out_s, CORBA::String_inout inout_s)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -326,7 +326,7 @@ Type <String>::Var_type Client <T, ::Test::I1>::string_op (CORBA::String_in in_s
 }
 
 template <class T>
-Type < ::Test::SeqLong>::Var_type Client <T, ::Test::I1>::seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s)
+Type < ::Test::SeqLong>::Var Client <T, ::Test::I1>::seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -336,7 +336,7 @@ Type < ::Test::SeqLong>::Var_type Client <T, ::Test::I1>::seq_op (Type <::Test::
 }
 
 template <class T>
-Type <Any>::Var_type Client <T, ::Test::I1>::any_op (Any_in in_any, Any_out out_any, Any_inout inout_any)
+Type <Any>::Var Client <T, ::Test::I1>::any_op (Any_in in_any, Any_out out_any, Any_inout inout_any)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
