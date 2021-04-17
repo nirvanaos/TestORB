@@ -17,11 +17,11 @@ class MyException : public ::CORBA::UserException
 public:
 	NIRVANA_EXCEPTION_DCL (MyException);
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::MemberRef param () const
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::ConstRef param () const
 	{
 		return _data._param;
 	}
-	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::MemberRef val)
+	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::ConstRef val)
 	{
 		_data._param = val;
 	}
@@ -30,11 +30,11 @@ public:
 		_data._param = std::move (val);
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Boolean>::MemberRef bparam () const
+	::CORBA::Nirvana::Type < ::CORBA::Boolean>::ConstRef bparam () const
 	{
 		return _data._bparam;
 	}
-	void bparam (::CORBA::Nirvana::Type < ::CORBA::Boolean>::MemberRef val)
+	void bparam (::CORBA::Nirvana::Type < ::CORBA::Boolean>::ConstRef val)
 	{
 		_data._bparam = val;
 	}
@@ -130,11 +130,11 @@ public:
 	MyStruct& operator = (const MyStruct&) = default;
 	MyStruct& operator = (MyStruct&&) = default;
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::MemberRef ws_member () const
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::ConstRef ws_member () const
 	{
 		return _ws_member;
 	}
-	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::MemberRef val)
+	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::ConstRef val)
 	{
 		_ws_member = val;
 	}
@@ -143,20 +143,20 @@ public:
 		_ws_member = std::move (val);
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Long>::MemberRef l_member () const
+	::CORBA::Nirvana::Type < ::CORBA::Long>::ConstRef l_member () const
 	{
 		return _l_member;
 	}
-	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::MemberRef val)
+	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::ConstRef val)
 	{
 		_l_member = val;
 	}
 
-	::CORBA::Nirvana::TypeItf <I1>::MemberRef itf () const
+	::CORBA::Nirvana::TypeItf <I1>::ConstRef itf () const
 	{
 		return _itf;
 	}
-	void itf (::CORBA::Nirvana::TypeItf <I1>::MemberRef val)
+	void itf (::CORBA::Nirvana::TypeItf <I1>::ConstRef val)
 	{
 		_itf = val;
 	}
