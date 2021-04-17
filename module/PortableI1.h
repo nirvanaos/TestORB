@@ -13,11 +13,11 @@ class PortableI1 :
 	public ImplI1
 {
 public:
-	PortableI1 (CORBA::Long addendum) :
+	PortableI1 (int32_t addendum) :
 		addendum_ (addendum)
 	{}
 
-	virtual CORBA::Long op1 (CORBA::Long p1)
+	virtual int32_t op1 (int32_t p1)
 	{
 		return p1 + addendum_;
 	}
@@ -47,8 +47,18 @@ public:
 		return ImplI1::any_op (in_a, out_a, inout_a);
 	}
 
+	virtual int32_t addendum ()
+	{
+		return addendum_;
+	}
+
+	virtual void addendum (int32_t a)
+	{
+		addendum_ = a;
+	}
+
 private:
-	CORBA::Long addendum_;
+	int32_t addendum_;
 };
 
 }

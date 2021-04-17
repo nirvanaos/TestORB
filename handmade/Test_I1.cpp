@@ -4,16 +4,16 @@
 #include <Nirvana/OLF.h>
 #include "Test_I1.h"
 
-NIRVANA_EXCEPTION_DEF (Test::, MyException)
-
-NIRVANA_OLF_SECTION extern const Nirvana::ImportInterfaceT <CORBA::TypeCode>
-Test::_tc_MyException = { ::Nirvana::OLF_IMPORT_INTERFACE, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode::repository_id_ };
-
 NIRVANA_OLF_SECTION extern const Nirvana::ImportInterfaceT <CORBA::TypeCode>
 Test::_tc_SeqLong = { ::Nirvana::OLF_IMPORT_INTERFACE, "IDL:Test/SeqLong:1.0", CORBA::TypeCode::repository_id_ };
 
 NIRVANA_OLF_SECTION extern const Nirvana::ImportInterfaceT <CORBA::TypeCode>
 Test::_tc_MyAlias = { ::Nirvana::OLF_IMPORT_INTERFACE, "IDL:Test/MyAlias:1.0", CORBA::TypeCode::repository_id_ };
+
+NIRVANA_EXCEPTION_DEF (Test::, MyException)
+
+NIRVANA_OLF_SECTION extern const Nirvana::ImportInterfaceT <CORBA::TypeCode>
+Test::_tc_MyException = { ::Nirvana::OLF_IMPORT_INTERFACE, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode::repository_id_ };
 
 NIRVANA_OLF_SECTION extern const Nirvana::ImportInterfaceT <CORBA::TypeCode>
 Test::_tc_MyStruct = { ::Nirvana::OLF_IMPORT_INTERFACE, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode::repository_id_ };

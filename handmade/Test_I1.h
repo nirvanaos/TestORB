@@ -4,59 +4,53 @@
 
 namespace Test {
 
-// typedef sequence <long> SeqLong;
-
 typedef ::CORBA::Nirvana::Sequence < ::CORBA::Long> SeqLong;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_SeqLong;
 typedef ::CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
 
-// typedef SeqLong MyAlias;
-
 typedef SeqLong MyAlias;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyAlias;
 typedef SeqLong_var MyAlias_var;
-
-// exception MyException
 
 class MyException : public ::CORBA::UserException
 {
 public:
 	NIRVANA_EXCEPTION_DCL (MyException);
 
-	::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Member_ret param () const
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::MemberRef param () const
 	{
-		return _data.param;
+		return _data._param;
 	}
-	void param (::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Const_type val)
+	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::MemberRef val)
 	{
-		_data.param = val;
+		_data._param = val;
 	}
-	void param (::CORBA::Nirvana::Type < CORBA::Nirvana::String>::Var_type&& val)
+	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Var_type&& val)
 	{
-		_data.param = std::move (val);
+		_data._param = std::move (val);
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_ret bparam () const
+	::CORBA::Nirvana::Type < ::CORBA::Boolean>::MemberRef bparam () const
 	{
-		return _data.bparam;
+		return _data._bparam;
 	}
-	void bparam (::CORBA::Nirvana::Type < ::CORBA::Boolean>::Const_type val)
+	void bparam (::CORBA::Nirvana::Type < ::CORBA::Boolean>::MemberRef val)
 	{
-		_data.bparam = val;
+		_data._bparam = val;
 	}
 
 	struct _Data
 	{
 		_Data () :
-			bparam (::CORBA::FALSE)
+			_bparam (::CORBA::FALSE)
 		{}
 		_Data (const _Data&) = default;
 		_Data (_Data&&) = default;
 		_Data& operator = (const _Data&) = default;
 		_Data& operator = (_Data&&) = default;
 
-		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Member_type param;
-		::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_type bparam;
+		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Member_type _param;
+		::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_type _bparam;
 	};
 
 private:
@@ -67,8 +61,7 @@ private:
 
 	_Data _data;
 };
-
-extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_MyException;
+extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyException;
 
 }
 
@@ -86,8 +79,8 @@ struct ABI < ::Test::MyException::_Data>
 };
 
 template <>
-struct Type <::Test::MyException::_Data> :
-	TypeVarLen <::Test::MyException::_Data, Type <Type <std::string>::Member_type>::has_check>
+struct Type < ::Test::MyException::_Data> :
+	TypeVarLen < ::Test::MyException::_Data, Type <Type <String>::Member_type>::has_check>
 {
 	static void check (const ABI_type& val)
 	{
@@ -97,20 +90,20 @@ struct Type <::Test::MyException::_Data> :
 
 	static void marshal_in (const Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
-		Type <Type <String>::Member_type>::marshal_in (src.param, marshaler, dst.param);
-		Type <Type <Boolean>::Member_type>::marshal_in (src.bparam, marshaler, dst.bparam);
+		Type <Type <String>::Member_type>::marshal_in (src._param, marshaler, dst.param);
+		Type <Type <Boolean>::Member_type>::marshal_in (src._bparam, marshaler, dst.bparam);
 	}
 
 	static void marshal_out (Var_type& src, Marshal_ptr marshaler, ABI_type& dst)
 	{
-		Type <Type <String>::Member_type>::marshal_out (src.param, marshaler, dst.param);
-		Type <Type <Boolean>::Member_type>::marshal_out (src.bparam, marshaler, dst.bparam);
+		Type <Type <String>::Member_type>::marshal_out (src._param, marshaler, dst.param);
+		Type <Type <Boolean>::Member_type>::marshal_out (src._bparam, marshaler, dst.bparam);
 	}
 
 	static void unmarshal (const ABI_type& src, Unmarshal_ptr unmarshaler, Var_type& dst)
 	{
-		Type <Type <String>::Member_type>::unmarshal (src.param, unmarshaler, dst.param);
-		Type <Type <Boolean>::Member_type>::unmarshal (src.bparam, unmarshaler, dst.bparam);
+		Type <Type <String>::Member_type>::unmarshal (src.param, unmarshaler, dst._param);
+		Type <Type <Boolean>::Member_type>::unmarshal (src.bparam, unmarshaler, dst._bparam);
 	}
 };
 
@@ -122,9 +115,9 @@ struct Type <::Test::MyException::_Data> :
 namespace Test {
 
 class I1;
-typedef CORBA::Nirvana::TypeItf <I1>::C_ptr I1_ptr;
-typedef CORBA::Nirvana::TypeItf <I1>::C_var I1_var;
-extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
+extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_I1;
+typedef ::CORBA::Nirvana::TypeItf <I1>::C_ptr I1_ptr;
+typedef ::CORBA::Nirvana::TypeItf <I1>::C_var I1_var;
 
 class MyStruct
 {
@@ -137,11 +130,11 @@ public:
 	MyStruct& operator = (const MyStruct&) = default;
 	MyStruct& operator = (MyStruct&&) = default;
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member_ret ws_member () const
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::MemberRef ws_member () const
 	{
 		return _ws_member;
 	}
-	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Const_type val)
+	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::MemberRef val)
 	{
 		_ws_member = val;
 	}
@@ -150,20 +143,20 @@ public:
 		_ws_member = std::move (val);
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_ret l_member () const
+	::CORBA::Nirvana::Type < ::CORBA::Long>::MemberRef l_member () const
 	{
 		return _l_member;
 	}
-	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::Const_type val)
+	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::MemberRef val)
 	{
 		_l_member = val;
 	}
 
-	::CORBA::Nirvana::TypeItf <I1>::Member_ret itf () const
+	::CORBA::Nirvana::TypeItf <I1>::MemberRef itf () const
 	{
 		return _itf;
 	}
-	void itf (::CORBA::Nirvana::TypeItf <I1>::Const_type& val)
+	void itf (::CORBA::Nirvana::TypeItf <I1>::MemberRef val)
 	{
 		_itf = val;
 	}
@@ -174,6 +167,7 @@ public:
 
 private:
 	friend struct ::CORBA::Nirvana::Type <MyStruct>;
+
 	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member_type _ws_member;
 	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_type _l_member;
 	::CORBA::Nirvana::TypeItf <I1>::Member_type _itf;
@@ -186,7 +180,7 @@ namespace CORBA {
 namespace Nirvana {
 
 template <>
-const char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1.0";
+const Char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1.0";
 
 template <>
 struct ABI < ::Test::MyStruct>

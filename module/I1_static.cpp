@@ -13,7 +13,7 @@ class I1_static :
 	public ImplI1
 {
 public:
-	static CORBA::Long op1 (CORBA::Long p1)
+	static int32_t op1 (CORBA::Long p1)
 	{
 		return p1 + TestORB::MAGIC_CONST;
 	}
@@ -22,6 +22,14 @@ public:
 	{
 		throw CORBA::NO_IMPLEMENT ();
 	}
+
+	static int32_t addendum ()
+	{
+		return TestORB::MAGIC_CONST;
+	}
+
+	void addendum (int32_t)
+	{}
 };
 
 }

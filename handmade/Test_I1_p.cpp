@@ -28,6 +28,9 @@ const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef 
 
 NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
 
+NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
+NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
+
 namespace CORBA {
 namespace Nirvana {
 
@@ -457,6 +460,4 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I1>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
-NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
 NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <::Test::I1>)
