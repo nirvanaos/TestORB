@@ -49,8 +49,8 @@ public:
 		_Data& operator = (const _Data&) = default;
 		_Data& operator = (_Data&&) = default;
 
-		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Member_type _param;
-		::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member_type _bparam;
+		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Member _param;
+		::CORBA::Nirvana::Type < ::CORBA::Boolean>::Member _bparam;
 	};
 
 private:
@@ -74,36 +74,36 @@ const Char RepIdOf < ::Test::MyException>::repository_id_ [] = "IDL:Test/MyExcep
 template <>
 struct ABI < ::Test::MyException::_Data>
 {
-	Type <Type <String>::Member_type>::ABI param;
-	Type <Type <Boolean>::Member_type>::ABI bparam;
+	Type <Type <String>::Member>::ABI param;
+	Type <Type <Boolean>::Member>::ABI bparam;
 };
 
 template <>
 struct Type < ::Test::MyException::_Data> :
-	TypeVarLen < ::Test::MyException::_Data, Type <Type <String>::Member_type>::has_check>
+	TypeVarLen < ::Test::MyException::_Data, Type <Type <String>::Member>::has_check>
 {
 	static void check (const ABI& val)
 	{
-		Type <Type <String>::Member_type>::check (val.param);
-		Type <Type <Boolean>::Member_type>::check (val.bparam);
+		Type <Type <String>::Member>::check (val.param);
+		Type <Type <Boolean>::Member>::check (val.bparam);
 	}
 
 	static void marshal_in (const Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
-		Type <Type <String>::Member_type>::marshal_in (src._param, marshaler, dst.param);
-		Type <Type <Boolean>::Member_type>::marshal_in (src._bparam, marshaler, dst.bparam);
+		Type <Type <String>::Member>::marshal_in (src._param, marshaler, dst.param);
+		Type <Type <Boolean>::Member>::marshal_in (src._bparam, marshaler, dst.bparam);
 	}
 
 	static void marshal_out (Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
-		Type <Type <String>::Member_type>::marshal_out (src._param, marshaler, dst.param);
-		Type <Type <Boolean>::Member_type>::marshal_out (src._bparam, marshaler, dst.bparam);
+		Type <Type <String>::Member>::marshal_out (src._param, marshaler, dst.param);
+		Type <Type <Boolean>::Member>::marshal_out (src._bparam, marshaler, dst.bparam);
 	}
 
 	static void unmarshal (const ABI& src, Unmarshal_ptr unmarshaler, Var& dst)
 	{
-		Type <Type <String>::Member_type>::unmarshal (src.param, unmarshaler, dst._param);
-		Type <Type <Boolean>::Member_type>::unmarshal (src.bparam, unmarshaler, dst._bparam);
+		Type <Type <String>::Member>::unmarshal (src.param, unmarshaler, dst._param);
+		Type <Type <Boolean>::Member>::unmarshal (src.bparam, unmarshaler, dst._bparam);
 	}
 };
 
@@ -168,9 +168,9 @@ public:
 private:
 	friend struct ::CORBA::Nirvana::Type <MyStruct>;
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member_type _ws_member;
-	::CORBA::Nirvana::Type < ::CORBA::Long>::Member_type _l_member;
-	::CORBA::Nirvana::TypeItf <I1>::Member_type _itf;
+	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Member _ws_member;
+	::CORBA::Nirvana::Type < ::CORBA::Long>::Member _l_member;
+	::CORBA::Nirvana::TypeItf <I1>::Member _itf;
 };
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyStruct;
 
@@ -185,20 +185,20 @@ const Char RepIdOf < ::Test::MyStruct>::repository_id_ [] = "IDL:Test/MyStruct:1
 template <>
 struct ABI < ::Test::MyStruct>
 {
-	Type <Type <WString>::Member_type>::ABI ws_member;
-	Type <Type <Long>::Member_type>::ABI l_member;
-	Type <TypeItf < ::Test::I1>::Member_type>::ABI itf;
+	Type <Type <WString>::Member>::ABI ws_member;
+	Type <Type <Long>::Member>::ABI l_member;
+	Type <TypeItf < ::Test::I1>::Member>::ABI itf;
 };
 
 template <>
 struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
-	Type <Type <WString>::Member_type>::has_check>
+	Type <Type <WString>::Member>::has_check>
 {
 	static void check (const ABI& val)
 	{
-		Type <Type <WString>::Member_type>::check (val.ws_member);
-		Type <Type <Long>::Member_type>::check (val.l_member);
-		Type <TypeItf < ::Test::I1>::Member_type>::check (val.itf);
+		Type <Type <WString>::Member>::check (val.ws_member);
+		Type <Type <Long>::Member>::check (val.l_member);
+		Type <TypeItf < ::Test::I1>::Member>::check (val.itf);
 	}
 
 	static TypeCode_ptr type_code ()
@@ -208,23 +208,23 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 
 	static void marshal_in (const Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
-		Type <Type <WString>::Member_type>::marshal_in (src._ws_member, marshaler, dst.ws_member);
-		Type <Type <Long>::Member_type>::marshal_in (src._l_member, marshaler, dst.l_member);
-		Type <TypeItf < ::Test::I1>::Member_type>::marshal_in (src._itf, marshaler, dst.itf);
+		Type <Type <WString>::Member>::marshal_in (src._ws_member, marshaler, dst.ws_member);
+		Type <Type <Long>::Member>::marshal_in (src._l_member, marshaler, dst.l_member);
+		Type <TypeItf < ::Test::I1>::Member>::marshal_in (src._itf, marshaler, dst.itf);
 	}
 
 	static void marshal_out (Var& src, Marshal_ptr marshaler, ABI& dst)
 	{
-		Type <Type <WString>::Member_type>::marshal_out (src._ws_member, marshaler, dst.ws_member);
-		Type <Type <Long>::Member_type>::marshal_out (src._l_member, marshaler, dst.l_member);
-		Type <TypeItf < ::Test::I1>::Member_type>::marshal_out (src._itf, marshaler, dst.itf);
+		Type <Type <WString>::Member>::marshal_out (src._ws_member, marshaler, dst.ws_member);
+		Type <Type <Long>::Member>::marshal_out (src._l_member, marshaler, dst.l_member);
+		Type <TypeItf < ::Test::I1>::Member>::marshal_out (src._itf, marshaler, dst.itf);
 	}
 
 	static void unmarshal (const ABI& src, Unmarshal_ptr unmarshaler, Var& dst)
 	{
-		Type <Type <WString>::Member_type>::unmarshal (src.ws_member, unmarshaler, dst._ws_member);
-		Type <Type <Long>::Member_type>::unmarshal (src.l_member, unmarshaler, dst._l_member);
-		Type <TypeItf < ::Test::I1>::Member_type>::unmarshal (src.itf, unmarshaler, dst._itf);
+		Type <Type <WString>::Member>::unmarshal (src.ws_member, unmarshaler, dst._ws_member);
+		Type <Type <Long>::Member>::unmarshal (src.l_member, unmarshaler, dst._l_member);
+		Type <TypeItf < ::Test::I1>::Member>::unmarshal (src.itf, unmarshaler, dst._itf);
 	}
 };
 
