@@ -2,36 +2,41 @@
 #include <CORBA/Proxy/Proxy.h>
 #include "Test_I1_s.h"
 
-// SeqLong
-
 extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_SeqLong_TC;
 
+namespace CORBA {
+namespace Nirvana {
+
 template <>
-class CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC> : 
-	public CORBA::Nirvana::TypeCodeTypeDefImpl <&_exp_Test_SeqLong_TC, CORBA::Nirvana::Sequence <CORBA::Long> >
+class TypeCodeTypeDef <&::_exp_Test_SeqLong_TC> :
+	public TypeCodeTypeDefImpl <&::_exp_Test_SeqLong_TC, Sequence <Long> >
 {};
 
 template <>
-const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC> >::name_ [] = "SeqLong";
+const Char TypeCodeName <TypeCodeTypeDef <&::_exp_Test_SeqLong_TC> >::name_ [] = "SeqLong";
+
+}
+}
 
 NIRVANA_EXPORT (_exp_Test_SeqLong_TC, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC>)
 
-// MyAlias
-
 extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_MyAlias_TC;
 
+namespace CORBA {
+namespace Nirvana {
+
 template <>
-class CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC> :
-	public CORBA::Nirvana::TypeCodeTypeDefImpl <&_exp_Test_MyAlias_TC, CORBA::Nirvana::Alias <&Test::_tc_SeqLong> >
+class TypeCodeTypeDef <&::_exp_Test_MyAlias_TC> :
+	public TypeCodeTypeDefImpl <&::_exp_Test_MyAlias_TC, Alias <&::Test::_tc_SeqLong> >
 {};
 
 template <>
-const CORBA::Char CORBA::Nirvana::TypeCodeName <CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC> >::name_ [] = "MyAlias";
+const Char TypeCodeName <TypeCodeTypeDef <&::_exp_Test_MyAlias_TC> >::name_ [] = "MyAlias";
+
+}
+}
 
 NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
-
-NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
-NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
 
 namespace CORBA {
 namespace Nirvana {
@@ -42,6 +47,14 @@ const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
 	{ "bparam", Type <Boolean>::type_code }
 };
 
+}
+}
+
+NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
+
+namespace CORBA {
+namespace Nirvana {
+
 template <>
 const Char TypeCodeName < ::Test::MyStruct>::name_ [] = "MyStruct";
 
@@ -50,6 +63,14 @@ const Parameter TypeCodeMembers < ::Test::MyStruct>::members_ [] = {
 	{ "ws_member", Type <WString>::type_code },
 	{ "l_member", Type <Long>::type_code }
 };
+
+}
+}
+
+NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
+
+namespace CORBA {
+namespace Nirvana {
 
 IMPLEMENT_PROXY_FACTORY(::Test, I1);
 
@@ -67,12 +88,12 @@ struct ProxyTraits <::Test::I1>
 
 	static void op1_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
-		::Nirvana::ConstPointer _in_params,
+		::Nirvana::ConstPointer _in_ptr,
 		Unmarshal_var& _u,
-		::Nirvana::Pointer _out_params)
+		::Nirvana::Pointer _out_ptr)
 	{
-		const op1_in& _in = *(const op1_in*)_in_params;
-		op1_out& _out = *(op1_out*)_out_params;
+		const op1_in& _in = *(const op1_in*)_in_ptr;
+		op1_out& _out = *(op1_out*)_out_ptr;
 		_out = _servant->op1 (_in);
 	}
 
