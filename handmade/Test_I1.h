@@ -283,7 +283,7 @@ public:
 	TypeItf < ::Test::I1>::Var object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj);
 	Type <String>::Var string_op (String_in, String_out, String_inout);
 	Type < ::Test::SeqLong>::Var seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
-	Type <Any>::Var any_op (Any_in, Any_out, Any_inout);
+	Type <Any>::Var any_op (Type <Any>::C_in, Type <Any>::C_out, Type <Any>::C_inout);
 };
 
 template <class T>
@@ -316,7 +316,7 @@ TypeItf < ::Test::I1>::Var Client <T, ::Test::I1>::object_op (TypeItf < ::Test::
 }
 
 template <class T>
-Type <String>::Var Client <T, ::Test::I1>::string_op (CORBA::String_in in_s, CORBA::String_out out_s, CORBA::String_inout inout_s)
+Type <String>::Var Client <T, ::Test::I1>::string_op (Type <String>::C_in in_s, Type <String>::C_out out_s, Type <String>::C_inout inout_s)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
@@ -336,7 +336,7 @@ Type < ::Test::SeqLong>::Var Client <T, ::Test::I1>::seq_op (Type <::Test::SeqLo
 }
 
 template <class T>
-Type <Any>::Var Client <T, ::Test::I1>::any_op (Any_in in_any, Any_out out_any, Any_inout inout_any)
+Type <Any>::Var Client <T, ::Test::I1>::any_op (Type <Any>::C_in in_any, Type <Any>::C_out out_any, Type <Any>::C_inout inout_any)
 {
 	Environment _env;
 	Bridge < ::Test::I1>& _b (T::_get_bridge (_env));
