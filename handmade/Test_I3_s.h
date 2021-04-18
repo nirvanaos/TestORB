@@ -4,7 +4,6 @@
 #include "Test_I3.h"
 #include "Test_I1_s.h"
 #include "Test_I2_s.h"
-#include <CORBA/Server.h>
 
 namespace CORBA {
 namespace Nirvana {

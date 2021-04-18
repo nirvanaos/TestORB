@@ -8,7 +8,7 @@ namespace Nirvana {
 IMPLEMENT_PROXY_FACTORY (::Test, I3);
 
 template <>
-struct ProxyTraits <::Test::I3>
+struct ProxyTraits < ::Test::I3>
 {
 	static const Operation operations_ [];
 	static const Char* const interfaces_ [];
@@ -32,20 +32,19 @@ struct ProxyTraits <::Test::I3>
 };
 
 template <>
-class Proxy <::Test::I3> :
-	public ProxyBase <::Test::I3>,
-	public ProxyBaseInterface <::Test::I2>,
-	public ProxyBaseInterface <::Test::I1>
+class Proxy < ::Test::I3> : public ProxyBase < ::Test::I3>,
+	public ProxyBaseInterface < ::Test::I2>,
+	public ProxyBaseInterface < ::Test::I1>
 {
-	typedef ProxyBase <::Test::I3> Base;
-	typedef ProxyTraits <::Test::I3> Traits;
+	typedef ProxyBase < ::Test::I3> Base;
+	typedef ProxyTraits < ::Test::I3> Traits;
 public:
 	Proxy (IOReference_ptr proxy_manager, CORBA::UShort interface_idx) :
 		Base (proxy_manager, interface_idx)
 	{
 		AbstractBase_ptr ab = Object_ptr (proxy_manager);
-		ProxyBaseInterface <::Test::I2>::init (ab);
-		ProxyBaseInterface <::Test::I1>::init (ab);
+		ProxyBaseInterface < ::Test::I2>::init (ab);
+		ProxyBaseInterface < ::Test::I1>::init (ab);
 	}
 
 	Long op3 (Long p1) const
@@ -58,24 +57,24 @@ public:
 	}
 };
 
-const Parameter ProxyTraits <::Test::I3>::op3_in_params_ [1] = {
+const Parameter ProxyTraits < ::Test::I3>::op3_in_params_ [1] = {
 	{ "p1", Type <Long>::type_code }
 };
 
-const Operation ProxyTraits <::Test::I3>::operations_ [] = {
-	{ "op3", { op3_in_params_, countof (op3_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper <::Test::I3, op3_request> }
+const Operation ProxyTraits < ::Test::I3>::operations_ [] = {
+	{ "op3", { op3_in_params_, countof (op3_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper < ::Test::I3, op3_request> }
 };
 
-const Char* const ProxyTraits <::Test::I3>::interfaces_ [] = {
+const Char* const ProxyTraits < ::Test::I3>::interfaces_ [] = {
 	::Test::I3::repository_id_,
 	::Test::I2::repository_id_,
 	::Test::I1::repository_id_
 };
 
 template <>
-const InterfaceMetadata ProxyFactoryImpl <::Test::I3>::metadata_ = {
-	{ProxyTraits <::Test::I3>::interfaces_, countof (ProxyTraits <::Test::I3>::interfaces_)},
-	{ProxyTraits <::Test::I3>::operations_, countof (ProxyTraits <::Test::I3>::operations_)}
+const InterfaceMetadata ProxyFactoryImpl < ::Test::I3>::metadata_ = {
+	{ProxyTraits < ::Test::I3>::interfaces_, countof (ProxyTraits < ::Test::I3>::interfaces_)},
+	{ProxyTraits < ::Test::I3>::operations_, countof (ProxyTraits < ::Test::I3>::operations_)}
 };
 
 }

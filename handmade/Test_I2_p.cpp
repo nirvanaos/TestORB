@@ -8,7 +8,7 @@ namespace Nirvana {
 IMPLEMENT_PROXY_FACTORY (::Test, I2);
 
 template <>
-struct ProxyTraits <::Test::I2>
+struct ProxyTraits < ::Test::I2>
 {
 	static const Operation operations_ [];
 	static const Char* const interfaces_ [];
@@ -32,11 +32,11 @@ struct ProxyTraits <::Test::I2>
 };
 
 template <>
-class Proxy <::Test::I2> :
-	public ProxyBase <::Test::I2>
+class Proxy < ::Test::I2> :
+	public ProxyBase < ::Test::I2>
 {
-	typedef ProxyBase <::Test::I2> Base;
-	typedef ProxyTraits <::Test::I2> Traits;
+	typedef ProxyBase < ::Test::I2> Base;
+	typedef ProxyTraits < ::Test::I2> Traits;
 public:
 	Proxy (IOReference_ptr proxy_manager, CORBA::UShort interface_idx) :
 		Base (proxy_manager, interface_idx)
@@ -52,22 +52,22 @@ public:
 	}
 };
 
-const Parameter ProxyTraits <::Test::I2>::op2_in_params_ [1] = {
+const Parameter ProxyTraits < ::Test::I2>::op2_in_params_ [1] = {
 	{ "p1", Type <Long>::type_code }
 };
 
-const Operation ProxyTraits <::Test::I2>::operations_ [] = {
-	{ "op2", { op2_in_params_, countof (op2_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper <::Test::I2, op2_request> }
+const Operation ProxyTraits < ::Test::I2>::operations_ [] = {
+	{ "op2", { op2_in_params_, countof (op2_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper < ::Test::I2, op2_request> }
 };
 
-const Char* const ProxyTraits <::Test::I2>::interfaces_ [] = {
+const Char* const ProxyTraits < ::Test::I2>::interfaces_ [] = {
 	::Test::I2::repository_id_
 };
 
 template <>
-const InterfaceMetadata ProxyFactoryImpl <::Test::I2>::metadata_ = {
-	{ProxyTraits <::Test::I2>::interfaces_, countof (ProxyTraits <::Test::I2>::interfaces_)},
-	{ProxyTraits <::Test::I2>::operations_, countof (ProxyTraits <::Test::I2>::operations_)}
+const InterfaceMetadata ProxyFactoryImpl < ::Test::I2>::metadata_ = {
+	{ProxyTraits < ::Test::I2>::interfaces_, countof (ProxyTraits < ::Test::I2>::interfaces_)},
+	{ProxyTraits < ::Test::I2>::operations_, countof (ProxyTraits < ::Test::I2>::operations_)}
 };
 
 }

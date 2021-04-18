@@ -2,7 +2,6 @@
 #define IDL_TEST_I2_S_H_
 
 #include "Test_I2.h"
-#include <CORBA/Server.h>
 
 namespace CORBA {
 namespace Nirvana {

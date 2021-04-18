@@ -1,0 +1,10 @@
+#include "Test_I3.idl"
+
+module Test {
+
+interface I3_factory
+{
+	I3 create (in long addendum);
+};
+
+};

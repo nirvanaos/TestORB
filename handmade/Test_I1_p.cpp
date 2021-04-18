@@ -75,7 +75,7 @@ namespace Nirvana {
 IMPLEMENT_PROXY_FACTORY(::Test, I1);
 
 template <>
-struct ProxyTraits <::Test::I1>
+struct ProxyTraits < ::Test::I1>
 {
 	static const Operation operations_ [];
 	static const Char* const interfaces_ [];
@@ -134,12 +134,12 @@ struct ProxyTraits <::Test::I1>
 		const object_op_in& _in = *(const object_op_in*)_in_ptr;
 			
 		// out and inout params
-		I_var <::Test::I1> out_obj;
-		I_var <::Test::I1> inout_obj;
-		I_var <::Test::I1> _ret;
+		I_var < ::Test::I1> out_obj;
+		I_var < ::Test::I1> inout_obj;
+		I_var < ::Test::I1> _ret;
 		{
 			// in params
-			I_var <::Test::I1> in_obj;
+			I_var < ::Test::I1> in_obj;
 
 			// Unmarshal in and inout
 			Type < ::Test::I1>::unmarshal (_in.in_obj, _u, in_obj);
@@ -326,11 +326,11 @@ struct ProxyTraits <::Test::I1>
 };
 
 template <>
-class Proxy <::Test::I1> :
-	public ProxyBase <::Test::I1>
+class Proxy < ::Test::I1> :
+	public ProxyBase < ::Test::I1>
 {
-	typedef ProxyBase <::Test::I1> Base;
-	typedef ProxyTraits <::Test::I1> Traits;
+	typedef ProxyBase < ::Test::I1> Base;
+	typedef ProxyTraits < ::Test::I1> Traits;
 public:
 	Proxy (IOReference_ptr proxy_manager, CORBA::UShort interface_idx) :
 		Base (proxy_manager, interface_idx)
@@ -417,70 +417,70 @@ public:
 	}
 };
 
-const Parameter ProxyTraits <::Test::I1>::op1_in_params_ [1] = {
+const Parameter ProxyTraits < ::Test::I1>::op1_in_params_ [1] = {
 	{ "p1", Type <Long>::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::object_op_in_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::object_op_in_params_ [2] = {
 	{ "in_obj", Type < ::Test::I1>::type_code },
 	{ "inout_obj", Type < ::Test::I1>::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::object_op_out_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::object_op_out_params_ [2] = {
 	{ "out_obj", Type < ::Test::I1>::type_code },
 	{ "inout_obj", Type < ::Test::I1>::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::string_op_in_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::string_op_in_params_ [2] = {
 	{ "in_s", Type <String>::type_code },
 	{ "inout_s", Type <String>::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::string_op_out_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::string_op_out_params_ [2] = {
 	{ "out_s", Type <String>::type_code },
 	{ "inout_s", Type <String>::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::seq_op_in_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::seq_op_in_params_ [2] = {
 	{ "in_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code },
 	{ "inout_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::seq_op_out_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::seq_op_out_params_ [2] = {
 	{ "out_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code },
 	{ "inout_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::any_op_in_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::any_op_in_params_ [2] = {
 	{ "in_any", Type <Any>::type_code },
 	{ "inout_any", Type <Any>::type_code }
 };
 
-const Parameter ProxyTraits <::Test::I1>::any_op_out_params_ [2] = {
+const Parameter ProxyTraits < ::Test::I1>::any_op_out_params_ [2] = {
 	{ "out_any", Type <Any>::type_code },
 	{ "inout_any", Type <Any>::type_code }
 };
 
-const Operation ProxyTraits <::Test::I1>::operations_ [] = {
-	{ "op1", { op1_in_params_, countof (op1_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper <::Test::I1, op1_request> },
-	{ "throw_no_implement", { 0, 0 }, {0, 0}, Type <void>::type_code, RqProcWrapper <::Test::I1, throw_no_implement_request> },
-	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type < ::Test::I1>::type_code, RqProcWrapper <::Test::I1, object_op_request> },
-	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, Type <String>::type_code, RqProcWrapper <::Test::I1, string_op_request> },
-	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code, RqProcWrapper <::Test::I1, seq_op_request> },
-	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, Type <Any>::type_code, RqProcWrapper <::Test::I1, any_op_request> }
+const Operation ProxyTraits < ::Test::I1>::operations_ [] = {
+	{ "op1", { op1_in_params_, countof (op1_in_params_) }, {0, 0}, Type <Long>::type_code, RqProcWrapper < ::Test::I1, op1_request> },
+	{ "throw_no_implement", { 0, 0 }, {0, 0}, Type <void>::type_code, RqProcWrapper < ::Test::I1, throw_no_implement_request> },
+	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type < ::Test::I1>::type_code, RqProcWrapper < ::Test::I1, object_op_request> },
+	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, Type <String>::type_code, RqProcWrapper < ::Test::I1, string_op_request> },
+	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code, RqProcWrapper < ::Test::I1, seq_op_request> },
+	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, Type <Any>::type_code, RqProcWrapper < ::Test::I1, any_op_request> }
 };
 
-const Char* const ProxyTraits <::Test::I1>::interfaces_ [] = {
+const Char* const ProxyTraits < ::Test::I1>::interfaces_ [] = {
 	::Test::I1::repository_id_
 };
 
 template <>
-const InterfaceMetadata ProxyFactoryImpl <::Test::I1>::metadata_ = {
-	{ProxyTraits <::Test::I1>::interfaces_, countof (ProxyTraits <::Test::I1>::interfaces_)},
-  {ProxyTraits <::Test::I1>::operations_, countof (ProxyTraits <::Test::I1>::operations_)}
+const InterfaceMetadata ProxyFactoryImpl < ::Test::I1>::metadata_ = {
+	{ProxyTraits < ::Test::I1>::interfaces_, countof (ProxyTraits < ::Test::I1>::interfaces_)},
+  {ProxyTraits < ::Test::I1>::operations_, countof (ProxyTraits < ::Test::I1>::operations_)}
 };
 
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <::Test::I1>)
+NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl < ::Test::I1>)
