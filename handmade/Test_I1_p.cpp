@@ -72,7 +72,7 @@ NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>:
 namespace CORBA {
 namespace Nirvana {
 
-IMPLEMENT_PROXY_FACTORY(::Test, I1);
+IMPLEMENT_PROXY_FACTORY(::Test::, I1);
 
 template <>
 struct ProxyTraits < ::Test::I1>

@@ -41,7 +41,7 @@ struct ProxyTraits <::Test::I1_factory>
 	}
 };
 
-IMPLEMENT_PROXY_FACTORY (::Test, I1_factory);
+IMPLEMENT_PROXY_FACTORY (::Test::, I1_factory);
 
 template <>
 class Proxy <::Test::I1_factory> :

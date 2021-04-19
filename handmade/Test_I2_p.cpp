@@ -5,7 +5,7 @@
 namespace CORBA {
 namespace Nirvana {
 
-IMPLEMENT_PROXY_FACTORY (::Test, I2);
+IMPLEMENT_PROXY_FACTORY (::Test::, I2);
 
 template <>
 struct ProxyTraits < ::Test::I2>
