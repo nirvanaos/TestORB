@@ -281,7 +281,7 @@ public:
 	Type <Long>::Var op1 (Long p1);
 	void throw_no_implement ();
 	TypeItf < ::Test::I1>::Var object_op (TypeItf < ::Test::I1>::C_in in_obj, TypeItf < ::Test::I1>::C_out out_obj, TypeItf < ::Test::I1>::C_inout inout_obj);
-	Type <String>::Var string_op (String_in, String_out, String_inout);
+	Type <String>::Var string_op (String_in, Type <String>::C_out, Type <String>::C_inout);
 	Type < ::Test::SeqLong>::Var seq_op (Type <::Test::SeqLong>::C_in in_s, Type <::Test::SeqLong>::C_out out_s, Type <::Test::SeqLong>::C_inout inout_s);
 	Type <Any>::Var any_op (Type <Any>::C_in, Type <Any>::C_out, Type <Any>::C_inout);
 };
