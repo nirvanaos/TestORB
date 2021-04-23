@@ -120,7 +120,7 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
 	EXPECT_EQ (_tc_SeqLong->name (), "SeqLong");
 	
-	TypeCode_var seq = _tc_SeqLong->content_type ();
+	TypeCode::_var_type seq = _tc_SeqLong->content_type ();
 	EXPECT_EQ (seq->kind (), TCKind::tk_sequence);
 	EXPECT_EQ (seq->length (), 0);
 
@@ -128,7 +128,7 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_TRUE (_tc_SeqLong->equivalent (seq));
 	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
 
-	TypeCode_var l = seq->content_type ();
+	TypeCode::_var_type l = seq->content_type ();
 	EXPECT_EQ (l->kind (), TCKind::tk_long);
 
 	EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
