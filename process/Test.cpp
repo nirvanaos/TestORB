@@ -18,6 +18,7 @@ using namespace Test;
 
 void test_interface (I1_ptr p)
 {
+	::CORBA::Nirvana::Interface::_ptr_type ip = p;
 	ASSERT_FALSE (is_nil (p));
 	ASSERT_FALSE (p->_non_existent ());
 	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);

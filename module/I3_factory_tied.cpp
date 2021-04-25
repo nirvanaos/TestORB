@@ -56,7 +56,7 @@ class I3_factory_tied :
 public:
 	static I3_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <POA_Test::I3_tie <TiedI3> > (new POA_Test::I3_tie <TiedI3> (new TiedI3 (addendum)))->_this ();
+		return CORBA::make_reference <POA_Test::I3_tie <TiedI3> > (new TiedI3 (addendum))->_this ();
 	}
 };
 
@@ -77,7 +77,7 @@ class I3_tied_derived :
 public:
 	static I3_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <TiedDerivedI3> (new TiedDerivedI3 (addendum))->_this ();
+		return CORBA::make_reference <TiedDerivedI3> (addendum)->_this ();
 	}
 };
 

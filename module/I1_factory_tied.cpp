@@ -46,7 +46,7 @@ class I1_factory_tied :
 public:
 	static I1_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <POA_Test::I1_tie <TiedI1> > (new POA_Test::I1_tie <TiedI1> (new TiedI1 (addendum)))->_this ();
+		return CORBA::make_reference <POA_Test::I1_tie <TiedI1> > (new TiedI1 (addendum))->_this ();
 	}
 };
 
@@ -67,7 +67,7 @@ class I1_tied_derived :
 public:
 	static I1_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <TiedDerivedI1> (new TiedDerivedI1 (addendum))->_this ();
+		return CORBA::make_reference <TiedDerivedI1> (addendum)->_this ();
 	}
 };
 

@@ -11,7 +11,7 @@ class I1_factory_dynamic :
 public:
 	static I1_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <DynamicI1> (new DynamicI1 (addendum))->_this ();
+		return CORBA::make_reference <DynamicI1> (addendum)->_this ();
 	}
 };
 

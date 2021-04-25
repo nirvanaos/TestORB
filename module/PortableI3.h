@@ -7,6 +7,7 @@
 namespace Test {
 
 // Portable implementation
+// TODO: Implementation inheritance
 
 class PortableI3 :
 	public POA_Test::I3,
@@ -27,7 +28,7 @@ public:
 		throw CORBA::NO_IMPLEMENT ();
 	}
 
-	virtual I1_var object_op (I1_ptr in_obj, I1_var& out_obj, I1_var& inout_obj)
+	virtual I1::_ref_type object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
 	{
 		return ImplI1::object_op (in_obj, out_obj, inout_obj);
 	}

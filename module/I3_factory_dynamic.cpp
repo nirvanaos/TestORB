@@ -11,7 +11,7 @@ class I3_factory_dynamic :
 public:
 	static I3_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <DynamicI3> (new DynamicI3 (addendum))->_this ();
+		return CORBA::make_reference <DynamicI3> (addendum)->_this ();
 	}
 };
 

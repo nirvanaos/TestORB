@@ -11,7 +11,7 @@ class I1_factory_portable :
 public:
 	static I1_var create (CORBA::Long addendum)
 	{
-		return PortableServer::Servant_var <PortableI1> (new PortableI1 (addendum))->_this ();
+		return CORBA::make_reference <PortableI1> (addendum)->_this ();
 	}
 };
 
