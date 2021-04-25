@@ -340,7 +340,7 @@ public:
 	{
 		Traits::op1_out _out;
 		Marshal_var _m;
-		_target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 0 },
+		_target ()->call (_make_op_idx (0),
 			&p1, sizeof (p1), _m, &_out, sizeof (_out));
 		return _out;
 	}
@@ -348,7 +348,7 @@ public:
 	void throw_no_implement () const
 	{
 		Marshal_var _m;
-		_target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 1 },
+		_target ()->call (_make_op_idx (1),
 			0, 0, _m, 0, 0);
 	}
 
@@ -359,7 +359,7 @@ public:
 		Type < ::Test::I1>::marshal_in (in_obj, _m, _in.in_obj);
 		Type < ::Test::I1>::marshal_in (inout_obj, _m, _in.inout_obj);
 		Traits::object_op_out _out;
-		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 2 },
+		Unmarshal_var _u = _target ()->call (_make_op_idx (2),
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
 		Type < ::Test::I1>::unmarshal (_out.out_obj, _u, out_obj);
 		Type < ::Test::I1>::unmarshal (_out.inout_obj, _u, inout_obj);
@@ -375,7 +375,7 @@ public:
 		Type <String>::marshal_in (in_s, _m, _in.in_s);
 		Type <String>::marshal_in (inout_s, _m, _in.inout_s);
 		Traits::string_op_out _out;
-		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 3 },
+		Unmarshal_var _u = _target ()->call (_make_op_idx (3),
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
 		Type <String>::unmarshal (_out.out_s, _u, out_s);
 		Type <String>::unmarshal (_out.inout_s, _u, inout_s);
@@ -391,7 +391,7 @@ public:
 		Type < ::Test::SeqLong>::marshal_in (in_s, _m, _in.in_s);
 		Type < ::Test::SeqLong>::marshal_in (inout_s, _m, _in.inout_s);
 		Traits::seq_op_out _out;
-		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 4 },
+		Unmarshal_var _u = _target ()->call (_make_op_idx (4),
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
 		Type < ::Test::SeqLong>::unmarshal (_out.out_s, _u, out_s);
 		Type < ::Test::SeqLong>::unmarshal (_out.inout_s, _u, inout_s);
@@ -407,7 +407,7 @@ public:
 		Type <Any>::marshal_in (in_any, _m, _in.in_any);
 		Type <Any>::marshal_in (inout_any, _m, _in.inout_any);
 		Traits::any_op_out _out;
-		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 5 },
+		Unmarshal_var _u = _target ()->call (_make_op_idx (5),
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
 		Type <Any>::unmarshal (_out.out_any, _u, out_any);
 		Type <Any>::unmarshal (_out.inout_any, _u, inout_any);

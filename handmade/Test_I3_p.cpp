@@ -51,7 +51,7 @@ public:
 	{
 		Traits::op3_out _out;
 		Marshal_var _m;
-		_target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 0 },
+		_target ()->call (_make_op_idx (0),
 			&p1, sizeof (p1), _m, &_out, sizeof (_out));
 		return _out;
 	}
