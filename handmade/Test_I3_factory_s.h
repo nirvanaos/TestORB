@@ -18,7 +18,7 @@ protected:
 	{
 		try {
 			return Type < ::Test::I3>::ret (S::_implementation (_b).create (addendum));
-		} catch (const Exception& e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);

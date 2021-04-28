@@ -89,7 +89,7 @@ struct ProxyTraits < ::Test::I1>
 	static void op1_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
 		::Nirvana::ConstPointer _in_ptr,
-		Unmarshal_var& _u,
+		Unmarshal::_ref_type& _u,
 		::Nirvana::Pointer _out_ptr)
 	{
 		const op1_in& _in = *(const op1_in*)_in_ptr;
@@ -102,7 +102,7 @@ struct ProxyTraits < ::Test::I1>
 	static void throw_no_implement_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
 		::Nirvana::ConstPointer _in_params,
-		Unmarshal_var& _u,
+		Unmarshal::_ref_type& _u,
 		::Nirvana::Pointer _out_params)
 	{
 		_servant->throw_no_implement ();
@@ -128,7 +128,7 @@ struct ProxyTraits < ::Test::I1>
 	static void object_op_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
 		::Nirvana::ConstPointer _in_ptr,
-		Unmarshal_var& _u,
+		Unmarshal::_ref_type& _u,
 		::Nirvana::Pointer _out_ptr)
 	{
 		const object_op_in& _in = *(const object_op_in*)_in_ptr;
@@ -182,7 +182,7 @@ struct ProxyTraits < ::Test::I1>
 	static void string_op_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
 		::Nirvana::ConstPointer _in_ptr,
-		Unmarshal_var& _u,
+		Unmarshal::_ref_type& _u,
 		::Nirvana::Pointer _out_ptr)
 	{
 		const string_op_in& _in = *(const string_op_in*)_in_ptr;
@@ -236,7 +236,7 @@ struct ProxyTraits < ::Test::I1>
 	static void seq_op_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
 		::Nirvana::ConstPointer _in_ptr,
-		Unmarshal_var& _u,
+		Unmarshal::_ref_type& _u,
 		::Nirvana::Pointer _out_ptr)
 	{
 		const seq_op_in& _in = *(const seq_op_in*)_in_ptr;
@@ -290,7 +290,7 @@ struct ProxyTraits < ::Test::I1>
 	static void any_op_request (::Test::I1_ptr _servant,
 		IORequest_ptr _call,
 		::Nirvana::ConstPointer _in_ptr,
-		Unmarshal_var& _u,
+		Unmarshal::_ref_type& _u,
 		::Nirvana::Pointer _out_ptr)
 	{
 		const any_op_in& _in = *(const any_op_in*)_in_ptr;
@@ -352,7 +352,7 @@ public:
 			0, 0, _m, 0, 0);
 	}
 
-	::Test::I1_var object_op (::Test::I1_ptr in_obj, ::Test::I1_var& out_obj, ::Test::I1_var& inout_obj) const
+	::Test::I1_var object_op (::Test::I1_ptr in_obj, ::Test::I1::_ref_type& out_obj, ::Test::I1::_ref_type& inout_obj) const
 	{
 		Traits::object_op_in _in;
 		Marshal_var _m = _target ()->create_marshaler ();

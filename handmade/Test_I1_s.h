@@ -18,7 +18,7 @@ protected:
 	{
 		try {
 			return S::_implementation (_b).op1 (p1);
-		} catch (const Exception& e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
@@ -30,7 +30,7 @@ protected:
 	{
 		try {
 			S::_implementation (_b).throw_no_implement ();
-		} catch (const Exception& e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
@@ -41,7 +41,7 @@ protected:
 	{
 		try {
 			return Type < ::Test::I1>::ret (S::_implementation (_b).object_op (Type < ::Test::I1>::in (in_obj), Type < ::Test::I1>::out (out_obj), Type < ::Test::I1>::inout (inout_obj)));
-		} catch (const Exception& e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
@@ -53,7 +53,7 @@ protected:
 	{
 		try {
 			return Type <String>::ret (S::_implementation (_b).string_op (Type <String>::in (in_s), Type <String>::out (out_s), Type <String>::inout (inout_s)));
-		} catch (const Exception& e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
@@ -65,7 +65,7 @@ protected:
 	{
 		try {
 			return Type < ::Test::SeqLong>::ret (S::_implementation (_b).seq_op (Type < ::Test::SeqLong>::in (in_s), Type < ::Test::SeqLong>::out (out_s), Type < ::Test::SeqLong>::inout (inout_s)));
-		} catch (const Exception& e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
@@ -77,7 +77,7 @@ protected:
 	{
 		try {
 			return Type <Any>::ret (S::_implementation (_b).any_op (Type <Any>::in (in_any), Type <Any>::out (out_any), Type <Any>::inout (inout_any)));
-		} catch (const Exception & e) {
+		} catch (Exception& e) {
 			set_exception (_env, e);
 		} catch (...) {
 			set_unknown_exception (_env);
@@ -128,7 +128,7 @@ class ServantPOA < ::Test::I1> :
 public:
 	virtual Long op1 (Long p1) = 0;
 	virtual void throw_no_implement () = 0;
-	virtual ::Test::I1_var object_op (::Test::I1_ptr in_obj, ::Test::I1_var& out_obj, ::Test::I1_var& inout_obj) = 0;
+	virtual ::Test::I1::_ref_type object_op (::Test::I1::_ptr_type in_obj, ::Test::I1::_ref_type& out_obj, ::Test::I1::_ref_type& inout_obj) = 0;
 	virtual std::string string_op (const std::string&, std::string&, std::string&) = 0;
 	virtual std::vector <Long> seq_op (const std::vector <Long>& in_s, std::vector <Long>& out_s, std::vector <Long>& inout_s) = 0;
 	virtual CORBA::Any any_op (const CORBA::Any&, CORBA::Any&, CORBA::Any&) = 0;
