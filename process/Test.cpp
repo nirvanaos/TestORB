@@ -94,16 +94,16 @@ void test_performance (I1_ptr p)
 
 // The fixture for testing simple interface.
 
-typedef ::testing::Types <I1_factory_dynamic
+typedef ::testing::Types < ::Nirvana::Static <I1_factory_dynamic>
 #ifndef TEST_NO_POA
-	, I1_factory_portable
+	, ::Nirvana::Static <I1_factory_portable>
 #endif
 #ifndef TEST_NO_STATIC
-	, I1_static
+	, ::Nirvana::Static <I1_static>
 #endif
 #ifndef TEST_NO_TIED
-	, I1_factory_tied
-	, I1_tied_derived
+	, ::Nirvana::Static <I1_factory_tied>
+	, ::Nirvana::Static <I1_tied_derived>
 #endif
 > ServantTypesI1;
 
@@ -130,7 +130,7 @@ protected:
 
 	static I1_ptr incarnate ()
 	{
-		return incarnate (::Nirvana::Static <Factory>::ptr ());
+		return incarnate (Factory::ptr ());
 	}
 };
 
@@ -155,16 +155,16 @@ TYPED_TEST (TestORB_I1, Exception)
 
 // The fixture for testing complex interface.
 
-typedef ::testing::Types <I3_factory_dynamic
+typedef ::testing::Types < ::Nirvana::Static <I3_factory_dynamic>
 #ifndef TEST_NO_POA
-	, I3_factory_portable
+	, ::Nirvana::Static <I3_factory_portable>
 #endif
 #ifndef TEST_NO_STATIC
-	, I3_static
+	, ::Nirvana::Static <I3_static>
 #endif
 #ifndef TEST_NO_TIED
-	, I3_factory_tied
-	, I3_tied_derived
+	, ::Nirvana::Static <I3_factory_tied>
+	, ::Nirvana::Static <I3_tied_derived>
 #endif
 > ServantTypesI3;
 
@@ -191,7 +191,7 @@ protected:
 
 	static I3_ptr incarnate ()
 	{
-		return incarnate (::Nirvana::Static <Factory>::ptr ());
+		return incarnate (Factory::ptr ());
 	}
 };
 
