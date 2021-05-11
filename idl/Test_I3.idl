@@ -3,7 +3,7 @@
 
 module Test {
 
-interface I3 : I1, I2
+local interface I3 : I1, I2
 {
 	long op3 (in long p1);
 };
