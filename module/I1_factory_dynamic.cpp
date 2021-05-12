@@ -9,7 +9,7 @@ class I1_factory_dynamic :
 	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_dynamic>
 {
 public:
-	static I1_var create (CORBA::Long addendum)
+	static I1::_ref_type create (CORBA::Long addendum)
 	{
 		return CORBA::make_reference <DynamicI1> (addendum)->_this ();
 	}

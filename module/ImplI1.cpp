@@ -7,8 +7,8 @@ using namespace CORBA;
 I1::_ref_type ImplI1::object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
 {
 	I1::_ref_type tmp (std::move (inout_obj));
-	out_obj = I1::_duplicate (in_obj);
-	inout_obj = I1::_duplicate (in_obj);
+	out_obj = in_obj;
+	inout_obj = in_obj;
 	return tmp;
 }
 

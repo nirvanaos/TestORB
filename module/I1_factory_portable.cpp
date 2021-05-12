@@ -9,7 +9,7 @@ class I1_factory_portable :
 	public ::CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_portable>
 {
 public:
-	static I1_var create (CORBA::Long addendum)
+	static I1::_ref_type create (CORBA::Long addendum)
 	{
 		return CORBA::make_reference <PortableI1> (addendum)->_this ();
 	}

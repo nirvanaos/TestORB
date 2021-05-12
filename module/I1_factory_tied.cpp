@@ -44,7 +44,7 @@ class I1_factory_tied :
 	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_tied>
 {
 public:
-	static I1_var create (CORBA::Long addendum)
+	static I1::_ref_type create (CORBA::Long addendum)
 	{
 		return CORBA::make_reference <POA_Test::I1_tie <TiedI1> > (new TiedI1 (addendum))->_this ();
 	}
@@ -65,7 +65,7 @@ class I1_tied_derived :
 	public ::CORBA::Nirvana::ServantStatic <I1_tied_derived, I1_factory>
 {
 public:
-	static I1_var create (CORBA::Long addendum)
+	static I1::_ref_type create (CORBA::Long addendum)
 	{
 		return CORBA::make_reference <TiedDerivedI1> (addendum)->_this ();
 	}

@@ -54,7 +54,7 @@ class I3_factory_tied :
 	public CORBA::servant_traits <I3_factory>::ServantStatic <I3_factory_tied>
 {
 public:
-	static I3_var create (CORBA::Long addendum)
+	static I3::_ref_type create (CORBA::Long addendum)
 	{
 		return CORBA::make_reference <POA_Test::I3_tie <TiedI3> > (new TiedI3 (addendum))->_this ();
 	}
@@ -75,7 +75,7 @@ class I3_tied_derived :
 	public ::CORBA::Nirvana::ServantStatic <I3_tied_derived, I3_factory>
 {
 public:
-	static I3_var create (CORBA::Long addendum)
+	static I3::_ref_type create (CORBA::Long addendum)
 	{
 		return CORBA::make_reference <TiedDerivedI3> (addendum)->_this ();
 	}
