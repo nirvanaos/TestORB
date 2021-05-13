@@ -7,8 +7,8 @@
 namespace Test {
 
 class I3_factory;
-typedef CORBA::Nirvana::I_ptr <I3_factory> I3_factory_ptr;
-typedef CORBA::Nirvana::I_var <I3_factory> I3_factory_var;
+typedef CORBA::Internal::I_ptr <I3_factory> I3_factory_ptr;
+typedef CORBA::Internal::I_var <I3_factory> I3_factory_var;
 
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I3_factory;
 
@@ -55,7 +55,7 @@ struct Type < ::Test::I3_factory> : TypeLocalObject < ::Test::I3_factory>
 
 namespace Test {
 
-class I3_factory : public CORBA::Nirvana::ClientInterface <I3_factory, ::CORBA::Object>
+class I3_factory : public CORBA::Internal::ClientInterface <I3_factory, ::CORBA::Object>
 {};
 
 }

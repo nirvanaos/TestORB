@@ -4,9 +4,9 @@
 
 namespace Test {
 
-typedef ::CORBA::Nirvana::Sequence < ::CORBA::Long> SeqLong;
+typedef CORBA::Internal::Sequence < ::CORBA::Long> SeqLong;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_SeqLong;
-typedef ::CORBA::Nirvana::Type <SeqLong>::C_var SeqLong_var;
+typedef CORBA::Internal::Type <SeqLong>::C_var SeqLong_var;
 
 typedef SeqLong MyAlias;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyAlias;
@@ -17,32 +17,32 @@ class MyException : public ::CORBA::UserException
 public:
 	NIRVANA_EXCEPTION_DCL (MyException);
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::ConstRef param () const
+	CORBA::Internal::Type < CORBA::Internal::String>::ConstRef param () const
 	{
 		return _param;
 	}
-	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::ConstRef val)
+	void param (CORBA::Internal::Type < CORBA::Internal::String>::ConstRef val)
 	{
 		_param = val;
 	}
-	void param (::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Var&& val)
+	void param (CORBA::Internal::Type < CORBA::Internal::String>::Var&& val)
 	{
 		_param = std::move (val);
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Boolean>::ConstRef bparam () const
+	CORBA::Internal::Type < ::CORBA::Boolean>::ConstRef bparam () const
 	{
 		return _bparam;
 	}
-	void bparam (::CORBA::Nirvana::Type < ::CORBA::Boolean>::ConstRef val)
+	void bparam (CORBA::Internal::Type < ::CORBA::Boolean>::ConstRef val)
 	{
 		_bparam = val;
 	}
 
 	struct _Data
 	{
-		::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Var _param;
-		::CORBA::Nirvana::Type < ::CORBA::Boolean>::ABI _bparam;
+		CORBA::Internal::Type < CORBA::Internal::String>::Var _param;
+		CORBA::Internal::Type < ::CORBA::Boolean>::ABI _bparam;
 	};
 
 private:
@@ -51,8 +51,8 @@ private:
 		return &_param;
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::String>::Var _param;
-	::CORBA::Nirvana::Type < ::CORBA::Boolean>::ABI _bparam;
+	CORBA::Internal::Type < CORBA::Internal::String>::Var _param;
+	CORBA::Internal::Type < ::CORBA::Boolean>::ABI _bparam;
 };
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyException;
 
@@ -109,8 +109,8 @@ namespace Test {
 
 class I1;
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_I1;
-typedef ::CORBA::Nirvana::TypeItf <I1>::C_ptr I1_ptr;
-typedef ::CORBA::Nirvana::TypeItf <I1>::C_var I1_var;
+typedef CORBA::Internal::TypeItf <I1>::C_ptr I1_ptr;
+typedef CORBA::Internal::TypeItf <I1>::C_var I1_var;
 
 }
 
@@ -144,47 +144,47 @@ public:
 	MyStruct& operator = (const MyStruct&) = default;
 	MyStruct& operator = (MyStruct&&) = default;
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::ConstRef ws_member () const
+	CORBA::Internal::Type < CORBA::Internal::WString>::ConstRef ws_member () const
 	{
 		return _ws_member;
 	}
-	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::ConstRef val)
+	void ws_member (CORBA::Internal::Type < CORBA::Internal::WString>::ConstRef val)
 	{
 		_ws_member = val;
 	}
-	void ws_member (::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var&& val)
+	void ws_member (CORBA::Internal::Type < CORBA::Internal::WString>::Var&& val)
 	{
 		_ws_member = std::move (val);
 	}
 
-	::CORBA::Nirvana::Type < ::CORBA::Long>::ConstRef l_member () const
+	CORBA::Internal::Type < ::CORBA::Long>::ConstRef l_member () const
 	{
 		return _l_member;
 	}
-	void l_member (::CORBA::Nirvana::Type < ::CORBA::Long>::ConstRef val)
+	void l_member (CORBA::Internal::Type < ::CORBA::Long>::ConstRef val)
 	{
 		_l_member = val;
 	}
 
-	::CORBA::Nirvana::TypeItf <I1>::ConstRef itf () const
+	CORBA::Internal::TypeItf <I1>::ConstRef itf () const
 	{
 		return _itf;
 	}
-	void itf (::CORBA::Nirvana::TypeItf <I1>::ConstRef val)
+	void itf (CORBA::Internal::TypeItf <I1>::ConstRef val)
 	{
 		_itf = val;
 	}
-	void itf (::CORBA::Nirvana::TypeItf <I1>::Var&& val)
+	void itf (CORBA::Internal::TypeItf <I1>::Var&& val)
 	{
 		_itf = std::move (val);
 	}
 
 private:
-	friend struct ::CORBA::Nirvana::Type <MyStruct>;
+	friend struct CORBA::Internal::Type <MyStruct>;
 
-	::CORBA::Nirvana::Type < ::CORBA::Nirvana::WString>::Var _ws_member;
-	::CORBA::Nirvana::Type < ::CORBA::Long>::Var _l_member;
-	::CORBA::Nirvana::TypeItf <I1>::Var _itf;
+	CORBA::Internal::Type < CORBA::Internal::WString>::Var _ws_member;
+	CORBA::Internal::Type < ::CORBA::Long>::Var _l_member;
+	CORBA::Internal::TypeItf <I1>::Var _itf;
 };
 extern const ::Nirvana::ImportInterfaceT < ::CORBA::TypeCode> _tc_MyStruct;
 
@@ -247,13 +247,13 @@ struct Type < ::Test::MyStruct> : TypeVarLen < ::Test::MyStruct,
 
 namespace Test {
 
-typedef ::CORBA::Nirvana::Type <MyStruct>::C_var MyStruct_var;
+typedef CORBA::Internal::Type <MyStruct>::C_var MyStruct_var;
 
 // interface I1
 
 class I1;
-typedef CORBA::Nirvana::TypeItf <I1>::C_ptr I1_ptr;
-typedef CORBA::Nirvana::TypeItf <I1>::C_var I1_var;
+typedef CORBA::Internal::TypeItf <I1>::C_ptr I1_ptr;
+typedef CORBA::Internal::TypeItf <I1>::C_var I1_var;
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I1;
 
 }
@@ -355,7 +355,7 @@ Type <Any>::Var Client <T, ::Test::I1>::any_op (Type <Any>::C_in in_any, Type <A
 
 namespace Test {
 
-class I1 : public CORBA::Nirvana::ClientInterface <I1, ::CORBA::Object>
+class I1 : public CORBA::Internal::ClientInterface <I1, ::CORBA::Object>
 {};
 
 }

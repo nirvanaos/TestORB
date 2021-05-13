@@ -88,4 +88,4 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I3_factory>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_I3_factory_ProxyFactory, Test::I3_factory::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <Test::I3_factory>)
+NIRVANA_EXPORT (_exp_Test_I3_factory_ProxyFactory, Test::I3_factory::repository_id_, CORBA::AbstractBase, CORBA::Internal::ProxyFactoryImpl <Test::I3_factory>)

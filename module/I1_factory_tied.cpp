@@ -62,7 +62,7 @@ public:
 };
 
 class I1_tied_derived :
-	public ::CORBA::Nirvana::ServantStatic <I1_tied_derived, I1_factory>
+	public CORBA::Internal::ServantStatic <I1_tied_derived, I1_factory>
 {
 public:
 	static I1::_ref_type create (CORBA::Long addendum)

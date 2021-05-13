@@ -138,7 +138,7 @@ public:
 }
 
 namespace POA_Test {
-typedef ::CORBA::Nirvana::ServantPOA < ::Test::I1> I1;
+typedef CORBA::Internal::ServantPOA < ::Test::I1> I1;
 }
 
 #endif
@@ -164,7 +164,7 @@ class ServantStatic <S, ::Test::I1> :
 
 namespace POA_Test {
 
-template <class T> using I1_tie = ::CORBA::Nirvana::ServantTied <T, ::Test::I1>;
+template <class T> using I1_tie = CORBA::Internal::ServantTied <T, ::Test::I1>;
 
 }
 

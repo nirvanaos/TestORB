@@ -7,8 +7,8 @@
 namespace Test {
 
 class I3;
-typedef ::CORBA::Nirvana::TypeItf <I3>::C_ptr I3_ptr;
-typedef ::CORBA::Nirvana::TypeItf <I3>::C_var I3_var;
+typedef CORBA::Internal::TypeItf <I3>::C_ptr I3_ptr;
+typedef CORBA::Internal::TypeItf <I3>::C_var I3_var;
 extern const ::Nirvana::ImportInterfaceT <::CORBA::TypeCode> _tc_I3;
 
 }
@@ -56,7 +56,7 @@ struct Type < ::Test::I3> : TypeLocalObject < ::Test::I3>
 
 namespace Test {
 
-class I3 : public CORBA::Nirvana::ClientInterface <I3, I2, I1, ::CORBA::Object>
+class I3 : public CORBA::Internal::ClientInterface <I3, I2, I1, ::CORBA::Object>
 {};
 
 }

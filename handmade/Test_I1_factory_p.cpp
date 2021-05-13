@@ -59,7 +59,7 @@ public:
 		Traits::create_in _in { addendum };
 		Traits::create_out _out;
 		Marshal_var _m;
-		Unmarshal_var _u = _target ()->call (CORBA::Nirvana::OperationIndex{ _interface_idx (), 0 },
+		Unmarshal_var _u = _target ()->call (CORBA::Internal::OperationIndex{ _interface_idx (), 0 },
 			&_in, sizeof (_in), _m, &_out, sizeof (_out));
 		::Test::I1_var _ret;
 		Type < ::Test::I1>::unmarshal (_out._ret, _u, _ret);
@@ -88,4 +88,4 @@ const InterfaceMetadata ProxyFactoryImpl <::Test::I1_factory>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_I1_factory_ProxyFactory, Test::I1_factory::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl <Test::I1_factory>)
+NIRVANA_EXPORT (_exp_Test_I1_factory_ProxyFactory, Test::I1_factory::repository_id_, CORBA::AbstractBase, CORBA::Internal::ProxyFactoryImpl <Test::I1_factory>)

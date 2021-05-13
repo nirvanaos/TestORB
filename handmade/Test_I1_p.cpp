@@ -18,7 +18,7 @@ const Char TypeCodeName <TypeCodeTypeDef <&::_exp_Test_SeqLong_TC> >::name_ [] =
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_SeqLong_TC, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_SeqLong_TC>)
+NIRVANA_EXPORT (_exp_Test_SeqLong_TC, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, CORBA::Internal::TypeCodeTypeDef <&_exp_Test_SeqLong_TC>)
 
 extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_MyAlias_TC;
 
@@ -36,7 +36,7 @@ const Char TypeCodeName <TypeCodeTypeDef <&::_exp_Test_MyAlias_TC> >::name_ [] =
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Nirvana::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
+NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Internal::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
 
 namespace CORBA {
 namespace Nirvana {
@@ -50,7 +50,7 @@ const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Nirvana::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeException <Test::MyException, true>)
+NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Internal::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Internal::TypeCodeException <Test::MyException, true>)
 
 namespace CORBA {
 namespace Nirvana {
@@ -67,7 +67,7 @@ const Parameter TypeCodeMembers < ::Test::MyStruct>::members_ [] = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Nirvana::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Nirvana::TypeCodeStruct < Test::MyStruct>)
+NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Internal::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Internal::TypeCodeStruct < Test::MyStruct>)
 
 namespace CORBA {
 namespace Nirvana {
@@ -442,13 +442,13 @@ const Parameter ProxyTraits < ::Test::I1>::string_op_out_params_ [2] = {
 };
 
 const Parameter ProxyTraits < ::Test::I1>::seq_op_in_params_ [2] = {
-	{ "in_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code },
-	{ "inout_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code }
+	{ "in_s", CORBA::Internal::Type <Alias <&Test::_tc_SeqLong> >::type_code },
+	{ "inout_s", CORBA::Internal::Type <Alias <&Test::_tc_SeqLong> >::type_code }
 };
 
 const Parameter ProxyTraits < ::Test::I1>::seq_op_out_params_ [2] = {
-	{ "out_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code },
-	{ "inout_s", CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code }
+	{ "out_s", CORBA::Internal::Type <Alias <&Test::_tc_SeqLong> >::type_code },
+	{ "inout_s", CORBA::Internal::Type <Alias <&Test::_tc_SeqLong> >::type_code }
 };
 
 const Parameter ProxyTraits < ::Test::I1>::any_op_in_params_ [2] = {
@@ -466,7 +466,7 @@ const Operation ProxyTraits < ::Test::I1>::operations_ [] = {
 	{ "throw_no_implement", { 0, 0 }, {0, 0}, Type <void>::type_code, RqProcWrapper < ::Test::I1, throw_no_implement_request> },
 	{ "object_op", { object_op_in_params_, countof (object_op_in_params_) }, { object_op_out_params_, countof (object_op_out_params_) }, Type < ::Test::I1>::type_code, RqProcWrapper < ::Test::I1, object_op_request> },
 	{ "string_op", { string_op_in_params_, countof (string_op_in_params_) }, { string_op_out_params_, countof (string_op_out_params_) }, Type <String>::type_code, RqProcWrapper < ::Test::I1, string_op_request> },
-	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, CORBA::Nirvana::Type <Alias <&Test::_tc_SeqLong> >::type_code, RqProcWrapper < ::Test::I1, seq_op_request> },
+	{ "seq_op", { seq_op_in_params_, countof (seq_op_in_params_) }, { seq_op_out_params_, countof (seq_op_out_params_) }, CORBA::Internal::Type <Alias <&Test::_tc_SeqLong> >::type_code, RqProcWrapper < ::Test::I1, seq_op_request> },
 	{ "any_op", { any_op_in_params_, countof (any_op_in_params_) }, { any_op_out_params_, countof (any_op_out_params_) }, Type <Any>::type_code, RqProcWrapper < ::Test::I1, any_op_request> }
 };
 
@@ -483,4 +483,4 @@ const InterfaceMetadata ProxyFactoryImpl < ::Test::I1>::metadata_ = {
 }
 }
 
-NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Nirvana::ProxyFactoryImpl < ::Test::I1>)
+NIRVANA_EXPORT (_exp_Test_I1_ProxyFactory, Test::I1::repository_id_, CORBA::AbstractBase, CORBA::Internal::ProxyFactoryImpl < ::Test::I1>)
