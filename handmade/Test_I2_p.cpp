@@ -3,7 +3,7 @@
 #include "Test_I2_s.h"
 
 namespace CORBA {
-namespace Nirvana {
+namespace Internal {
 
 IMPLEMENT_PROXY_FACTORY (::Test::, I2);
 

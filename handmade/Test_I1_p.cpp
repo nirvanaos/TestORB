@@ -5,7 +5,7 @@
 extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_SeqLong_TC;
 
 namespace CORBA {
-namespace Nirvana {
+namespace Internal {
 
 template <>
 class TypeCodeTypeDef <&::_exp_Test_SeqLong_TC> :
@@ -23,7 +23,7 @@ NIRVANA_EXPORT (_exp_Test_SeqLong_TC, "IDL:Test/SeqLong:1.0", CORBA::TypeCode, C
 extern "C" NIRVANA_OLF_SECTION const Nirvana::ExportInterface _exp_Test_MyAlias_TC;
 
 namespace CORBA {
-namespace Nirvana {
+namespace Internal {
 
 template <>
 class TypeCodeTypeDef <&::_exp_Test_MyAlias_TC> :
@@ -39,7 +39,7 @@ const Char TypeCodeName <TypeCodeTypeDef <&::_exp_Test_MyAlias_TC> >::name_ [] =
 NIRVANA_EXPORT (_exp_Test_MyAlias_TC, "IDL:Test/MyAlias:1.0", CORBA::TypeCode, CORBA::Internal::TypeCodeTypeDef <&_exp_Test_MyAlias_TC>)
 
 namespace CORBA {
-namespace Nirvana {
+namespace Internal {
 
 template <>
 const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
@@ -53,7 +53,7 @@ const Parameter TypeCodeMembers < ::Test::MyException>::members_ [] = {
 NIRVANA_EXPORT (_exp_Test_TC_MyException, CORBA::Internal::RepIdOf <Test::MyException>::repository_id_, CORBA::TypeCode, CORBA::Internal::TypeCodeException <Test::MyException, true>)
 
 namespace CORBA {
-namespace Nirvana {
+namespace Internal {
 
 template <>
 const Char TypeCodeName < ::Test::MyStruct>::name_ [] = "MyStruct";
@@ -70,7 +70,7 @@ const Parameter TypeCodeMembers < ::Test::MyStruct>::members_ [] = {
 NIRVANA_EXPORT (_exp_Test_TC_MyStruct, CORBA::Internal::RepIdOf <Test::MyStruct>::repository_id_, CORBA::TypeCode, CORBA::Internal::TypeCodeStruct < Test::MyStruct>)
 
 namespace CORBA {
-namespace Nirvana {
+namespace Internal {
 
 IMPLEMENT_PROXY_FACTORY(::Test::, I1);
 
