@@ -1,3 +1,4 @@
+#include <Nirvana/Nirvana.h>
 #include "ImplI1.h"
 
 namespace Test {
