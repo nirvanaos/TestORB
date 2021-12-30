@@ -21,11 +21,6 @@ public:
 		return p1 + addendum_;
 	}
 
-	void throw_no_implement ()
-	{
-		throw CORBA::NO_IMPLEMENT ();
-	}
-
 	int32_t addendum () const
 	{
 		return addendum_;

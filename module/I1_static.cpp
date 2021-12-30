@@ -18,11 +18,6 @@ public:
 		return p1 + TestORB::MAGIC_CONST;
 	}
 
-	static void throw_no_implement ()
-	{
-		throw CORBA::NO_IMPLEMENT ();
-	}
-
 	static int32_t addendum ()
 	{
 		return TestORB::MAGIC_CONST;

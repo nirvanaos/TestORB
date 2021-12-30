@@ -25,7 +25,12 @@ public:
 
 	virtual void throw_no_implement ()
 	{
-		throw CORBA::NO_IMPLEMENT ();
+		ImplI1::throw_no_implement ();
+	}
+
+	virtual void throw_user ()
+	{
+		ImplI1::throw_user ();
 	}
 
 	virtual I1::_ref_type object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
