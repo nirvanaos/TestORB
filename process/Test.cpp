@@ -147,11 +147,25 @@ TYPED_TEST (TestORB_I1, Performance)
 	test_performance (TestORB_I1 <TypeParam>::incarnate ());
 }
 
-TYPED_TEST (TestORB_I1, Exception)
+TYPED_TEST (TestORB_I1, SystemException)
 {
 	I1_ptr p = TestORB_I1 <TypeParam>::incarnate ();
 	EXPECT_THROW (p->throw_no_implement (), NO_IMPLEMENT);
-//	EXPECT_THROW (p->throw_user (), MyException); TODO: Fails!
+	release (p);
+}
+
+TYPED_TEST (TestORB_I1, UserException)
+{
+	I1_ptr p = TestORB_I1 <TypeParam>::incarnate ();
+	bool thrown = false;
+	try {
+		p->throw_user ();
+	} catch (const MyException& ex) {
+		thrown = true;
+		EXPECT_EQ (ex.param, "test");
+		EXPECT_TRUE (ex.bparam);
+	}
+	EXPECT_TRUE (thrown);
 	release (p);
 }
 
