@@ -3,7 +3,7 @@
 
 #include <CORBA/CORBA.h>
 #include <Nirvana/static.h>
-#include "Test_I1.h"
+#include <IDL/Test_I1.h>
 
 NIRVANA_STATIC((Test, I1_static), ::Test::I1)
 

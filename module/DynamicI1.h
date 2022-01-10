@@ -2,7 +2,7 @@
 #define NIRVANA_TESTORB_DYNAMICI1_H_
 
 #include "ImplI1.h"
-#include "Test_I1_s.h"
+#include <IDL/Test_I1_s.h>
 
 namespace Test {
 

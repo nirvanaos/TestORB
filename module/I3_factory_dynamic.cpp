@@ -1,6 +1,6 @@
 #include <CORBA/Server.h>
 #include "I3_factory_dynamic.h"
-#include "Test_I3_factory_s.h"
+#include <IDL/Test_I3_factory_s.h>
 #include "DynamicI3.h"
 
 namespace Test {

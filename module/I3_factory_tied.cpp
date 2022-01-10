@@ -1,8 +1,8 @@
 #include <CORBA/Server.h>
 #include "I3_factory_tied.h"
 #include "ImplI1.h"
-#include "Test_I3_s.h"
-#include "Test_I3_factory_s.h"
+#include <IDL/Test_I3_s.h>
+#include <IDL/Test_I3_factory_s.h>
 
 namespace Test {
 
