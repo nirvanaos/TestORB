@@ -5,6 +5,16 @@ namespace Test {
 
 using namespace CORBA;
 
+void ImplI1::throw_no_implement ()
+{
+	throw CORBA::NO_IMPLEMENT ();
+}
+
+void ImplI1::throw_user ()
+{
+	throw MyException ("test", true);
+}
+
 I1::_ref_type ImplI1::object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
 {
 	I1::_ref_type tmp (std::move (inout_obj));
