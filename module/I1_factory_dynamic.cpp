@@ -17,4 +17,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP(Test, I1_factory_dynamic)
+NIRVANA_STATIC_EXP (Test, I1_factory_dynamic)
