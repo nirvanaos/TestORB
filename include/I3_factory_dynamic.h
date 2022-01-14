@@ -1,5 +1,6 @@
 #ifndef NIRVANA_TESTORB_I3_FACTORY_DYNAMIC_H_
 #define NIRVANA_TESTORB_I3_FACTORY_DYNAMIC_H_
+#pragma once
 
 #include <CORBA/CORBA.h>
 #include <IDL/Test_I3_factory.h>

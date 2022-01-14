@@ -1,5 +1,6 @@
 #ifndef NIRVANA_TESTORB_I1_FACTORY_PORTABLE_H_
 #define NIRVANA_TESTORB_I1_FACTORY_PORTABLE_H_
+#pragma once
 
 #include <CORBA/CORBA.h>
 #include <IDL/Test_I1_factory.h>

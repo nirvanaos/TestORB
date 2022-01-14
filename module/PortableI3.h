@@ -1,5 +1,6 @@
 #ifndef NIRVANA_TESTORB_PORTABLEI3_H_
 #define NIRVANA_TESTORB_PORTABLEI3_H_
+#pragma once
 
 #include "ImplI1.h"
 #include <IDL/Test_I3_s.h>

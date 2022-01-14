@@ -1,5 +1,6 @@
 #ifndef NIRVANA_TESTORB_IMPLI1_H_
 #define NIRVANA_TESTORB_IMPLI1_H_
+#pragma once
 
 #include <CORBA/CORBA.h>
 #include <IDL/Test_I1.h>
