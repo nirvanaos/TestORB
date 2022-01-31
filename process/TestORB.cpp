@@ -346,6 +346,23 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
 	EXPECT_TRUE (_tc_MyAlias->content_type ()->equal (_tc_SeqLong));
 	EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
+
+	EXPECT_EQ (_tc_TypeCode->kind (), TCKind::tk_TypeCode);
+	EXPECT_THROW (_tc_TypeCode->id (), TypeCode::BadKind);
+
+	EXPECT_EQ (_tc_Object->kind (), TCKind::tk_objref);
+	EXPECT_EQ (_tc_Object->id (), CORBA_REPOSITORY_ID ("Object"));
+	EXPECT_EQ (_tc_Object->name (), "Object");
+
+	EXPECT_EQ (_tc_string->kind (), TCKind::tk_string);
+	EXPECT_THROW (_tc_string->id (), TypeCode::BadKind);
+
+	EXPECT_EQ (_tc_wstring->kind (), TCKind::tk_wstring);
+	EXPECT_THROW (_tc_wstring->id (), TypeCode::BadKind);
+
+	EXPECT_EQ (_tc_ValueBase->kind (), TCKind::tk_value);
+	EXPECT_EQ (_tc_ValueBase->id (), CORBA_REPOSITORY_ID ("ValueBase"));
+	EXPECT_EQ (_tc_ValueBase->name (), "ValueBase");
 }
 
 }
