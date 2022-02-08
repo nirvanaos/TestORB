@@ -17,6 +17,8 @@ namespace TestORB {
 using namespace CORBA;
 using namespace Test;
 
+#ifdef LEGACY_CORBA_CPP
+
 void test_interface (I1_ptr p)
 {
 	ASSERT_FALSE (is_nil (p));
@@ -86,12 +88,93 @@ void test_interface (I1_ptr p)
 	release (p);
 }
 
+#else
+
+void test_interface (I1::_ptr_type p)
+{
+	ASSERT_FALSE (is_nil (p));
+	ASSERT_FALSE (p->_non_existent ());
+	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
+	Object::_ptr_type object = p;
+	ASSERT_TRUE (object);
+	ASSERT_FALSE (object->_non_existent ());
+	AbstractBase::_ptr_type ab = object;
+	ASSERT_TRUE (ab);
+	{
+		Object::_ptr_type o1 = ab->_to_object ();
+		ASSERT_TRUE (o1);
+		ASSERT_FALSE (o1->_non_existent ());
+	}
+	{
+		I1::_ptr_type p1 = I1::_narrow (object);
+		ASSERT_TRUE (p1);
+		ASSERT_FALSE (p1->_non_existent ());
+		EXPECT_EQ (p1->op1 (1), MAGIC_CONST + 1);
+	}
+	ASSERT_FALSE (p->_non_existent ());
+	EXPECT_TRUE (p->_is_a ("IDL:omg.org/CORBA/Object:1.0"));
+	EXPECT_TRUE (p->_is_a ("IDL:Test/I1:1.0"));
+
+	{
+		string out = "this text will be lost", inout = "inout string";
+		string in = "in string";
+		string ret = p->string_op (in, out, inout);
+		EXPECT_STREQ (ret.c_str (), "inout string");
+		EXPECT_STREQ (out.c_str (), "in string");
+		EXPECT_STREQ (inout.c_str (), "in string");
+	}
+
+	{ // Pass string constant as in parameter
+		string out = "this text will be lost", inout = "inout string";
+		string ret = p->string_op ("in string", out, inout);
+		EXPECT_STREQ (ret.c_str (), "inout string");
+		EXPECT_STREQ (out.c_str (), "in string");
+		EXPECT_STREQ (inout.c_str (), "in string");
+	}
+
+	{
+		I1::_ref_type out, inout (p);
+		I1::_ref_type ret = p->object_op (p, out, inout);
+		EXPECT_TRUE (out && out->_is_equivalent (p));
+		EXPECT_TRUE (inout && inout->_is_equivalent (p));
+		EXPECT_TRUE (ret && ret->_is_equivalent (p));
+	}
+
+	{
+		vector <Long> out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
+		vector <Long> ret = p->seq_op (vector <Long> { 9, 10, 11, 12 }, out, inout);
+		EXPECT_EQ (ret, vector <Long> ({ 5, 6, 7, 8 }));
+		EXPECT_EQ (out, vector <Long> ({ 9, 10, 11, 12 }));
+		EXPECT_EQ (inout, vector <Long> ({ 9, 10, 11, 12 }));
+	}
+
+	{
+		CORBA::Any out, inout;
+		CORBA::Any in;
+		CORBA::Any ret = p->any_op (in, out, inout);
+	}
+}
+
+#endif
+
+#ifdef LEGACY_CORBA_CPP
+
 void test_performance (I1_ptr p)
 {
 	for (int i = 0; i < 10000; ++i)
 		p->op1 (2);
 	release (p);
 }
+
+#else
+
+void test_performance (I1::_ptr_type p)
+{
+	for (int i = 0; i < 10000; ++i)
+		p->op1 (2);
+}
+
+#endif
 
 // The fixture for testing simple interface.
 
@@ -119,6 +202,8 @@ protected:
 	virtual ~TestORB_I1 ()
 	{}
 
+#ifdef LEGACY_CORBA_CPP
+
 	static I1_ptr incarnate (I1_factory_ptr factory)
 	{
 		return factory->create (MAGIC_CONST);
@@ -133,6 +218,25 @@ protected:
 	{
 		return incarnate (Factory::ptr ());
 	}
+
+#else
+
+	static I1::_ref_type incarnate (I1_factory::_ptr_type factory)
+	{
+		return factory->create (MAGIC_CONST);
+	}
+
+	static I1::_ref_type incarnate (I1::_ptr_type obj)
+	{
+		return obj;
+	}
+
+	static I1::_ref_type incarnate ()
+	{
+		return incarnate (Factory::ptr ());
+	}
+
+#endif
 };
 
 TYPED_TEST_SUITE (TestORB_I1, ServantTypesI1);
@@ -147,12 +251,26 @@ TYPED_TEST (TestORB_I1, Performance)
 	test_performance (TestORB_I1 <TypeParam>::incarnate ());
 }
 
+#ifdef LEGACY_CORBA_CPP
+
 TYPED_TEST (TestORB_I1, SystemException)
 {
 	I1_ptr p = TestORB_I1 <TypeParam>::incarnate ();
 	EXPECT_THROW (p->throw_no_implement (), NO_IMPLEMENT);
 	release (p);
 }
+
+#else
+
+TYPED_TEST (TestORB_I1, SystemException)
+{
+	I1::_ref_type p = TestORB_I1 <TypeParam>::incarnate ();
+	EXPECT_THROW (p->throw_no_implement (), NO_IMPLEMENT);
+}
+
+#endif
+
+#ifdef LEGACY_CORBA_CPP
 
 TYPED_TEST (TestORB_I1, UserException)
 {
@@ -168,6 +286,24 @@ TYPED_TEST (TestORB_I1, UserException)
 	EXPECT_TRUE (thrown);
 	release (p);
 }
+
+#else
+
+TYPED_TEST (TestORB_I1, UserException)
+{
+	I1::_ref_type p = TestORB_I1 <TypeParam>::incarnate ();
+	bool thrown = false;
+	try {
+		p->throw_user ();
+	} catch (const MyException& ex) {
+		thrown = true;
+		EXPECT_EQ (ex.param (), "test");
+		EXPECT_TRUE (ex.bparam ());
+	}
+	EXPECT_TRUE (thrown);
+}
+
+#endif
 
 // The fixture for testing complex interface.
 
@@ -195,6 +331,8 @@ protected:
 	virtual ~TestORB_I3 ()
 	{}
 
+#ifdef LEGACY_CORBA_CPP
+
 	static I3_ptr incarnate (I3_factory_ptr factory)
 	{
 		return factory->create (MAGIC_CONST);
@@ -209,6 +347,25 @@ protected:
 	{
 		return incarnate (Factory::ptr ());
 	}
+
+#else
+
+	static I3::_ref_type incarnate (I3_factory::_ptr_type factory)
+	{
+		return factory->create (MAGIC_CONST);
+	}
+
+	static I3::_ref_type incarnate (I3::_ptr_type obj)
+	{
+		return obj;
+	}
+
+	static I3::_ref_type incarnate ()
+	{
+		return incarnate (Factory::ptr ());
+	}
+
+#endif
 };
 
 TYPED_TEST_SUITE (TestORB_I3, ServantTypesI3);
@@ -222,6 +379,8 @@ TYPED_TEST (TestORB_I3, Performance)
 {
 	test_performance (TestORB_I3 <TypeParam>::incarnate ());
 }
+
+#ifdef LEGACY_CORBA_CPP
 
 TYPED_TEST (TestORB_I3, MultiInherit)
 {
@@ -265,6 +424,46 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 
 	// release (p) must be called automatically.
 }
+
+#else
+
+TYPED_TEST (TestORB_I3, MultiInherit)
+{
+	I3::_ref_type p = TestORB_I3 <TypeParam>::incarnate ();
+
+	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
+	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
+	EXPECT_EQ (p->op3 (1), 3 * MAGIC_CONST + 1);
+
+	{
+		I1::_ref_type p1 = p;
+		EXPECT_EQ (p1->op1 (1), MAGIC_CONST + 1);
+		I3::_ref_type p3 = I3::_narrow (p1);
+		ASSERT_TRUE (p3);
+		EXPECT_EQ (p3->op3 (1), 3 * MAGIC_CONST + 1);
+	}
+
+	{
+		I2::_ref_type p2 = p;
+		EXPECT_EQ (p2->op2 (1), 2 * MAGIC_CONST + 1);
+		I3::_ref_type p3 = I3::_narrow (p2);
+		ASSERT_TRUE (p3);
+		EXPECT_EQ (p3->op3 (1), 3 * MAGIC_CONST + 1);
+	}
+
+	{
+		Object::_ref_type obj = p;
+		ASSERT_TRUE (obj);
+		I1::_ref_type p1 = I1::_narrow (obj);
+		ASSERT_TRUE (p1);
+		I2::_ref_type p2 = I2::_narrow (obj);
+		ASSERT_TRUE (p2);
+		I3::_ref_type p3 = I3::_narrow (obj);
+		ASSERT_TRUE (p3);
+	}
+}
+
+#endif
 
 class TestORB : public ::testing::Test
 {
@@ -330,7 +529,11 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
 	EXPECT_EQ (_tc_SeqLong->name (), "SeqLong");
 
+#ifdef LEGACY_CORBA_CPP
 	TypeCode::_var_type seq = _tc_SeqLong->content_type ();
+#else
+	TypeCode::_ref_type seq = _tc_SeqLong->content_type ();
+#endif
 	EXPECT_EQ (seq->kind (), TCKind::tk_sequence);
 	EXPECT_EQ (seq->length (), 0);
 
@@ -338,7 +541,11 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_TRUE (_tc_SeqLong->equivalent (seq));
 	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
 
+#ifdef LEGACY_CORBA_CPP
 	TypeCode::_var_type l = seq->content_type ();
+#else
+	TypeCode::_ref_type l = seq->content_type ();
+#endif
 	EXPECT_EQ (l->kind (), TCKind::tk_long);
 
 	EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
