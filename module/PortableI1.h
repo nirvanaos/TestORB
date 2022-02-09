@@ -10,7 +10,7 @@ namespace Test {
 // Portable implementation
 
 class PortableI1 :
-	public POA_Test::I1,
+	public CORBA::servant_traits <I1>::base_type,
 	public ImplI1
 {
 public:
@@ -61,6 +61,11 @@ public:
 	virtual void addendum (int32_t a)
 	{
 		addendum_ = a;
+	}
+
+	virtual std::string short_string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
+	{
+		return ImplI1::short_string_op (in_s, out_s, inout_s);
 	}
 
 private:

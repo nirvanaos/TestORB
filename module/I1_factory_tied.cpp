@@ -41,17 +41,17 @@ class I1_factory_tied :
 public:
 	static I1::_ref_type create (CORBA::Long addendum)
 	{
-		return CORBA::make_reference <POA_Test::I1_tie <TiedI1> > (new TiedI1 (addendum))->_this ();
+		return CORBA::make_reference <CORBA::servant_traits <I1>::tie_type <TiedI1> > (new TiedI1 (addendum))->_this ();
 	}
 };
 
 class TiedDerivedI1 :
-	public POA_Test::I1_tie <TiedI1>,
+	public CORBA::servant_traits <I1>::tie_type <TiedI1>,
 	public TiedI1
 {
 public:
 	TiedDerivedI1 (CORBA::Long addendum) :
-		POA_Test::I1_tie <TiedI1> (static_cast <TiedI1&> (*this)),
+		CORBA::servant_traits <I1>::tie_type <TiedI1> (static_cast <TiedI1&> (*this)),
 		TiedI1 (addendum)
 	{}
 };

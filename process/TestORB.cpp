@@ -153,6 +153,12 @@ void test_interface (I1::_ptr_type p)
 		CORBA::Any in;
 		CORBA::Any ret = p->any_op (in, out, inout);
 	}
+
+	{
+		string out, inout;
+		string ret;
+		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+	}
 }
 
 #endif
