@@ -38,22 +38,26 @@ public:
 		PortableI1::throw_user ();
 	}
 
-	virtual I1::_ref_type object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
+	virtual I1::_ref_type object_op (I1::_ptr_type in_obj,
+		I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
 	{
 		return PortableI1::object_op (in_obj, out_obj, inout_obj);
 	}
 
-	virtual std::string string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
+	virtual std::string string_op (const std::string& in_s,
+		std::string& out_s, std::string& inout_s)
 	{
 		return PortableI1::string_op (in_s, out_s, inout_s);
 	}
 
-	virtual std::vector <CORBA::Long> seq_op (const std::vector <CORBA::Long>& in_s, std::vector <CORBA::Long>& out_s, std::vector <CORBA::Long>& inout_s)
+	virtual std::vector <CORBA::Long> seq_op (const std::vector <CORBA::Long>& in_s,
+		std::vector <CORBA::Long>& out_s, std::vector <CORBA::Long>& inout_s)
 	{
 		return PortableI1::seq_op (in_s, out_s, inout_s);
 	}
 
-	virtual CORBA::Any any_op (const CORBA::Any& in_a, CORBA::Any& out_a, CORBA::Any& inout_a)
+	virtual CORBA::Any any_op (const CORBA::Any& in_a, CORBA::Any& out_a,
+		CORBA::Any& inout_a)
 	{
 		return PortableI1::any_op (in_a, out_a, inout_a);
 	}
@@ -68,9 +72,17 @@ public:
 		PortableI1::addendum (a);
 	}
 
-	virtual std::string short_string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
+	virtual std::string short_string_op (const std::string& in_s,
+		std::string& out_s, std::string& inout_s)
 	{
 		return PortableI1::short_string_op (in_s, out_s, inout_s);
+	}
+
+	virtual std::vector <CORBA::Long> short_seq_op (
+		const std::vector <CORBA::Long>& in_s, std::vector <CORBA::Long>& out_s,
+		std::vector <CORBA::Long>& inout_s)
+	{
+		return PortableI1::short_seq_op (in_s, out_s, inout_s);
 	}
 
 	virtual CORBA::Long op2 (CORBA::Long p1)

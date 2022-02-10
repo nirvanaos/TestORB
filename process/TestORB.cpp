@@ -47,17 +47,17 @@ void test_interface (I1_ptr p)
 	EXPECT_TRUE (p->_is_a ("IDL:Test/I1:1.0"));
 
 	{
-		string out = "this text will be lost", inout = "inout string";
-		string in = "in string";
-		string ret = p->string_op (in, out, inout);
+		String_var out = "this text will be lost", inout = "inout string";
+		String_var in = "in string";
+		String_var ret = p->string_op (in, out, inout);
 		EXPECT_STREQ (ret.c_str (), "inout string");
 		EXPECT_STREQ (out.c_str (), "in string");
 		EXPECT_STREQ (inout.c_str (), "in string");
 	}
 
 	{ // Pass string constant as in parameter
-		string out = "this text will be lost", inout = "inout string";
-		string ret = p->string_op ("in string", out, inout);
+		String_var out = "this text will be lost", inout = "inout string";
+		String_var ret = p->string_op ("in string", out, inout);
 		EXPECT_STREQ (ret.c_str (), "inout string");
 		EXPECT_STREQ (out.c_str (), "in string");
 		EXPECT_STREQ (inout.c_str (), "in string");
@@ -72,17 +72,29 @@ void test_interface (I1_ptr p)
 	}
 
 	{
-		vector <Long> out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
-		vector <Long> ret = p->seq_op (vector <Long> { 9, 10, 11, 12 }, out, inout);
-		EXPECT_EQ (ret, vector <Long> ({ 5, 6, 7, 8 }));
-		EXPECT_EQ (out, vector <Long> ({ 9, 10, 11, 12 }));
-		EXPECT_EQ (inout, vector <Long> ({ 9, 10, 11, 12 }));
+		SeqLong out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
+		SeqLong ret = p->seq_op (SeqLong{ 9, 10, 11, 12 }, out, inout);
+		EXPECT_EQ (ret, SeqLong ({ 5, 6, 7, 8 }));
+		EXPECT_EQ (out, SeqLong ({ 9, 10, 11, 12 }));
+		EXPECT_EQ (inout, SeqLong ({ 9, 10, 11, 12 }));
 	}
 
 	{
-		CORBA::Any out, inout;
-		CORBA::Any in;
-		CORBA::Any ret = p->any_op (in, out, inout);
+		Any out, inout;
+		Any in;
+		Any ret = p->any_op (in, out, inout);
+	}
+
+	{
+		String_var out, inout;
+		String_var ret;
+		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+	}
+
+	{
+		SeqLong out, inout;
+		ShortSeqLong ret;
+		EXPECT_THROW (ret = p->short_seq_op (SeqLong { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
 	}
 
 	release (p);
@@ -149,15 +161,21 @@ void test_interface (I1::_ptr_type p)
 	}
 
 	{
-		CORBA::Any out, inout;
-		CORBA::Any in;
-		CORBA::Any ret = p->any_op (in, out, inout);
+		Any out, inout;
+		Any in;
+		Any ret = p->any_op (in, out, inout);
 	}
 
 	{
 		string out, inout;
 		string ret;
 		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+	}
+
+	{
+		vector <Long> out, inout;
+		vector <Long> ret;
+		EXPECT_THROW (ret = p->short_seq_op (vector <Long> { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
 	}
 }
 

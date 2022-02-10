@@ -47,4 +47,14 @@ CORBA::Any ImplI1::any_op (const CORBA::Any& in_any, CORBA::Any& out_any, CORBA:
 	return tmp;
 }
 
+std::string ImplI1::short_string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
+{
+	return string_op (in_s, out_s, inout_s);
+}
+
+std::vector <Long> ImplI1::short_seq_op (const std::vector <Long>& in_s, std::vector <Long>& out_s, std::vector <Long>& inout_s)
+{
+	return seq_op (in_s, out_s, inout_s);
+}
+
 }

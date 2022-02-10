@@ -22,10 +22,8 @@ public:
 	static std::string string_op (const std::string& in_s, std::string& out_s, std::string& inout_s);
 	static std::vector <CORBA::Long> seq_op (const std::vector <CORBA::Long>& in_s, std::vector <CORBA::Long>& out_s, std::vector <CORBA::Long>& inout_s);
 	static CORBA::Any any_op (const CORBA::Any& in_any, CORBA::Any& out_any, CORBA::Any& inout_any);
-	static std::string short_string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
-	{
-		return string_op (in_s, out_s, inout_s);
-	}
+	static std::string short_string_op (const std::string& in_s, std::string& out_s, std::string& inout_s);
+	static std::vector <CORBA::Long> short_seq_op (const std::vector <CORBA::Long>& in_s, std::vector <CORBA::Long>& out_s, std::vector <CORBA::Long>& inout_s);
 };
 
 }
