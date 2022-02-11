@@ -10,7 +10,7 @@ namespace Test {
 // Portable implementation
 
 class PortableI3 :
-	public virtual PortableI1,
+	public virtual PortableI1, // Implementation inheritance
 	public virtual CORBA::servant_traits <I3>::base_type
 {
 public:
