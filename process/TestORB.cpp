@@ -596,4 +596,10 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_ValueBase->name (), "ValueBase");
 }
 
+TEST_F (TestORB, ORBInit)
+{
+	int argc = 0;
+	ORB::_ref_type orb = ORB_init (argc, nullptr, nullptr);
+}
+
 }

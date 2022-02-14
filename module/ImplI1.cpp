@@ -57,4 +57,14 @@ std::vector <Long> ImplI1::short_seq_op (const std::vector <Long>& in_s, std::ve
 	return seq_op (in_s, out_s, inout_s);
 }
 
+std::vector <std::string> ImplI1::seq_string_op (
+	const std::vector <std::string>& in_s, std::vector <std::string>& out_s,
+	std::vector <std::string>& inout_s)
+{
+	std::vector <std::string> tmp (std::move (inout_s));
+	out_s = in_s;
+	inout_s = in_s;
+	return tmp;
+}
+
 }

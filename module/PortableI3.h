@@ -85,6 +85,13 @@ public:
 		return PortableI1::short_seq_op (in_s, out_s, inout_s);
 	}
 
+	virtual std::vector <std::string> seq_string_op (
+		const std::vector <std::string>& in_s, std::vector <std::string>& out_s,
+		std::vector <std::string>& inout_s)
+	{
+		return PortableI1::seq_string_op (in_s, out_s, inout_s);
+	}
+
 	virtual CORBA::Long op2 (CORBA::Long p1)
 	{
 		return p1 + 2 * addendum ();

@@ -80,6 +80,13 @@ public:
 		return ImplI1::short_seq_op (in_s, out_s, inout_s);
 	}
 
+	virtual std::vector <std::string> seq_string_op (
+		const std::vector <std::string>& in_s, std::vector <std::string>& out_s,
+		std::vector <std::string>& inout_s)
+	{
+		return ImplI1::seq_string_op (in_s, out_s, inout_s);
+	}
+
 private:
 	int32_t addendum_;
 };

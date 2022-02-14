@@ -27,6 +27,7 @@ enum MyEnum
 
 typedef string <8> ShortString;
 typedef sequence <long, 4> ShortSeqLong;
+typedef sequence <string> SeqString;
 
 interface I1
 {
@@ -40,6 +41,7 @@ interface I1
 	attribute long addendum;
 	ShortString short_string_op (in ShortString in_s, out ShortString out_s, inout ShortString inout_s);
 	ShortSeqLong short_seq_op (in ShortSeqLong in_s, out ShortSeqLong out_s, inout ShortSeqLong inout_s);
+	SeqString seq_string_op (in SeqString in_s, out SeqString out_s, inout SeqString inout_s);
 };
 
 };
