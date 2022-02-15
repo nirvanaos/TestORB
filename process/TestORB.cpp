@@ -12,6 +12,12 @@
 
 using namespace std;
 
+// There is some bug with virtual implementation when CLang for Visual Studio
+// is used. Maybe even a bug in CLang.
+#if defined (_MSVC_LANG) && defined (__clang__)
+#define TEST_NO_POA
+#endif
+
 namespace TestORB {
 
 using namespace CORBA;
