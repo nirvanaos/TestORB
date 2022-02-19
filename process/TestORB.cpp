@@ -9,6 +9,7 @@
 #include "I3_factory_tied.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
+#include <siginfo.h>
 
 using namespace std;
 
@@ -402,7 +403,20 @@ TYPED_TEST_SUITE (TestORB_I3, ServantTypesI3);
 
 TYPED_TEST (TestORB_I3, Interface)
 {
-	test_interface (TestORB_I3 <TypeParam>::incarnate ());
+	I3::_ref_type p = TestORB_I3 <TypeParam>::incarnate ();
+	test_interface (p);
+	EXPECT_EQ (p->divide (6, 2), 3);
+
+	bool ok = false;
+	try {
+		p->divide (5, 0);
+	} catch (const CORBA::SystemException& ex) {
+		ok = true;
+		const CORBA::ARITHMETIC_ERROR* ae = CORBA::ARITHMETIC_ERROR::_downcast (&ex);
+		EXPECT_TRUE (ae);
+		EXPECT_EQ (ae->minor (), FPE_INTDIV);
+	}
+	EXPECT_TRUE (ok);
 }
 
 TYPED_TEST (TestORB_I3, Performance)

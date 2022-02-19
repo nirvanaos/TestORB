@@ -45,6 +45,11 @@ public:
 		return p1 + 3 * addendum_;
 	}
 
+	static int32_t divide (int32_t a, int32_t b)
+	{
+		return a / b;
+	}
+
 private:
 	int32_t addendum_;
 };

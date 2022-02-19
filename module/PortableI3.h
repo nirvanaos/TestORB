@@ -101,6 +101,11 @@ public:
 	{
 		return p1 + 3 * addendum ();
 	}
+
+	virtual CORBA::Long divide (CORBA::Long a, CORBA::Long b)
+	{
+		return a / b;
+	}
 };
 
 }

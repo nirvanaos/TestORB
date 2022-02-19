@@ -6,6 +6,8 @@ module Test {
 local interface I3 : I1, I2
 {
 	long op3 (in long p1);
+
+	long divide (in long a, in long b);
 };
 
 interface Empty

@@ -39,6 +39,11 @@ public:
 	{
 		return p1 + 3 * TestORB::MAGIC_CONST;
 	}
+
+	static CORBA::Long divide (CORBA::Long a, CORBA::Long b)
+	{
+		return a / b;
+	}
 };
 
 }
