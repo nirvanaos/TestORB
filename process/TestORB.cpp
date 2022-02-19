@@ -403,8 +403,12 @@ TYPED_TEST_SUITE (TestORB_I3, ServantTypesI3);
 
 TYPED_TEST (TestORB_I3, Interface)
 {
+	test_interface (TestORB_I3 <TypeParam>::incarnate ());
+}
+
+TYPED_TEST (TestORB_I3, Signal)
+{
 	I3::_ref_type p = TestORB_I3 <TypeParam>::incarnate ();
-	test_interface (p);
 	EXPECT_EQ (p->divide (6, 2), 3);
 
 	bool ok = false;
