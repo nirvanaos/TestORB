@@ -9,7 +9,7 @@
 #include "I3_factory_tied.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
-#include <siginfo.h>
+#include <signal.h>
 
 using namespace std;
 
