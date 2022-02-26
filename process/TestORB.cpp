@@ -408,7 +408,13 @@ TYPED_TEST (TestORB_I3, Interface)
 
 TYPED_TEST (TestORB_I3, Signal)
 {
-	I3::_ref_type p = TestORB_I3 <TypeParam>::incarnate ();
+#ifdef LEGACY_CORBA_CPP
+	I3_var
+#else
+	I3::_ref_type
+#endif
+	p = TestORB_I3 <TypeParam>::incarnate ();
+
 	EXPECT_EQ (p->divide (6, 2), 3);
 
 	bool ok = false;
@@ -623,7 +629,13 @@ TEST_F (TestORB, TypeCode)
 TEST_F (TestORB, ORBInit)
 {
 	int argc = 0;
-	ORB::_ref_type orb = ORB_init (argc, nullptr, nullptr);
+	ORB::
+#ifdef LEGACY_CORBA_CPP
+		_var_type
+#else
+		_ref_type
+#endif
+		orb = ORB_init (argc, nullptr, nullptr);
 }
 
 }
