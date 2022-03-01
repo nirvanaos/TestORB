@@ -33,8 +33,13 @@ public:
 		ImplI1::throw_user ();
 	}
 
+#ifdef LEGACY_CORBA_CPP
+	virtual I1::_ptr_type object_op (I1::_ptr_type in_obj, I1::_var_type& out_obj,
+		I1::_var_type& inout_obj)
+#else
 	virtual I1::_ref_type object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj,
 		I1::_ref_type& inout_obj)
+#endif
 	{
 		return ImplI1::object_op (in_obj, out_obj, inout_obj);
 	}

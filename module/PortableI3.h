@@ -18,11 +18,6 @@ public:
 		PortableI1 (addendum)
 	{}
 
-	I3::_ref_type _this ()
-	{
-		return CORBA::servant_traits <I3>::base_type::_this ();
-	}
-
 	virtual CORBA::Long op1 (CORBA::Long p1)
 	{
 		return PortableI1::op1 (p1);
@@ -38,8 +33,13 @@ public:
 		PortableI1::throw_user ();
 	}
 
-	virtual I1::_ref_type object_op (I1::_ptr_type in_obj,
-		I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
+#ifdef LEGACY_CORBA_CPP
+	virtual I1::_ptr_type object_op (I1::_ptr_type in_obj, I1::_var_type& out_obj,
+		I1::_var_type& inout_obj)
+#else
+	virtual I1::_ref_type object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj,
+		I1::_ref_type& inout_obj)
+#endif
 	{
 		return PortableI1::object_op (in_obj, out_obj, inout_obj);
 	}

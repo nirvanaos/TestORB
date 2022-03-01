@@ -39,14 +39,15 @@ class I1_factory_tied :
 	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_tied>
 {
 public:
-	static I1::_ref_type create (CORBA::Long addendum)
+	static 
+#ifdef LEGACY_CORBA_CPP
+		I1::_ptr_type
+#else
+		I1::_ref_type
+#endif
+		create (CORBA::Long addendum)
 	{
-		CORBA::servant_reference < CORBA::servant_traits <I1>::tie_type <TiedI1> > servant =
-			CORBA::make_reference <CORBA::servant_traits <I1>::tie_type <TiedI1> > (new TiedI1 (addendum));
-		servant->_add_ref ();
-		unsigned long rcnt = servant->_refcount_value ();
-		servant->_remove_ref ();
-		return servant->_this ();
+		return CORBA::make_reference <CORBA::servant_traits <I1>::tie_type <TiedI1> > (new TiedI1 (addendum))->_this ();
 	}
 };
 
@@ -65,13 +66,15 @@ class I1_tied_derived :
 	public CORBA::Internal::ServantStatic <I1_tied_derived, I1_factory>
 {
 public:
-	static I1::_ref_type create (CORBA::Long addendum)
+	static
+#ifdef LEGACY_CORBA_CPP
+		I1::_ptr_type
+#else
+		I1::_ref_type
+#endif
+		create (CORBA::Long addendum)
 	{
-		CORBA::servant_reference <TiedDerivedI1> servant = CORBA::make_reference <TiedDerivedI1> (addendum);
-		servant->_add_ref ();
-		unsigned long rcnt = servant->_refcount_value ();
-		servant->_remove_ref ();
-		return servant->_this ();
+		return CORBA::make_reference <TiedDerivedI1> (addendum)->_this ();
 	}
 };
 

@@ -9,13 +9,15 @@ class I1_factory_dynamic :
 	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_dynamic>
 {
 public:
-	static I1::_ref_type create (CORBA::Long addendum)
+	static
+#ifdef LEGACY_CORBA_CPP
+		I1::_var_type
+#else
+		I1::_ref_type
+#endif
+	create (CORBA::Long addendum)
 	{
-		CORBA::servant_reference <DynamicI1> servant = CORBA::make_reference <DynamicI1> (addendum);
-		servant->_add_ref ();
-		unsigned long rcnt = servant->_refcount_value ();
-		servant->_remove_ref ();
-		return servant->_this ();
+		return CORBA::make_reference <DynamicI1> (addendum)->_this ();
 	}
 };
 
