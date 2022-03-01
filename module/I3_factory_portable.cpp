@@ -11,7 +11,11 @@ class I3_factory_portable :
 public:
 	static I3::_ref_type create (CORBA::Long addendum)
 	{
-		return CORBA::make_reference <PortableI3> (addendum)->_this ();
+		CORBA::servant_reference <PortableI3> servant = CORBA::make_reference <PortableI3> (addendum);
+		servant->_add_ref ();
+		unsigned long rcnt = servant->_refcount_value ();
+		servant->_remove_ref ();
+		return servant->_this ();
 	}
 };
 

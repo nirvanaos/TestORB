@@ -56,7 +56,12 @@ class I3_factory_tied :
 public:
 	static I3::_ref_type create (CORBA::Long addendum)
 	{
-		return CORBA::make_reference <CORBA::servant_traits <I3>::tie_type <TiedI3> > (new TiedI3 (addendum))->_this ();
+		CORBA::servant_reference <CORBA::servant_traits <I3>::tie_type <TiedI3> > servant =
+			CORBA::make_reference <CORBA::servant_traits <I3>::tie_type <TiedI3> > (new TiedI3 (addendum));
+		servant->_add_ref ();
+		unsigned long rcnt = servant->_refcount_value ();
+		servant->_remove_ref ();
+		return servant->_this ();
 	}
 };
 
@@ -77,7 +82,12 @@ class I3_tied_derived :
 public:
 	static I3::_ref_type create (CORBA::Long addendum)
 	{
-		return CORBA::make_reference <TiedDerivedI3> (addendum)->_this ();
+		CORBA::servant_reference <TiedDerivedI3> servant =
+			CORBA::make_reference <TiedDerivedI3> (addendum);
+		servant->_add_ref ();
+		unsigned long rcnt = servant->_refcount_value ();
+		servant->_remove_ref ();
+		return servant->_this ();
 	}
 };
 
