@@ -117,13 +117,6 @@ void test_interface (I1::_ptr_type p)
 	Object::_ptr_type object = p;
 	ASSERT_TRUE (object);
 	ASSERT_FALSE (object->_non_existent ());
-	AbstractBase::_ptr_type ab = object;
-	ASSERT_TRUE (ab);
-	{
-		Object::_ptr_type o1 = ab->_to_object ();
-		ASSERT_TRUE (o1);
-		ASSERT_FALSE (o1->_non_existent ());
-	}
 	{
 		I1::_ptr_type p1 = I1::_narrow (object);
 		ASSERT_TRUE (p1);
