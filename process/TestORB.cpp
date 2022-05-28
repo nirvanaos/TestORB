@@ -34,14 +34,6 @@ void test_interface (I1_ptr p)
 	Object_ptr object = p;
 	ASSERT_FALSE (is_nil (object));
 	ASSERT_FALSE (object->_non_existent ());
-	AbstractBase_ptr ab = object;
-	ASSERT_FALSE (is_nil (ab));
-	{
-		Object_ptr o1 = ab->_to_object ();
-		ASSERT_FALSE (is_nil (o1));
-		ASSERT_FALSE (o1->_non_existent ());
-		release (o1);
-	}
 	{
 		I1_ptr p1 = I1::_narrow (object);
 		ASSERT_FALSE (is_nil (p1));
