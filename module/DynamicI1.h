@@ -18,6 +18,9 @@ public:
 		addendum_ (addendum)
 	{}
 
+	~DynamicI1 ()
+	{}
+
 	int32_t op1 (int32_t p1) const
 	{
 		return p1 + addendum_;
