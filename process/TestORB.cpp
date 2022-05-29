@@ -559,10 +559,23 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_LE (_tc_MyStruct->member_count (), 3u);
 	EXPECT_EQ (_tc_MyStruct->member_name (0), "ws_member");
 	EXPECT_EQ (_tc_MyStruct->member_name (1), "l_member");
+#ifdef LEGACY_CORBA_CPP
+	{
+		TypeCode::_var_type mt = _tc_MyStruct->member_type (0);
+		EXPECT_EQ (mt->kind (), TCKind::tk_wstring);
+		mt = _tc_MyStruct->member_type (1);
+		EXPECT_EQ (mt->kind (), TCKind::tk_long);
+		if (_tc_MyStruct->member_count () > 2) {
+			mt = _tc_MyStruct->member_type (2);
+			EXPECT_EQ (mt->kind (), TCKind::tk_objref);
+		}
+	}
+#else
 	EXPECT_EQ (_tc_MyStruct->member_type (0)->kind (), TCKind::tk_wstring);
 	EXPECT_EQ (_tc_MyStruct->member_type (1)->kind (), TCKind::tk_long);
 	if (_tc_MyStruct->member_count () > 2)
 		EXPECT_EQ (_tc_MyStruct->member_type (2)->kind (), TCKind::tk_objref);
+#endif
 
 	EXPECT_EQ (_tc_SeqLong->kind (), TCKind::tk_alias);
 	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
@@ -590,7 +603,12 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
 	EXPECT_EQ (_tc_MyAlias->id (), "IDL:Test/MyAlias:1.0");
 	EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
+#ifdef LEGACY_CORBA_CPP
+	l = _tc_MyAlias->content_type ();
+	EXPECT_TRUE (l->equal (_tc_SeqLong));
+#else
 	EXPECT_TRUE (_tc_MyAlias->content_type ()->equal (_tc_SeqLong));
+#endif
 	EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
 
 	EXPECT_EQ (_tc_TypeCode->kind (), TCKind::tk_TypeCode);
