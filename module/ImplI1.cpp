@@ -20,8 +20,8 @@ void ImplI1::throw_user ()
 I1::_ptr_type ImplI1::object_op (I1::_ptr_type in_obj, I1::_var_type& out_obj, I1::_var_type& inout_obj)
 {
 	I1::_var_type tmp (std::move (inout_obj));
-	out_obj = in_obj;
-	inout_obj = in_obj;
+	out_obj = I1::_duplicate (in_obj);
+	inout_obj = I1::_duplicate (in_obj);
 	return tmp._retn ();
 }
 

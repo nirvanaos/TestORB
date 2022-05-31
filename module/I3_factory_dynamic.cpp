@@ -3,10 +3,12 @@
 #include <IDL/Test_I3_factory_s.h>
 #include "DynamicI3.h"
 
+using namespace CORBA;
+
 namespace Test {
 
 class I3_factory_dynamic :
-	public CORBA::servant_traits <I3_factory>::ServantStatic <I3_factory_dynamic>
+	public servant_traits <I3_factory>::ServantStatic <I3_factory_dynamic>
 {
 public:
 	static
@@ -15,9 +17,19 @@ public:
 #else
 		I3::_ref_type
 #endif
-		create (CORBA::Long addendum)
+		create (Long addendum)
 	{
-		return CORBA::make_reference <DynamicI3> (addendum)->_this ();
+#ifdef LEGACY_CORBA_CPP
+//		{
+//			LocalObject::_ptr_type lo = new DynamicI3 (addendum);
+//			Object::_ptr_type obj = lo;
+//			release (lo);
+//		}
+#endif
+		servant_reference <DynamicI3> serv = make_reference <DynamicI3> (addendum);
+		// Test for LocalObject
+		//Internal::I_ptr <LocalObject> lo = serv;
+		return serv->_this ();
 	}
 };
 
