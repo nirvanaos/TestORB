@@ -21,8 +21,8 @@ public:
 	{
 		servant_reference <PortableI3> serv = make_reference <PortableI3> (addendum);
 		// Test for LocalObject
-		//LocalObject::_ptr_type lo = serv;
-		//Object::_ptr_type obj = lo;
+		LocalObject::_ptr_type lo = serv;
+		Object::_ptr_type obj = lo;
 		return serv->_this ();
 	}
 };
