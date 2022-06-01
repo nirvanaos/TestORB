@@ -3,10 +3,12 @@
 #include <IDL/Test_I3_factory_s.h>
 #include "PortableI3.h"
 
+using namespace CORBA;
+
 namespace Test {
 
 class I3_factory_portable :
-	public CORBA::servant_traits <I3_factory>::ServantStatic <I3_factory_portable>
+	public servant_traits <I3_factory>::ServantStatic <I3_factory_portable>
 {
 public:
 	static
@@ -15,9 +17,13 @@ public:
 #else
 		I3::_ref_type
 #endif
-		create (CORBA::Long addendum)
+		create (Long addendum)
 	{
-		return CORBA::make_reference <PortableI3> (addendum)->_this ();
+		servant_reference <PortableI3> serv = make_reference <PortableI3> (addendum);
+		// Test for LocalObject
+		//LocalObject::_ptr_type lo = serv;
+		//Object::_ptr_type obj = lo;
+		return serv->_this ();
 	}
 };
 

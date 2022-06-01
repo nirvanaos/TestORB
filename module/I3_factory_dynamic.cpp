@@ -20,15 +20,16 @@ public:
 		create (Long addendum)
 	{
 #ifdef LEGACY_CORBA_CPP
-//		{
-//			LocalObject::_ptr_type lo = new DynamicI3 (addendum);
-//			Object::_ptr_type obj = lo;
-//			release (lo);
-//		}
+		{
+			LocalObject::_ptr_type lo = new DynamicI3 (addendum);
+			Object::_ptr_type obj = lo;
+			release (lo);
+		}
 #endif
 		servant_reference <DynamicI3> serv = make_reference <DynamicI3> (addendum);
 		// Test for LocalObject
-		//Internal::I_ptr <LocalObject> lo = serv;
+		LocalObject::_ptr_type lo = serv;
+		Object::_ptr_type obj = lo;
 		return serv->_this ();
 	}
 };
