@@ -1,0 +1,9 @@
+module Test {
+
+abstract interface A1
+{
+	long aop (in long x);
+};
+
+};
+
