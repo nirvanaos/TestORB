@@ -19,10 +19,23 @@ public:
 #endif
 		create (Long addendum)
 	{
+#ifdef LEGACY_CORBA_CPP
+		{
+			LocalObject::_ptr_type lo = new PortableI3 (addendum);
+			release (lo);
+		}
+#endif
 		servant_reference <PortableI3> serv = make_reference <PortableI3> (addendum);
-		// Test for LocalObject
+		// Direct conversion to LocalObject must be available
 		LocalObject::_ptr_type lo = serv;
+		// Conversion to Object must be available
 		Object::_ptr_type obj = lo;
+		assert (obj);
+		// Object operations must be available
+		bool is = lo->_is_a (I3::repository_id_);
+		assert (is);
+
+		// Return I3 proxy.
 		return serv->_this ();
 	}
 };

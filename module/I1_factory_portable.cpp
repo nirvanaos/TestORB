@@ -3,6 +3,9 @@
 #include "I1_factory_portable.h"
 #include "PortableI1.h"
 
+using namespace PortableServer;
+using namespace CORBA;
+
 namespace Test {
 
 class I1_factory_portable :
@@ -15,9 +18,23 @@ public:
 #else
 		I1::_ref_type
 #endif
-		create (CORBA::Long addendum)
+		create (Long addendum)
 	{
-		return CORBA::make_reference <PortableI1> (addendum)->_this ();
+#ifdef LEGACY_CORBA_CPP
+		{
+			Servant serv = new PortableI1 (addendum);
+			release (serv);
+		}
+#endif
+
+		servant_reference <PortableI1> serv = make_reference <PortableI1> (addendum);
+
+		// Direct conversion to ServantBase must be available
+		Servant s = serv;
+		assert (s);
+
+		// Return I1 proxy.
+		return serv->_this ();
 	}
 };
 
