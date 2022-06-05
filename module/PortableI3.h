@@ -106,6 +106,11 @@ public:
 	{
 		return a / b;
 	}
+
+	virtual CORBA::Long aop (CORBA::Long x)
+	{
+		return x - addendum ();
+	}
 };
 
 }

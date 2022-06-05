@@ -53,6 +53,11 @@ public:
 		return a / b;
 	}
 
+	int32_t aop (int32_t x) const
+	{
+		return x - addendum_;
+	}
+
 private:
 	int32_t addendum_;
 };

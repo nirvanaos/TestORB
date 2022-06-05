@@ -1,6 +1,8 @@
+#include "Test_A1.idl"
+
 module Test {
 
-interface I2
+interface I2 : A1
 {
 	long op2 (in long p1);
 };

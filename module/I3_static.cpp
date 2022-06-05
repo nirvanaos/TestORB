@@ -44,6 +44,11 @@ public:
 	{
 		return a / b;
 	}
+
+	static CORBA::Long aop (CORBA::Long x)
+	{
+		return x - TestORB::MAGIC_CONST;
+	}
 };
 
 }
