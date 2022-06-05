@@ -450,8 +450,26 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		ASSERT_FALSE (is_nil (p2));
 		I3_ptr p3 = I3::_narrow (obj);
 		ASSERT_FALSE (is_nil (p3));
+		ASSERT_TRUE (p->_is_equivalent (p3));
+		A1_ptr a1 = A1::_narrow (obj);
+		ASSERT_TRUE (a1);
 		release (p1);
 		release (p2);
+		release (p3);
+		release (a1);
+	}
+
+	{ // Abstract interface
+		A1_ptr a1 = p;
+		AbstractBase_ptr ab = a1;
+		ASSERT_TRUE (ab);
+		EXPECT_FALSE (ab->_to_value ());
+		Object::_ptr_type obj = ab->_to_object ();
+		ASSERT_TRUE (obj);
+		I3::_ptr_type p3 = I3::_narrow (obj);
+		EXPECT_TRUE (p3);
+		EXPECT_TRUE (p->_is_equivalent (p3));
+		release (obj);
 		release (p3);
 	}
 
@@ -467,6 +485,7 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
 	EXPECT_EQ (p->op3 (1), 3 * MAGIC_CONST + 1);
+	EXPECT_EQ (p->aop (4), 4 - MAGIC_CONST);
 
 	{
 		I1::_ref_type p1 = p;
@@ -488,11 +507,26 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		Object::_ref_type obj = p;
 		ASSERT_TRUE (obj);
 		I1::_ref_type p1 = I1::_narrow (obj);
-		ASSERT_TRUE (p1);
+		EXPECT_TRUE (p1);
 		I2::_ref_type p2 = I2::_narrow (obj);
-		ASSERT_TRUE (p2);
+		EXPECT_TRUE (p2);
 		I3::_ref_type p3 = I3::_narrow (obj);
-		ASSERT_TRUE (p3);
+		EXPECT_TRUE (p3);
+		EXPECT_TRUE (p->_is_equivalent (p3));
+		A1::_ref_type a1 = A1::_narrow (obj);
+		ASSERT_TRUE (a1);
+	}
+
+	{ // Abstract interface
+		A1::_ptr_type a1 = p;
+		AbstractBase::_ptr_type ab = a1;
+		ASSERT_TRUE (ab);
+		EXPECT_FALSE (ab->_to_value ());
+		Object::_ref_type obj = ab->_to_object ();
+		ASSERT_TRUE (obj);
+		I3::_ref_type p3 = I3::_narrow (obj);
+		EXPECT_TRUE (p3);
+		EXPECT_TRUE (p->_is_equivalent (p3));
 	}
 }
 
