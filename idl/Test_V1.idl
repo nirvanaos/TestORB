@@ -7,7 +7,7 @@ valuetype V1
 	private short val1;
 	public long val2;
 	public string val3;
-	private V1 val5; 
+	private V1 val4; 
 };
 
 };
