@@ -4,10 +4,10 @@ valuetype V1
 {
 	short op1 ();
 	long op2 (in V1 x);
-//	private short val1;
-//	public long val2;
-//	private string val3;
-//	private V1 val5; 
+	private short val1;
+	public long val2;
+	public string val3;
+	private V1 val5; 
 };
 
 };
