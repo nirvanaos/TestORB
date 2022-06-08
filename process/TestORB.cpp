@@ -504,6 +504,14 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 	}
 
 	{
+		A1::_ref_type out, inout (p);
+		A1::_ref_type ret = p->abstract_op (p, out, inout);
+		EXPECT_TRUE (p->_is_equivalent (out->_to_object ()));
+		EXPECT_TRUE (p->_is_equivalent (inout->_to_object ()));
+		EXPECT_TRUE (p->_is_equivalent (ret->_to_object ()));
+	}
+
+	{
 		Object::_ref_type obj = p;
 		ASSERT_TRUE (obj);
 		I1::_ref_type p1 = I1::_narrow (obj);

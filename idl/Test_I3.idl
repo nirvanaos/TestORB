@@ -8,6 +8,8 @@ local interface I3 : I1, I2
 	long op3 (in long p1);
 
 	long divide (in long a, in long b);
+
+	A1 abstract_op (in A1 in_obj, out A1 out_obj, inout A1 inout_obj);
 };
 
 interface Empty

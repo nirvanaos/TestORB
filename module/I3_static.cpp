@@ -1,6 +1,7 @@
 #include <CORBA/Server.h>
 #include "I3_static.h"
 #include "ImplI1.h"
+#include "ImplI3.h"
 #include <IDL/Test_I1_s.h>
 #include <IDL/Test_I2_s.h>
 #include <IDL/Test_I3_s.h>
@@ -12,7 +13,8 @@ namespace Test {
 
 class I3_static :
 	public CORBA::servant_traits <I3>::ServantStatic <I3_static>,
-	public ImplI1
+	public ImplI1,
+	public ImplI3
 {
 public:
 	static CORBA::Long op1 (CORBA::Long p1)
@@ -38,11 +40,6 @@ public:
 	static CORBA::Long op3 (CORBA::Long p1)
 	{
 		return p1 + 3 * TestORB::MAGIC_CONST;
-	}
-
-	static CORBA::Long divide (CORBA::Long a, CORBA::Long b)
-	{
-		return a / b;
 	}
 
 	static CORBA::Long aop (CORBA::Long x)

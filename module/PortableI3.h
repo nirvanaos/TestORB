@@ -3,6 +3,7 @@
 #pragma once
 
 #include "PortableI1.h"
+#include "ImplI3.h"
 #include <IDL/Test_I3_s.h>
 
 namespace Test {
@@ -104,12 +105,23 @@ public:
 
 	virtual CORBA::Long divide (CORBA::Long a, CORBA::Long b)
 	{
-		return a / b;
+		return ImplI3::divide (a, b);
 	}
 
 	virtual CORBA::Long aop (CORBA::Long x)
 	{
 		return x - addendum ();
+	}
+
+#ifdef LEGACY_CORBA_CPP
+	virtual A1::_ptr_type abstract_op (A1::_ptr_type in_obj, A1::_var_type& out_obj,
+		A1::_var_type& inout_obj)
+#else
+	virtual A1::_ref_type abstract_op (A1::_ptr_type in_obj, A1::_ref_type& out_obj,
+		A1::_ref_type& inout_obj)
+#endif
+	{
+		return ImplI3::abstract_op (in_obj, out_obj, inout_obj);
 	}
 };
 

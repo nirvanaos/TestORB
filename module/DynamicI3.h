@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ImplI1.h"
+#include "ImplI3.h"
 #include <IDL/Test_I3_s.h>
 #include <IDL/Test_I2_s.h>
 #include <IDL/Test_I1_s.h>
@@ -13,7 +14,8 @@ namespace Test {
 
 class DynamicI3 :
 	public CORBA::servant_traits <I3>::Servant <DynamicI3>,
-	public ImplI1
+	public ImplI1,
+	public ImplI3
 {
 public:
 	DynamicI3 (int32_t addendum) :
@@ -46,11 +48,6 @@ public:
 	int32_t op3 (int32_t p1) const
 	{
 		return p1 + 3 * addendum_;
-	}
-
-	static int32_t divide (int32_t a, int32_t b)
-	{
-		return a / b;
 	}
 
 	int32_t aop (int32_t x) const
