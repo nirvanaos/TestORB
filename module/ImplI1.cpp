@@ -66,7 +66,8 @@ std::string ImplI1::short_string_op (const std::string& in_s, std::string& out_s
 	return string_op (in_s, out_s, inout_s);
 }
 
-std::vector <Long> ImplI1::short_seq_op (const std::vector <Long>& in_s, std::vector <Long>& out_s, std::vector <Long>& inout_s)
+std::vector <Long> ImplI1::short_seq_op (const std::vector <Long>& in_s,
+	std::vector <Long>& out_s, std::vector <Long>& inout_s)
 {
 	return seq_op (in_s, out_s, inout_s);
 }
@@ -76,6 +77,24 @@ std::vector <std::string> ImplI1::seq_string_op (
 	std::vector <std::string>& inout_s)
 {
 	std::vector <std::string> tmp (std::move (inout_s));
+	out_s = in_s;
+	inout_s = in_s;
+	return tmp;
+}
+
+MyStruct ImplI1::struct_op (const MyStruct& in_s, MyStruct& out_s, MyStruct& inout_s)
+{
+	MyStruct tmp (std::move (inout_s));
+	out_s = in_s;
+	inout_s = in_s;
+	return tmp;
+}
+
+std::vector <MyStruct> ImplI1::seq_struct_op (
+	const std::vector <MyStruct>& in_s, std::vector <MyStruct>& out_s,
+	std::vector <MyStruct>& inout_s)
+{
+	std::vector <MyStruct> tmp (std::move (inout_s));
 	out_s = in_s;
 	inout_s = in_s;
 	return tmp;

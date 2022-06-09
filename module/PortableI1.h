@@ -92,6 +92,16 @@ public:
 		return ImplI1::seq_string_op (in_s, out_s, inout_s);
 	}
 
+	virtual MyStruct struct_op (const MyStruct& in_s, MyStruct& out_s, MyStruct& inout_s)
+	{
+		return ImplI1::struct_op (in_s, out_s, inout_s);
+	}
+
+	virtual std::vector <MyStruct> seq_struct_op (const std::vector <MyStruct>& in_s, std::vector <MyStruct>& out_s, std::vector <MyStruct>& inout_s)
+	{
+		return ImplI1::seq_struct_op (in_s, out_s, inout_s);
+	}
+
 private:
 	int32_t addendum_;
 };

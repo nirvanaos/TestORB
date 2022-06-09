@@ -28,6 +28,7 @@ enum MyEnum
 typedef string <8> ShortString;
 typedef sequence <long, 4> ShortSeqLong;
 typedef sequence <string> SeqString;
+typedef sequence <MyStruct> SeqStruct;
 
 interface I1
 {
@@ -42,6 +43,8 @@ interface I1
 	ShortString short_string_op (in ShortString in_s, out ShortString out_s, inout ShortString inout_s);
 	ShortSeqLong short_seq_op (in ShortSeqLong in_s, out ShortSeqLong out_s, inout ShortSeqLong inout_s);
 	SeqString seq_string_op (in SeqString in_s, out SeqString out_s, inout SeqString inout_s);
+	MyStruct struct_op (in MyStruct in_s, out MyStruct out_s, inout MyStruct inout_s);
+	SeqStruct seq_struct_op (in SeqStruct in_s, out SeqStruct out_s, inout SeqStruct inout_s);
 };
 
 };

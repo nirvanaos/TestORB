@@ -29,6 +29,8 @@ public:
 	static std::string short_string_op (const std::string& in_s, std::string& out_s, std::string& inout_s);
 	static std::vector <CORBA::Long> short_seq_op (const std::vector <CORBA::Long>& in_s, std::vector <CORBA::Long>& out_s, std::vector <CORBA::Long>& inout_s);
 	static std::vector <std::string> seq_string_op (const std::vector <std::string>& in_s, std::vector <std::string>& out_s, std::vector <std::string>& inout_s);
+	static MyStruct struct_op (const MyStruct& in_s, MyStruct& out_s, MyStruct& inout_s);
+	static std::vector <MyStruct> seq_struct_op (const std::vector <MyStruct>& in_s, std::vector <MyStruct>& out_s, std::vector <MyStruct>& inout_s);
 };
 
 }
