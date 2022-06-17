@@ -618,6 +618,14 @@ TEST_F (TestORB, TypeCode)
 {
 	EXPECT_EQ (_tc_I1->id (), "IDL:Test/I1:1.0");
 	EXPECT_EQ (_tc_I1->kind (), TCKind::tk_objref);
+	EXPECT_EQ (_tc_I1->name (), "I1");
+
+	EXPECT_EQ (_tc_I3->id (), "IDL:Test/I3:1.0");
+	EXPECT_EQ (_tc_I3->kind (), TCKind::tk_local_interface);
+	EXPECT_EQ (_tc_I3->name (), "I3");
+
+	EXPECT_FALSE (_tc_I1->equal (_tc_I3));
+	EXPECT_FALSE (_tc_I1->equivalent (_tc_I3));
 
 	EXPECT_EQ (_tc_MyException->kind (), TCKind::tk_except);
 	EXPECT_EQ (_tc_MyException->id (), "IDL:Test/MyException:1.0");
@@ -703,6 +711,31 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_ValueBase->kind (), TCKind::tk_value);
 	EXPECT_EQ (_tc_ValueBase->id (), CORBA_REPOSITORY_ID ("ValueBase"));
 	EXPECT_EQ (_tc_ValueBase->name (), "ValueBase");
+
+	EXPECT_EQ (_tc_A1->id (), "IDL:Test/A1:1.0");
+	EXPECT_EQ (_tc_A1->kind (), TCKind::tk_abstract_interface);
+	EXPECT_EQ (_tc_A1->name (), "A1");
+
+	EXPECT_EQ (_tc_V1->id (), "IDL:Test/V1:1.0");
+	EXPECT_EQ (_tc_V1->kind (), TCKind::tk_value);
+	EXPECT_EQ (_tc_V1->name (), "V1");
+	EXPECT_FALSE (_tc_V1->concrete_base_type ());
+	EXPECT_EQ (_tc_V1->member_count (), 4);
+	EXPECT_EQ (_tc_V1->member_name (0), "val1");
+	EXPECT_EQ (_tc_V1->member_visibility (0), PRIVATE_MEMBER);
+	EXPECT_EQ (_tc_V1->member_name (1), "val2");
+	EXPECT_EQ (_tc_V1->member_visibility (1), PUBLIC_MEMBER);
+	EXPECT_EQ (_tc_V1->member_name (2), "val3");
+	EXPECT_EQ (_tc_V1->member_visibility (2), PRIVATE_MEMBER);
+	EXPECT_EQ (_tc_V1->member_name (3), "val4");
+	EXPECT_EQ (_tc_V1->member_visibility (3), PUBLIC_MEMBER);
+#ifndef LEGACY_CORBA_CPP
+	EXPECT_EQ (_tc_V1->member_type (0)->kind (), TCKind::tk_short);
+	EXPECT_EQ (_tc_V1->member_type (1)->kind (), TCKind::tk_long);
+	EXPECT_EQ (_tc_V1->member_type (2)->kind (), TCKind::tk_string);
+	EXPECT_TRUE (_tc_V1->member_type (3)->equal (_tc_V1));
+	EXPECT_TRUE (_tc_V2->concrete_base_type ()->equal (_tc_V1));
+#endif
 }
 
 TEST_F (TestORB, ORBInit)
