@@ -7,6 +7,7 @@
 #include "I3_factory_dynamic.h"
 #include "I3_factory_portable.h"
 #include "I3_factory_tied.h"
+#include "IDL/Test_V2.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
 #include <signal.h>
@@ -162,6 +163,14 @@ void test_interface (I1::_ptr_type p)
 		vector <Long> out, inout;
 		vector <Long> ret;
 		EXPECT_THROW (ret = p->short_seq_op (vector <Long> { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
+	}
+
+	{
+		MyStruct out (L"out", 2, p), inout (L"inout", 3, p);
+		MyStruct ret = p->struct_op (MyStruct (L"in", 1, p), out, inout);
+		EXPECT_EQ (ret.ws_member (), L"inout");
+		EXPECT_EQ (out.ws_member (), L"in");
+		EXPECT_EQ (inout.ws_member (), L"in");
 	}
 }
 
@@ -522,7 +531,7 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		EXPECT_TRUE (p3);
 		EXPECT_TRUE (p->_is_equivalent (p3));
 		A1::_ref_type a1 = A1::_narrow (obj);
-		ASSERT_TRUE (a1);
+		EXPECT_TRUE (a1);
 	}
 
 	{ // Abstract interface
@@ -535,6 +544,37 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		I3::_ref_type p3 = I3::_narrow (obj);
 		EXPECT_TRUE (p3);
 		EXPECT_TRUE (p->_is_equivalent (p3));
+	}
+
+	{ // Value type
+		V2::_ref_type v = V2_factory::_factory->create ();
+		v->val_v2 (1234);
+		{
+			V1::_ref_type out, inout = v;
+			V1::_ref_type ret = p->value_op (v, out, inout);
+			V2::_ref_type v2 = V2::_downcast (ret);
+			ASSERT_TRUE (v2);
+			EXPECT_EQ (v2->val_v2 (), v->val_v2 ());
+		}
+
+		{ // Abstract base
+			A1::_ptr_type a1 = v;
+			AbstractBase::_ptr_type ab = a1;
+			ASSERT_TRUE (ab);
+			EXPECT_FALSE (ab->_to_object ());
+			ValueBase::_ref_type vb = ab->_to_value ();
+			ASSERT_TRUE (vb);
+			V1::_ptr_type v1 = V1::_downcast (vb);
+			EXPECT_TRUE (v1);
+			V2::_ptr_type v2 = V2::_downcast (vb);
+			EXPECT_TRUE (v2);
+		}
+
+		A1::_ref_type out, inout (v);
+		A1::_ref_type ret = p->abstract_op (v, out, inout);
+		V2::_ptr_type v2 = V2::_downcast (ret->_to_value ());
+		EXPECT_TRUE (v2);
+
 	}
 }
 

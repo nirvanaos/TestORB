@@ -123,6 +123,17 @@ public:
 	{
 		return ImplI3::abstract_op (in_obj, out_obj, inout_obj);
 	}
+
+#ifdef LEGACY_CORBA_CPP
+	virtual V1::_ptr_type value_op (V1::_ptr_type in_obj, V1::_var_type& out_obj,
+		V1::_var_type& inout_obj)
+#else
+	virtual V1::_ref_type value_op (V1::_ptr_type in_obj, V1::_ref_type& out_obj,
+		V1::_ref_type& inout_obj)
+#endif
+	{
+		return ImplI3::value_op (in_obj, out_obj, inout_obj);
+	}
 };
 
 }

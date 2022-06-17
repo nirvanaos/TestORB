@@ -1,8 +1,9 @@
 #include "Test_V1.idl"
+#include "Test_A1.idl"
 
 module Test {
 
-valuetype V2 : V1
+valuetype V2 : V1 supports A1
 {
 	long op_v2 (in long x);
 
