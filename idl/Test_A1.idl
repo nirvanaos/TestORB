@@ -1,3 +1,6 @@
+#ifndef TEST_A1_IDL_
+#define TEST_A1_IDL_
+
 module Test {
 
 abstract interface A1
@@ -7,3 +10,4 @@ abstract interface A1
 
 };
 
+#endif

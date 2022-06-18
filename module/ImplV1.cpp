@@ -18,12 +18,12 @@ public:
 	~ImplV1 ()
 	{}
 
-	int16_t op1 ()
+	int16_t vop1 ()
 	{
 		return 0;
 	}
 
-	int32_t op2 (V1::_ptr_type pv)
+	int32_t vop2 (V1::_ptr_type pv)
 	{
 		return pv->val2 ();
 	}

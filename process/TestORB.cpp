@@ -8,6 +8,7 @@
 #include "I3_factory_portable.h"
 #include "I3_factory_tied.h"
 #include "IDL/Test_V2.h"
+#include "I2_factory_impl.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
 #include <signal.h>
@@ -199,14 +200,14 @@ void test_performance (I1::_ptr_type p)
 
 typedef ::testing::Types < ::Nirvana::Static <I1_factory_dynamic>
 #ifndef TEST_NO_POA
-	, ::Nirvana::Static <I1_factory_portable>
+	, Nirvana::Static <I1_factory_portable>
 #endif
 #ifndef TEST_NO_STATIC
-	, ::Nirvana::Static <I1_static>
+	, Nirvana::Static <I1_static>
 #endif
 #ifndef TEST_NO_TIED
-	, ::Nirvana::Static <I1_factory_tied>
-	, ::Nirvana::Static <I1_tied_derived>
+	, Nirvana::Static <I1_factory_tied>
+	, Nirvana::Static <I1_tied_derived>
 #endif
 > ServantTypesI1;
 
@@ -748,6 +749,18 @@ TEST_F (TestORB, ORBInit)
 		_ref_type
 #endif
 		orb = ORB_init (argc, nullptr, nullptr);
+}
+
+TEST_F (TestORB, I2)
+{
+	I2::
+#ifdef LEGACY_CORBA_CPP
+		_var_type
+#else
+		_ref_type
+#endif
+		p = Nirvana::Static <I2_factory_impl>::ptr ()->create (MAGIC_CONST);
+	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
 }
 
 }

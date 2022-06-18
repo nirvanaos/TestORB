@@ -7,4 +7,9 @@ interface I2 : A1
 	long op2 (in long p1);
 };
 
+interface I2_factory
+{
+	I2 create (in long addendum);
+};
+
 };

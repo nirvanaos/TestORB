@@ -1,0 +1,13 @@
+#include "Test_V2.idl"
+#include "Test_I2.idl"
+
+module Test{
+
+valuetype V3 : V2 supports I2
+{
+	factory create (in long addendum);
+
+	private long addendum;
+};
+
+};
