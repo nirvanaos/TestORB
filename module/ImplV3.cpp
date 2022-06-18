@@ -68,16 +68,11 @@ public:
 		// Conversion to supported interface ptr must be unavailable:
 		// I2::_ptr_type p = v; // compiler error
 
-		auto serv = make_reference <ImplV3> (addendum);
-
 		// Direct conversion to ValueBase must be available
-		/*
-		ValueBase::_ptr_type = serv;
-		Servant s = serv;
-		assert (s);
-		*/
+		ValueBase::_ptr_type vb = v;
+
 		// Return I2 proxy.
-		return serv->_this ();
+		return v->_this ();
 	}
 };
 

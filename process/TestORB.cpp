@@ -7,7 +7,7 @@
 #include "I3_factory_dynamic.h"
 #include "I3_factory_portable.h"
 #include "I3_factory_tied.h"
-#include "IDL/Test_V2.h"
+#include "IDL/Test_V3.h"
 #include "I2_factory_impl.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
@@ -761,6 +761,9 @@ TEST_F (TestORB, I2)
 #endif
 		p = Nirvana::Static <I2_factory_impl>::ptr ()->create (MAGIC_CONST);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
+
+	// Legacy process can not create value with concrete interface support
+	EXPECT_THROW (V3_factory::_factory->create (MAGIC_CONST), NO_PERMISSION);
 }
 
 }
