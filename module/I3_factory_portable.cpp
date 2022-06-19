@@ -32,7 +32,7 @@ public:
 		Object::_ptr_type obj = lo;
 		assert (obj);
 		// Object operations must be available
-		bool is = lo->_is_a (CORBA::Internal::RepIdOf <I3>::id_);
+		bool is = lo->_is_a (CORBA::Internal::RepIdOf <I3>::id);
 		assert (is);
 
 		// Return I3 proxy.
