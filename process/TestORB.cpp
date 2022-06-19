@@ -577,6 +577,11 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		EXPECT_TRUE (v2);
 
 	}
+
+	{ // Array
+		FixStructArray out, inout;
+		FixStructArray ret = p->fix_struct_array_op (FixStructArray (), out, inout);
+	}
 }
 
 #endif
@@ -666,34 +671,34 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
 	EXPECT_EQ (_tc_SeqLong->name (), "SeqLong");
 
+	TypeCode::
 #ifdef LEGACY_CORBA_CPP
-	TypeCode::_var_type seq = _tc_SeqLong->content_type ();
+		_var_type
 #else
-	TypeCode::_ref_type seq = _tc_SeqLong->content_type ();
+		_ref_type
 #endif
-	EXPECT_EQ (seq->kind (), TCKind::tk_sequence);
-	EXPECT_EQ (seq->length (), 0);
+		cont;
 
-	EXPECT_FALSE (_tc_SeqLong->equal (seq));
-	EXPECT_TRUE (_tc_SeqLong->equivalent (seq));
+	cont = _tc_SeqLong->content_type ();
+
+	EXPECT_EQ (cont->kind (), TCKind::tk_sequence);
+	EXPECT_EQ (cont->length (), 0);
+
+	EXPECT_FALSE (_tc_SeqLong->equal (cont));
+	EXPECT_TRUE (_tc_SeqLong->equivalent (cont));
 	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
+	EXPECT_TRUE (_tc_SeqLong->equivalent (_tc_SeqLong));
 
-#ifdef LEGACY_CORBA_CPP
-	TypeCode::_var_type l = seq->content_type ();
-#else
-	TypeCode::_ref_type l = seq->content_type ();
-#endif
-	EXPECT_EQ (l->kind (), TCKind::tk_long);
+	cont = cont->content_type ();
+	EXPECT_EQ (cont->kind (), TCKind::tk_long);
 
 	EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
 	EXPECT_EQ (_tc_MyAlias->id (), "IDL:Test/MyAlias:1.0");
 	EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
-#ifdef LEGACY_CORBA_CPP
-	l = _tc_MyAlias->content_type ();
-	EXPECT_TRUE (l->equal (_tc_SeqLong));
-#else
-	EXPECT_TRUE (_tc_MyAlias->content_type ()->equal (_tc_SeqLong));
-#endif
+
+	cont = _tc_MyAlias->content_type ();
+	EXPECT_TRUE (cont->equal (_tc_SeqLong));
+
 	EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
 
 	EXPECT_EQ (_tc_TypeCode->kind (), TCKind::tk_TypeCode);
@@ -737,6 +742,19 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_TRUE (_tc_V1->member_type (3)->equal (_tc_V1));
 	EXPECT_TRUE (_tc_V2->concrete_base_type ()->equal (_tc_V1));
 #endif
+
+	EXPECT_EQ (_tc_LongArray->kind (), TCKind::tk_alias);
+	EXPECT_EQ (_tc_LongArray->id (), "IDL:Test/LongArray:1.0");
+	EXPECT_EQ (_tc_LongArray->name (), "LongArray");
+
+	cont = _tc_LongArray->content_type ();
+	EXPECT_EQ (cont->kind (), TCKind::tk_array);
+	EXPECT_EQ (cont->length (), 3);
+	cont = cont->content_type ();
+	EXPECT_EQ (cont->kind (), TCKind::tk_array);
+	EXPECT_EQ (cont->length (), 4);
+	cont = cont->content_type ();
+	EXPECT_EQ (cont->kind (), TCKind::tk_long);
 }
 
 TEST_F (TestORB, ORBInit)

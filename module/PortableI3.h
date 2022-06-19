@@ -134,6 +134,26 @@ public:
 	{
 		return ImplI3::value_op (in_obj, out_obj, inout_obj);
 	}
+
+	virtual StructFixLen fix_struct_op (const StructFixLen& in_s, StructFixLen& out_s, StructFixLen& inout_s)
+	{
+		return ImplI3::fix_struct_op (in_s, out_s, inout_s);
+	}
+
+	virtual LongArray long_array_op (const LongArray& in_ar, LongArray& out_ar, LongArray& inout_ar)
+	{
+		return ImplI3::long_array_op (in_ar, out_ar, inout_ar);
+	}
+
+	virtual StructArray struct_array_op (const StructArray& in_ar, StructArray& out_ar, StructArray& inout_ar)
+	{
+		return ImplI3::struct_array_op (in_ar, out_ar, inout_ar);
+	}
+
+	virtual FixStructArray fix_struct_array_op (const FixStructArray& in_ar, FixStructArray& out_ar, FixStructArray& inout_ar)
+	{
+		return ImplI3::fix_struct_array_op (in_ar, out_ar, inout_ar);
+	}
 };
 
 }
