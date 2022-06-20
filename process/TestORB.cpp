@@ -755,6 +755,12 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (cont->length (), 4);
 	cont = cont->content_type ();
 	EXPECT_EQ (cont->kind (), TCKind::tk_long);
+
+	EXPECT_EQ (_tc_StringValue->kind (), TCKind::tk_value_box);
+	EXPECT_EQ (_tc_StringValue->id (), "IDL:Test/StringValue:1.0");
+	EXPECT_EQ (_tc_StringValue->name (), "StringValue");
+	cont = _tc_StringValue->content_type ();
+	EXPECT_TRUE (cont->equal (_tc_string));
 }
 
 TEST_F (TestORB, ORBInit)
@@ -782,6 +788,25 @@ TEST_F (TestORB, I2)
 
 	// Legacy process can not create value with concrete interface support
 	EXPECT_THROW (V3_factory::_factory->create (MAGIC_CONST), NO_PERMISSION);
+}
+
+TEST_F (TestORB, ValueBox)
+{
+#ifndef LEGACY_CORBA_CPP
+	StringValue::_ref_type sv = make_reference <StringValue> ("test");
+#else
+	StringValue_var sv = new StringValue ("test");
+#endif
+	EXPECT_EQ (sv->_value (), "test");
+
+	StringValue::_ptr_type p = sv;
+
+	ValueBase::_ptr_type base = sv;
+
+	p = StringValue::_downcast (base);
+	EXPECT_TRUE (p);
+
+	CORBA::Internal::Interface::_ptr_type pi (p);
 }
 
 }
