@@ -582,6 +582,16 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		FixStructArray out, inout;
 		FixStructArray ret = p->fix_struct_array_op (FixStructArray (), out, inout);
 	}
+
+	{ // Value box
+		StringValue::_ref_type out = make_reference <StringValue> ("this text will be lost"),
+			inout = make_reference <StringValue> ("inout string");
+		StringValue::_ref_type in = make_reference <StringValue> ("in string");
+		StringValue::_ref_type ret = p->box_op (in, out, inout);
+		EXPECT_EQ (ret->_value (), "inout string");
+		EXPECT_EQ (out->_value (), "in string");
+		EXPECT_EQ (inout->_value (), "in string");
+	}
 }
 
 #endif
@@ -798,6 +808,8 @@ TEST_F (TestORB, ValueBox)
 	StringValue_var sv = new StringValue ("test");
 #endif
 	EXPECT_EQ (sv->_value (), "test");
+	sv->_value ().append ("1");
+	EXPECT_EQ (sv->_value (), "test1");
 
 	StringValue::_ptr_type p = sv;
 
@@ -807,6 +819,8 @@ TEST_F (TestORB, ValueBox)
 	EXPECT_TRUE (p);
 
 	CORBA::Internal::Interface::_ptr_type pi (p);
+
+	CORBA::Internal::Type <StringValue>::Var var;
 }
 
 }

@@ -97,6 +97,28 @@ public:
 		return tmp;
 	}
 
+#ifdef LEGACY_CORBA_CPP
+
+	static StringValue::_ptr_type box_op (StringValue::_ptr_type in_obj, StringValue::_var_type& out_obj, StringValue::_var_type& inout_obj)
+	{
+		StringValue::_var_type tmp (std::move (inout_obj));
+		out_obj = StringValue::_duplicate (in_obj);
+		inout_obj = StringValue::_duplicate (in_obj);
+		return tmp._retn ();
+	}
+
+#else
+
+	static StringValue::_ref_type box_op (StringValue::_ptr_type in_obj, StringValue::_ref_type& out_obj, StringValue::_ref_type& inout_obj)
+	{
+		StringValue::_ref_type tmp (std::move (inout_obj));
+		out_obj = in_obj;
+		inout_obj = in_obj;
+		return tmp;
+	}
+
+#endif
+
 };
 
 }

@@ -154,6 +154,17 @@ public:
 	{
 		return ImplI3::fix_struct_array_op (in_ar, out_ar, inout_ar);
 	}
+
+#ifdef LEGACY_CORBA_CPP
+	virtual StringValue::_ptr_type box_op (StringValue::_ptr_type in_obj, StringValue::_var_type& out_obj,
+		StringValue::_var_type& inout_obj)
+#else
+	virtual StringValue::_ref_type box_op (StringValue::_ptr_type in_obj, StringValue::_ref_type& out_obj,
+		StringValue::_ref_type& inout_obj)
+#endif
+	{
+		return ImplI3::box_op (in_obj, out_obj, inout_obj);
+	}
 };
 
 }

@@ -31,6 +31,8 @@ local interface I3 : I1, I2
 	LongArray long_array_op (in LongArray in_ar, out LongArray out_ar, inout LongArray inout_ar);
 	StructArray struct_array_op (in StructArray in_ar, out StructArray out_ar, inout StructArray inout_ar);
 	FixStructArray fix_struct_array_op (in FixStructArray in_ar, out FixStructArray out_ar, inout FixStructArray inout_ar);
+
+	StringValue box_op (in StringValue in_obj, out StringValue out_obj, inout StringValue inout_obj);
 };
 
 interface Empty
