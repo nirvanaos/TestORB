@@ -119,6 +119,14 @@ public:
 
 #endif
 
+	static BoxArray box_array_op (const BoxArray& in_ar, BoxArray& out_ar, BoxArray& inout_ar)
+	{
+		BoxArray tmp (std::move (inout_ar));
+		out_ar = in_ar;
+		inout_ar = in_ar;
+		return tmp;
+	}
+
 };
 
 }

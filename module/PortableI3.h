@@ -165,6 +165,11 @@ public:
 	{
 		return ImplI3::box_op (in_obj, out_obj, inout_obj);
 	}
+
+	virtual BoxArray box_array_op (const BoxArray& in_ar, BoxArray& out_ar, BoxArray& inout_ar)
+	{
+		return ImplI3::box_array_op (in_ar, out_ar, inout_ar);
+	}
 };
 
 }

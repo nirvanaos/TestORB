@@ -17,6 +17,8 @@ typedef StructFixLen FixStructArray [5][7];
 
 valuetype StringValue string;
 
+typedef StringValue BoxArray [3][4];
+
 local interface I3 : I1, I2
 {
 	long op3 (in long p1);
@@ -33,6 +35,8 @@ local interface I3 : I1, I2
 	FixStructArray fix_struct_array_op (in FixStructArray in_ar, out FixStructArray out_ar, inout FixStructArray inout_ar);
 
 	StringValue box_op (in StringValue in_obj, out StringValue out_obj, inout StringValue inout_obj);
+
+	BoxArray box_array_op (in BoxArray in_ar, out BoxArray out_ar, inout BoxArray inout_ar);
 };
 
 interface Empty
