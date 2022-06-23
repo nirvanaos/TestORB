@@ -14,4 +14,9 @@ union U switch (long) {
 	default: I1 obj;
 };
 
+union UFixed switch (long) {
+	case 1: long x;
+	case 2: double d;
+};
+
 };
