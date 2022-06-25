@@ -8,6 +8,7 @@
 #include "I3_factory_portable.h"
 #include "I3_factory_tied.h"
 #include "IDL/Test_V3.h"
+#include "IDL/Test_U.h"
 #include "I2_factory_impl.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
@@ -821,6 +822,30 @@ TEST_F (TestORB, ValueBox)
 	CORBA::Internal::Interface::_ptr_type pi (p);
 
 	CORBA::Internal::Type <StringValue>::Var var;
+}
+
+TEST_F (TestORB, Union)
+{
+	S s{ 10 };
+
+	U u;
+	u.w (s); // member w selected
+	u._d (3); // OK, member w selected
+	u._d (4); // OK, member w selected
+	EXPECT_THROW (u._d (1), BAD_PARAM); // error, different member selected, results in BAD_PARAM
+	I1::_ref_type a;
+	u.obj (a); // member obj selected
+	u._d (7); // OK, member obj selected
+	EXPECT_THROW (u._d (1), BAD_PARAM); // error, different member selected, results in BAD_PARAM
+	EXPECT_THROW (s = u.w (), BAD_PARAM); // error, member w not active, results in BAD_PARAM
+	u.w (s, 4); // OK, member w selected and discriminator is 4
+	u.obj (a, 23); // OK, member obj selected and discriminator is 23
+	EXPECT_THROW (u.obj (a, 2), BAD_PARAM); // error, 2 is not a valid discriminator for obj, results in BAD_PARAM
+	//u.x (0, 1); // compile-time error, x only has 1 possible discriminator value
+
+	Z z;
+	z._default (); // implicit default member selected
+	EXPECT_FALSE (z._d ());
 }
 
 }

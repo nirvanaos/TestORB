@@ -19,4 +19,18 @@ union UFixed switch (long) {
 	case 2: double d;
 };
 
+union Z switch (boolean) {
+	case TRUE: short s;
+};
+
+enum Tag
+{
+	First,
+	Second
+};
+
+union Tagged switch (Tag) {
+	case Second: short s;
+};
+
 };
