@@ -833,7 +833,13 @@ TEST_F (TestORB, Union)
 	u._d (3); // OK, member w selected
 	u._d (4); // OK, member w selected
 	EXPECT_THROW (u._d (1), BAD_PARAM); // error, different member selected, results in BAD_PARAM
-	I1::_ref_type a;
+	I1::
+#ifdef LEGACY_CORBA_CPP
+		_var_type
+#else
+		_ref_type
+#endif
+		a;
 	u.obj (a); // member obj selected
 	u._d (7); // OK, member obj selected
 	EXPECT_THROW (u._d (1), BAD_PARAM); // error, different member selected, results in BAD_PARAM
