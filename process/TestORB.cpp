@@ -772,6 +772,38 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_StringValue->name (), "StringValue");
 	cont = _tc_StringValue->content_type ();
 	EXPECT_TRUE (cont->equal (_tc_string));
+
+	EXPECT_EQ (_tc_U->kind (), TCKind::tk_union);
+	EXPECT_EQ (_tc_U->id (), "IDL:Test/U:1.0");
+	EXPECT_EQ (_tc_U->name (), "U");
+	EXPECT_EQ (_tc_U->member_count (), 4);
+	EXPECT_TRUE (_tc_U->discriminator_type ()->equal (_tc_long));
+	EXPECT_EQ (_tc_U->member_name (0), "x");
+	EXPECT_EQ (_tc_U->member_name (1), "z");
+	EXPECT_EQ (_tc_U->member_name (2), "w");
+	EXPECT_EQ (_tc_U->member_name (3), "obj");
+	EXPECT_EQ (_tc_U->default_index (), 3);
+#ifndef LEGACY_CORBA_CPP
+	Any
+#else
+	Any_var
+#endif
+		a = _tc_U->member_label (0);
+	Long l;
+	EXPECT_TRUE (a >>= l);
+	EXPECT_EQ (l, 1);
+	a = _tc_U->member_label (1);
+	EXPECT_TRUE (a >>= l);
+	EXPECT_EQ (l, 2);
+	a = _tc_U->member_label (2);
+	EXPECT_TRUE (a >>= l);
+	EXPECT_EQ (l, 3);
+
+	a = _tc_U->member_label (3);
+	EXPECT_FALSE (a >>= l);
+	Octet o;
+	EXPECT_TRUE (a >>= Any::to_octet (o));
+	EXPECT_EQ (o, 0);
 }
 
 TEST_F (TestORB, ORBInit)
