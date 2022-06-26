@@ -1,4 +1,6 @@
-# TestORB folder
+# Nirvana ORB test
+
+## Content
 
 This folder contains sources for building the Nirvana ORB test.
 Two binaries must be builded:
