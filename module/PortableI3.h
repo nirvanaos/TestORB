@@ -170,6 +170,11 @@ public:
 	{
 		return ImplI3::box_array_op (in_ar, out_ar, inout_ar);
 	}
+
+	virtual U union_op (const U& in_u, U& out_u, U& inout_u)
+	{
+		return ImplI3::union_op (in_u, out_u, inout_u);
+	}
 };
 
 }

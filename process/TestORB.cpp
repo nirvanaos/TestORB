@@ -8,7 +8,6 @@
 #include "I3_factory_portable.h"
 #include "I3_factory_tied.h"
 #include "IDL/Test_V3.h"
-#include "IDL/Test_U.h"
 #include "I2_factory_impl.h"
 #include "TestORB.h"
 #include <gtest/gtest.h>
@@ -592,6 +591,17 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		EXPECT_EQ (ret->_value (), "inout string");
 		EXPECT_EQ (out->_value (), "in string");
 		EXPECT_EQ (inout->_value (), "in string");
+	}
+
+	{ // Union
+		U in, out, inout;
+		out.z ("this text will be lost");
+		inout.z ("inout string");
+		in.z ("in string");
+		U ret = p->union_op (in, out, inout);
+		EXPECT_EQ (ret.z (), "inout string");
+		EXPECT_EQ (out.z (), "in string");
+		EXPECT_EQ (inout.z (), "in string");
 	}
 }
 

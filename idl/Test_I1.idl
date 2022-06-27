@@ -1,4 +1,7 @@
 // Test_I1.idl File from ORB test set.
+#ifndef TESTORB_TEST_I1_IDL_
+#define TESTORB_TEST_I1_IDL_
+
 module Test {
 
 typedef sequence <long> SeqLong;
@@ -48,3 +51,6 @@ interface I1
 };
 
 };
+
+#endif
+

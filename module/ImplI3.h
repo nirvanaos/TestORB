@@ -127,6 +127,13 @@ public:
 		return tmp;
 	}
 
+	static U union_op (const U& in_u, U& out_u, U& inout_u)
+	{
+		U tmp (inout_u);
+		out_u = in_u;
+		inout_u = in_u;
+		return tmp;
+	}
 };
 
 }

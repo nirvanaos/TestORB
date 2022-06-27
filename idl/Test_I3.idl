@@ -1,6 +1,7 @@
 #include "Test_I1.idl"
 #include "Test_I2.idl"
 #include "Test_V1.idl"
+#include "Test_U.idl"
 
 module Test {
 
@@ -37,6 +38,8 @@ local interface I3 : I1, I2
 	StringValue box_op (in StringValue in_obj, out StringValue out_obj, inout StringValue inout_obj);
 
 	BoxArray box_array_op (in BoxArray in_ar, out BoxArray out_ar, inout BoxArray inout_ar);
+
+	U union_op (in U in_u, out U out_u, inout U inout_u);
 };
 
 interface Empty
