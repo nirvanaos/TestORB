@@ -45,20 +45,5 @@ interface Empty
 
 interface EmptyWithBase : I2
 {};
-/*
-struct RecursiveStruct
-{
-	long value;
-	sequence <RecursiveStruct> chain;
-};
 
-struct RecursiveStruct2;
-typedef sequence <RecursiveStruct2> ChainRS2;
-
-struct RecursiveStruct2
-{
-	long value;
-	ChainRS2 chain;
-};
-*/
 };

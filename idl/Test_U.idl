@@ -33,4 +33,9 @@ union Tagged switch (Tag) {
 	case Second: short s;
 };
 
+union NoDefault switch (Tag) {
+	case First: short s;
+	case Second: long l;
+};
+
 };
