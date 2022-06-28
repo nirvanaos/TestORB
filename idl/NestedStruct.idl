@@ -1,4 +1,4 @@
-module Test {
+// Test for nested and recorsive struct
 
 struct RecursiveStruct1
 {
@@ -13,6 +13,4 @@ struct RecursiveStruct2
 {
 	long value;
 	ChainRS2 chain;
-};
-
 };

@@ -1,26 +1,27 @@
 // Test for unions
-
 #include "Test_I1.idl"
-
-module Test {
 
 struct S { long len; };
 
+// Variable length union
 union U switch (long) {
 	case 1: long x;
 	case 2: string z;
 	case 3:
 	case 4: S w;
-	default: I1 obj;
+	default: Test::I1 obj;
 };
 
+// Union with implicit default
+// The _default () method will be generated
+union Z switch (boolean) {
+	case TRUE: short s;
+};
+
+// Fixed length union
 union UFixed switch (long) {
 	case 1: long x;
 	case 2: double d;
-};
-
-union Z switch (boolean) {
-	case TRUE: short s;
 };
 
 enum Tag
@@ -29,13 +30,14 @@ enum Tag
 	Second
 };
 
+// This region has _default ()
 union Tagged switch (Tag) {
 	case Second: short s;
 };
 
+// This region does not have _default ()
 union NoDefault switch (Tag) {
 	case First: short s;
 	case Second: long l;
 };
 
-};
