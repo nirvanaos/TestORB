@@ -1,7 +1,7 @@
 #include "Test_I1.idl"
 #include "Test_I2.idl"
 #include "Test_V1.idl"
-#include "Test_U.idl"
+#include "Union.idl"
 
 module Test {
 
