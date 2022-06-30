@@ -784,7 +784,7 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_TRUE (cont->equal (_tc_string));
 
 	EXPECT_EQ (_tc_U->kind (), TCKind::tk_union);
-	EXPECT_EQ (_tc_U->id (), "IDL:Test/U:1.0");
+	EXPECT_EQ (_tc_U->id (), "IDL:U:1.0");
 	EXPECT_EQ (_tc_U->name (), "U");
 	EXPECT_EQ (_tc_U->member_count (), 4);
 	EXPECT_TRUE (_tc_U->discriminator_type ()->equal (_tc_long));
