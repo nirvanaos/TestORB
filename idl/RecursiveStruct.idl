@@ -14,3 +14,17 @@ struct RecursiveStruct2
 	long value;
 	ChainRS2 chain;
 };
+
+struct RecursiveStruct3;
+typedef sequence <RecursiveStruct3> ChainRS3;
+
+struct RecursiveStruct4
+{
+	ChainRS3 chain;
+};
+
+struct RecursiveStruct3
+{
+	long value;
+};
+
