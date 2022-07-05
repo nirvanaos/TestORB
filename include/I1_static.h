@@ -8,4 +8,10 @@
 
 NIRVANA_STATIC((Test, I1_static), ::Test::I1)
 
+namespace TestORB {
+
+const long MAGIC_CONST = 1963;
+
+}
+
 #endif

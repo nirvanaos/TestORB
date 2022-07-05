@@ -7,8 +7,6 @@
 
 namespace TestORB {
 
-const long MAGIC_CONST = 1963;
-
 class TestORB : public ::testing::Test
 {
 public:
