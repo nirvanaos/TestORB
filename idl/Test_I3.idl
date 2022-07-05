@@ -2,6 +2,7 @@
 #include "Test_I2.idl"
 #include "Test_V1.idl"
 #include "Union.idl"
+#include "ValueBox.idl"
 
 module Test {
 
@@ -15,10 +16,6 @@ struct StructFixLen
 };
 
 typedef StructFixLen FixStructArray [5][7];
-
-valuetype StringValue string;
-
-typedef StringValue BoxArray [3][4];
 
 local interface I3 : I1, I2
 {

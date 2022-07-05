@@ -1,0 +1,7 @@
+module Test{
+
+valuetype StringValue string;
+
+typedef StringValue BoxArray [3][4];
+
+};
