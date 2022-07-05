@@ -635,6 +635,17 @@ TEST_F (TestORB, Environment)
 
 TEST_F (TestORB, TypeCode)
 {
+	EXPECT_EQ (_tc_Object->id (), "IDL:omg.org/CORBA/Object:1.0");
+	EXPECT_EQ (_tc_Object->kind (), TCKind::tk_objref);
+	EXPECT_EQ (_tc_Object->name (), "Object");
+
+	EXPECT_EQ (_tc_ValueBase->id (), "IDL:omg.org/CORBA/ValueBase:1.0");
+	EXPECT_EQ (_tc_ValueBase->kind (), TCKind::tk_value);
+	EXPECT_EQ (_tc_ValueBase->name (), "ValueBase");
+	EXPECT_EQ (_tc_ValueBase->member_count (), 0);
+	EXPECT_EQ (_tc_ValueBase->type_modifier (), VM_NONE);
+	EXPECT_TRUE (is_nil (_tc_ValueBase->concrete_base_type ()));
+
 	EXPECT_EQ (_tc_I1->id (), "IDL:Test/I1:1.0");
 	EXPECT_EQ (_tc_I1->kind (), TCKind::tk_objref);
 	EXPECT_EQ (_tc_I1->name (), "I1");
