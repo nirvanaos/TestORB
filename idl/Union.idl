@@ -1,7 +1,13 @@
 // Test for unions
-#include "Test_I1.idl"
+
+module Test {
+
+interface I1;
+
+};
 
 struct S { long len; };
+interface A;
 
 // Variable length union
 union U switch (long) {
