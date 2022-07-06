@@ -164,11 +164,11 @@ void test_interface (I1::_ptr_type p)
 	}
 
 	{
-		MyStruct out (L"out", 2, p), inout (L"inout", 3, p);
-		MyStruct ret = p->struct_op (MyStruct (L"in", 1, p), out, inout);
-		EXPECT_EQ (ret.ws_member (), L"inout");
-		EXPECT_EQ (out.ws_member (), L"in");
-		EXPECT_EQ (inout.ws_member (), L"in");
+		MyStruct out (U"out", 2, p), inout (U"inout", 3, p);
+		MyStruct ret = p->struct_op (MyStruct (U"in", 1, p), out, inout);
+		EXPECT_EQ (ret.ws_member (), U"inout");
+		EXPECT_EQ (out.ws_member (), U"in");
+		EXPECT_EQ (inout.ws_member (), U"in");
 	}
 }
 

@@ -1,9 +1,28 @@
 #include "Test_A1.idl"
 
-module Test {
+module Test{
+
+const wchar char_const = L'c';
+const string string_const = "string_const";
+const wstring wstring_const = L"wstring_const";
+const long long_const = 123;
+const float float_const = 4.56;
+typedef double Dbl;
+const Dbl double_const = 7.890;
+const fixed fixed_const = 1.234D;
 
 interface I2 : A1
 {
+
+	const wchar char_const = L'c';
+	const string string_const = "string_const";
+	const wstring wstring_const = L"wstring_const";
+	const long long_const = 123;
+	const float float_const = 4.56;
+	typedef double Dbl;
+	const Dbl double_const = 7.890;
+	const fixed fixed_const = 1.234D;
+
 	long op2 (in long p1);
 };
 
