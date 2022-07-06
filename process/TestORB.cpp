@@ -869,4 +869,20 @@ TEST_F (TestORB, ValueBox)
 	CORBA::Internal::Type <StringValue>::Var var;
 }
 
+TEST_F (TestORB, Factory)
+{
+	ValueFactoryBase::
+#ifndef LEGACY_CORBA_CPP
+		_ref_type
+#else
+		_var_type
+#endif
+		f;
+
+	f = g_ORB->lookup_value_factory ("IDL:Test/V1:1.0");
+	EXPECT_TRUE (f);
+	f = g_ORB->lookup_value_factory ("IDL:Test/StringValue:1.0");
+	EXPECT_TRUE (f);
+}
+
 }
