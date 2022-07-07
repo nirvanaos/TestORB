@@ -89,6 +89,15 @@ void test_interface (I1_ptr p)
 		EXPECT_THROW (ret = p->short_seq_op (SeqLong { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
 	}
 
+	{
+		MyStruct_var out (new MyStruct{ _W ("out"), 2, I1::_duplicate (p) });
+		MyStruct_var inout (new MyStruct{ _W ("inout"), 3, I1::_duplicate (p) });
+		MyStruct_var ret = p->struct_op (MyStruct { _W ("in"), 1, I1::_duplicate (p) }, out.out (), inout.inout ());
+		EXPECT_EQ (ret->ws_member, _W ("inout"));
+		EXPECT_EQ (out->ws_member, _W ("in"));
+		EXPECT_EQ (inout->ws_member, _W ("in"));
+	}
+
 	release (p);
 }
 
@@ -164,11 +173,11 @@ void test_interface (I1::_ptr_type p)
 	}
 
 	{
-		MyStruct out (U"out", 2, p), inout (U"inout", 3, p);
-		MyStruct ret = p->struct_op (MyStruct (U"in", 1, p), out, inout);
-		EXPECT_EQ (ret.ws_member (), U"inout");
-		EXPECT_EQ (out.ws_member (), U"in");
-		EXPECT_EQ (inout.ws_member (), U"in");
+		MyStruct out (_W("out"), 2, p), inout (_W("inout"), 3, p);
+		MyStruct ret = p->struct_op (MyStruct (_W("in"), 1, p), out, inout);
+		EXPECT_EQ (ret.ws_member (), _W("inout"));
+		EXPECT_EQ (out.ws_member (), _W("in"));
+		EXPECT_EQ (inout.ws_member (), _W("in"));
 	}
 }
 
