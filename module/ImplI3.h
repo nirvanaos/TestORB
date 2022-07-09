@@ -134,6 +134,14 @@ public:
 		inout_u = in_u;
 		return tmp;
 	}
+
+	static bool bool_op (bool in_b, bool& out_b, bool& inout_b)
+	{
+		bool tmp = inout_b;
+		out_b = in_b;
+		inout_b = in_b;
+		return tmp;
+	}
 };
 
 }

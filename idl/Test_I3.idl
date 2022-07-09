@@ -37,6 +37,8 @@ local interface I3 : I1, I2
 	BoxArray box_array_op (in BoxArray in_ar, out BoxArray out_ar, inout BoxArray inout_ar);
 
 	U union_op (in U in_u, out U out_u, inout U inout_u);
+
+	boolean bool_op (in boolean in_b, out boolean out_b, inout boolean inout_b);
 };
 
 interface Empty

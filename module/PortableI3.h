@@ -175,6 +175,11 @@ public:
 	{
 		return ImplI3::union_op (in_u, out_u, inout_u);
 	}
+
+	virtual bool bool_op (bool in_b, bool& out_b, bool& inout_b)
+	{
+		return ImplI3::bool_op (in_b, out_b, inout_b);
+	}
 };
 
 }

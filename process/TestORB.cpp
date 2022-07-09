@@ -609,6 +609,14 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		EXPECT_EQ (out.z (), "in string");
 		EXPECT_EQ (inout.z (), "in string");
 	}
+
+	{ // boolean
+		bool out, inout = true;
+		bool ret = p->bool_op (false, out, inout);
+		EXPECT_TRUE (ret);
+		EXPECT_FALSE (out);
+		EXPECT_FALSE (inout);
+	}
 }
 
 #endif
