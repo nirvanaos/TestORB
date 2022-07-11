@@ -13,6 +13,7 @@ struct StructFixLen
 {
 	long lval;
 	long larr [3][4];
+	fixed <4, 3> f;
 };
 
 typedef StructFixLen FixStructArray [5][7];

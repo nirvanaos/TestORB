@@ -584,6 +584,12 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 
 	}
 
+	{ // Fixed-length struct
+		StructFixLen in, out, inout;
+		in.f (fixed_const);
+		StructFixLen ret = p->fix_struct_op (in, out, inout);
+	}
+
 	{ // Array
 		FixStructArray out, inout;
 		FixStructArray ret = p->fix_struct_array_op (FixStructArray (), out, inout);
@@ -834,6 +840,12 @@ TEST_F (TestORB, TypeCode)
 	Octet o;
 	EXPECT_TRUE (a >>= Any::to_octet (o));
 	EXPECT_EQ (o, 0);
+
+	EXPECT_EQ (_tc_StructFixLen->member_name (2), "f");
+	cont = _tc_StructFixLen->member_type (2);
+	EXPECT_EQ (cont->kind (), TCKind::tk_fixed);
+	EXPECT_EQ (cont->fixed_digits (), 4);
+	EXPECT_EQ (cont->fixed_scale (), 3);
 }
 
 TEST_F (TestORB, ORBInit)
