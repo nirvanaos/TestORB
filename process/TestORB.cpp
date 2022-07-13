@@ -914,4 +914,45 @@ TEST_F (TestORB, Factory)
 	EXPECT_TRUE (f);
 }
 
+TEST_F (TestORB, Any)
+{
+	Any a;
+	{
+		string s = "test string";
+		a <<= s;
+		EXPECT_FALSE (s.empty ());
+		string s1;
+		EXPECT_TRUE (a >>= s1);
+		EXPECT_EQ (s, s1);
+		a <<= move (s);
+		EXPECT_TRUE (s.empty ());
+		Long l;
+		EXPECT_FALSE (a >>= l);
+	}
+	{
+		vector <string> vs = { "test1",  "test2",  "test3" };
+		a <<= vs;
+		EXPECT_FALSE (vs.empty ());
+		vector <string> vs1;
+		EXPECT_TRUE (a >>= vs1);
+		EXPECT_EQ (vs, vs1);
+		a <<= move (vs);
+		EXPECT_TRUE (vs.empty ());
+		vector <Long> vl;
+		EXPECT_FALSE (a >>= vl);
+	}
+	{
+		array <string, 3> as = { "test1",  "test2",  "test3" };
+		a <<= as;
+		array <string, 3> as1;
+		EXPECT_TRUE (a >>= as1);
+		EXPECT_EQ (as, as1);
+		a <<= move (as);
+		EXPECT_TRUE (as [0].empty ());
+		array <string, 4> as4;
+		EXPECT_FALSE (a >>= as4);
+	}
+
+}
+
 }
