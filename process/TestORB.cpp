@@ -921,6 +921,10 @@ TEST_F (TestORB, Any)
 		string s = "test string";
 		a <<= s;
 		EXPECT_FALSE (s.empty ());
+		const string* ps = nullptr;
+		EXPECT_TRUE (a >>= ps);
+		EXPECT_TRUE (ps);
+		EXPECT_EQ (s, *ps);
 		string s1;
 		EXPECT_TRUE (a >>= s1);
 		EXPECT_EQ (s, s1);
