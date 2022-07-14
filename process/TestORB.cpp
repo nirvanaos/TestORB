@@ -744,7 +744,7 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
 
 	cont = _tc_MyAlias->content_type ();
-	EXPECT_TRUE (cont->equal (_tc_SeqLong));
+	EXPECT_TRUE (cont->equivalent (_tc_SeqLong));
 
 	EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
 
