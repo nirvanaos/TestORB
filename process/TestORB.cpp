@@ -959,4 +959,17 @@ TEST_F (TestORB, Any)
 
 }
 
+#ifndef LEGACY_CORBA_CPP
+
+TEST_F (TestORB, Swap)
+{
+	I1::_ref_type r1, r2;
+	swap (r1, r2);
+
+	MyStruct ms1, ms2;
+	swap (ms1, ms2);
+}
+
+#endif
+
 }
