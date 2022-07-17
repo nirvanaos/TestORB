@@ -142,6 +142,14 @@ public:
 		inout_b = in_b;
 		return tmp;
 	}
+
+	static Fixed_8_2 fixed_op (Fixed_8_2 in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
+	{
+		Fixed_8_2 tmp = inout_f;
+		out_f = in_f;
+		inout_f = in_f;
+		return tmp;
+	}
 };
 
 }
