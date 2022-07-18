@@ -626,7 +626,7 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 
 	{ // Fixed
 		Fixed_8_2 out (1.5), inout (3.5);
-		Fixed_8_2 ret = p->fixed_op (Fixed_8_2(const_neg_exp), out, inout);
+		Fixed_8_2 ret = p->fixed_op (const_neg_exp, out, inout);
 		EXPECT_EQ (ret, 3.5);
 		EXPECT_EQ (out, const_neg_exp);
 		EXPECT_EQ (inout, const_neg_exp);

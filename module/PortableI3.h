@@ -181,7 +181,7 @@ public:
 		return ImplI3::bool_op (in_b, out_b, inout_b);
 	}
 
-	virtual Fixed_8_2 fixed_op (const Fixed_8_2 in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
+	virtual Fixed_8_2 fixed_op (const Fixed_8_2& in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
 	{
 		return ImplI3::fixed_op (in_f, out_f, inout_f);
 	}
