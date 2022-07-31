@@ -90,12 +90,12 @@ void test_interface (I1_ptr p)
 	}
 
 	{
-		MyStruct_var out (new MyStruct{ _W ("out"), 2, I1::_duplicate (p) });
-		MyStruct_var inout (new MyStruct{ _W ("inout"), 3, I1::_duplicate (p) });
-		MyStruct_var ret = p->struct_op (MyStruct { _W ("in"), 1, I1::_duplicate (p) }, out.out (), inout.inout ());
-		EXPECT_EQ (ret->ws_member, _W ("inout"));
-		EXPECT_EQ (out->ws_member, _W ("in"));
-		EXPECT_EQ (inout->ws_member, _W ("in"));
+		MyStruct_var out (new MyStruct{ L"out", 2, I1::_duplicate (p) });
+		MyStruct_var inout (new MyStruct{ L"inout", 3, I1::_duplicate (p) });
+		MyStruct_var ret = p->struct_op (MyStruct { L"in", 1, I1::_duplicate (p) }, out.out (), inout.inout ());
+		EXPECT_EQ (ret->ws_member, L"inout");
+		EXPECT_EQ (out->ws_member, L"in");
+		EXPECT_EQ (inout->ws_member, L"in");
 	}
 
 	release (p);
@@ -173,11 +173,11 @@ void test_interface (I1::_ptr_type p)
 	}
 
 	{
-		MyStruct out (_W("out"), 2, p), inout (_W("inout"), 3, p);
-		MyStruct ret = p->struct_op (MyStruct (_W("in"), 1, p), out, inout);
-		EXPECT_EQ (ret.ws_member (), _W("inout"));
-		EXPECT_EQ (out.ws_member (), _W("in"));
-		EXPECT_EQ (inout.ws_member (), _W("in"));
+		MyStruct out (L"out", 2, p), inout (L"inout", 3, p);
+		MyStruct ret = p->struct_op (MyStruct (L"in", 1, p), out, inout);
+		EXPECT_EQ (ret.ws_member (), L"inout");
+		EXPECT_EQ (out.ws_member (), L"in");
+		EXPECT_EQ (inout.ws_member (), L"in");
 	}
 }
 
