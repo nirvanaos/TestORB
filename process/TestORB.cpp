@@ -154,6 +154,31 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (inout, vector <Long> ({ 9, 10, 11, 12 }));
 	}
 
+	{ // Large sequence
+		size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
+		if (sa) {
+			Long size = sa * 2 / sizeof (Long);
+			vector <Long> out, inout, in;
+			out.resize (size);
+			inout.resize (size);
+			in.resize (size);
+			for (Long i = 0; i < size; ++i) {
+				out [i] = i;
+			}
+			for (Long i = 0; i < size; ++i) {
+				inout [i] = i + size;
+			}
+			for (Long i = 0; i < size; ++i) {
+				in [i] = i + size * 2;
+			}
+			vector <Long> inout_copy = inout;
+			vector <Long> ret = p->seq_op (in, out, inout);
+			EXPECT_EQ (ret, inout_copy);
+			EXPECT_EQ (out, in);
+			EXPECT_EQ (inout, in);
+		}
+	}
+
 	{
 		Any out, inout;
 		Any in;
