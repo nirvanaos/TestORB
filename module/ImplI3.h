@@ -47,7 +47,7 @@ public:
 
 	static V1::_ptr_type value_op (V1::_ptr_type in_obj, V1::_var_type& out_obj, V1::_var_type& inout_obj)
 	{
-		V1::_var_type tmp (std::move (inout_obj));
+		V1::_var_type tmp = V1::_duplicate (V1::_downcast (inout_obj->_copy_value ()));
 		out_obj = V1::_duplicate (in_obj);
 		inout_obj = V1::_duplicate (in_obj);
 		return tmp._retn ();
@@ -57,7 +57,8 @@ public:
 
 	static V1::_ref_type value_op (V1::_ptr_type in_obj, V1::_ref_type& out_obj, V1::_ref_type& inout_obj)
 	{
-		V1::_ref_type tmp (std::move (inout_obj));
+		V1::_ref_type tmp = V1::_downcast (inout_obj->_copy_value ());
+		inout_obj = nullptr;
 		out_obj = in_obj;
 		inout_obj = in_obj;
 		return tmp;
