@@ -238,14 +238,30 @@ TEST_F (TestORB, TypeCodeRecursive)
 	EXPECT_TRUE (_tc_RecursiveStruct1->equal (_tc_RecursiveStruct1));
 	EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (_tc_RecursiveStruct1));
 
-	TypeCode::_ref_type tc_rec = g_ORB->create_recursive_tc ("");
-	TypeCode::_ref_type tc_seq = g_ORB->create_sequence_tc (0, tc_rec);
+	typedef TypeCode::
+#ifdef LEGACY_CORBA_CPP
+		_var_type
+#else
+		_ref_type
+#endif
+		TC;
+
+	TC tc_rec = g_ORB->create_recursive_tc ("");
+	TC tc_seq = g_ORB->create_sequence_tc (0, tc_rec);
 	StructMemberSeq members;
 	members.emplace_back ();
+#ifndef LEGACY_CORBA_CPP
 	members.back ().type (_tc_long);
+#else
+	members.back ().type = _tc_long;
+#endif
 	members.emplace_back ();
+#ifndef LEGACY_CORBA_CPP
 	members.back ().type (tc_seq);
-	TypeCode::_ref_type tc_struct = g_ORB->create_struct_tc ("", "", members);
+#else
+	members.back ().type = tc_seq;
+#endif
+	TC tc_struct = g_ORB->create_struct_tc ("", "", members);
 	EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (tc_struct));
 }
 
