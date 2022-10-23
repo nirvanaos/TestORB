@@ -2,6 +2,7 @@
 #include "IDL/Test_I1.h"
 #include "IDL/Test_I3.h"
 #include "IDL/Test_V3.h"
+#include "IDL/RecursiveStruct.h"
 #include <I2_factory_impl.h>
 #include <I1_static.h>
 
@@ -230,6 +231,22 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (cont->kind (), TCKind::tk_fixed);
 	EXPECT_EQ (cont->fixed_digits (), 4);
 	EXPECT_EQ (cont->fixed_scale (), 3);
+}
+
+TEST_F (TestORB, TypeCodeRecursive)
+{
+	EXPECT_TRUE (_tc_RecursiveStruct1->equal (_tc_RecursiveStruct1));
+	EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (_tc_RecursiveStruct1));
+
+	TypeCode::_ref_type tc_rec = g_ORB->create_recursive_tc ("");
+	TypeCode::_ref_type tc_seq = g_ORB->create_sequence_tc (0, tc_rec);
+	StructMemberSeq members;
+	members.emplace_back ();
+	members.back ().type (_tc_long);
+	members.emplace_back ();
+	members.back ().type (tc_seq);
+	TypeCode::_ref_type tc_struct = g_ORB->create_struct_tc ("", "", members);
+	EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (tc_struct));
 }
 
 TEST_F (TestORB, ORBInit)
