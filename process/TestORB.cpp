@@ -1,6 +1,7 @@
 #include "TestORB.h"
 #include "IDL/Test_I1.h"
 #include "IDL/Test_I3.h"
+#include "IDL/Test_V1.h"
 #include "IDL/Test_V3.h"
 #include "IDL/RecursiveStruct.h"
 #include <I2_factory_impl.h>
@@ -246,23 +247,67 @@ TEST_F (TestORB, TypeCodeRecursive)
 #endif
 		TC;
 
-	TC tc_rec = g_ORB->create_recursive_tc ("");
-	TC tc_seq = g_ORB->create_sequence_tc (0, tc_rec);
-	StructMemberSeq members;
-	members.emplace_back ();
+	{
+		TC tc_struct;
+		{
+			TC tc_rec = g_ORB->create_recursive_tc ("");
+			TC tc_seq = g_ORB->create_sequence_tc (0, tc_rec);
+			StructMemberSeq members;
+			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
-	members.back ().type (_tc_long);
+			members.back ().type (_tc_long);
 #else
-	members.back ().type = _tc_long;
+			members.back ().type = _tc_long;
 #endif
-	members.emplace_back ();
+			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
-	members.back ().type (tc_seq);
+			members.back ().type (tc_seq);
 #else
-	members.back ().type = tc_seq;
+			members.back ().type = tc_seq;
 #endif
-	TC tc_struct = g_ORB->create_struct_tc ("", "", members);
-	EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (tc_struct));
+			tc_struct = g_ORB->create_struct_tc ("", "", members);
+		}
+		EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (tc_struct));
+		EXPECT_TRUE (tc_struct->equivalent (_tc_RecursiveStruct1));
+	}
+
+	EXPECT_TRUE (_tc_V1->equal (_tc_V1));
+	EXPECT_TRUE (_tc_V1->equivalent (_tc_V1));
+
+	{
+		TC tc_v1;
+		{
+			TC tc_rec = g_ORB->create_recursive_tc (Internal::RepIdOf <V1>::id);
+			ValueMemberSeq members;
+			members.emplace_back ();
+#ifndef LEGACY_CORBA_CPP
+			members.back ().type (_tc_short);
+#else
+			members.back ().type = _tc_short;
+#endif
+			members.emplace_back ();
+#ifndef LEGACY_CORBA_CPP
+			members.back ().type (_tc_long);
+#else
+			members.back ().type = _tc_long;
+#endif
+			members.emplace_back ();
+#ifndef LEGACY_CORBA_CPP
+			members.back ().type (_tc_string);
+#else
+			members.back ().type = _tc_string;
+#endif
+			members.emplace_back ();
+#ifndef LEGACY_CORBA_CPP
+			members.back ().type (tc_rec);
+#else
+			members.back ().type = tc_rec;
+#endif
+			tc_v1 = g_ORB->create_value_tc (Internal::RepIdOf <V1>::id, "", VM_NONE, nullptr, members);
+		}
+		EXPECT_TRUE (_tc_V1->equivalent (tc_v1));
+		EXPECT_TRUE (tc_v1->equivalent (_tc_V1));
+	}
 }
 
 TEST_F (TestORB, ORBInit)
