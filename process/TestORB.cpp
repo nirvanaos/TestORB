@@ -7,7 +7,6 @@
 #include <I2_factory_impl.h>
 #include <I1_static.h>
 
-using namespace std;
 using namespace CORBA;
 using namespace Test;
 
@@ -27,7 +26,7 @@ TEST_F (TestORB, Environment)
 	const CORBA::Exception* ex = ne.exception ();
 	ASSERT_TRUE (ex);
 	EXPECT_STREQ (ex->_name (), "NO_MEMORY");
-	CORBA::Internal::Environment ne1 (move (ne));
+	CORBA::Internal::Environment ne1 (std::move (ne));
 	EXPECT_FALSE (ne.exception ());
 	ex = ne1.exception ();
 	ASSERT_TRUE (ex);
@@ -36,7 +35,7 @@ TEST_F (TestORB, Environment)
 	CORBA::Internal::EnvironmentEx <::Test::MyException> nex;
 	::Test::MyException my_ex;
 	CORBA::Internal::set_exception (&nex, my_ex);
-	CORBA::Internal::Environment ne2 (move (nex));
+	CORBA::Internal::Environment ne2 (std::move (nex));
 	ex = ne2.exception ();
 	ASSERT_TRUE (ex);
 	EXPECT_STREQ (ex->_name (), ::Test::MyException::__name ());
@@ -380,42 +379,42 @@ TEST_F (TestORB, Any)
 {
 	Any a;
 	{
-		string s = "test string";
+		std::string s = "test string";
 		a <<= s;
 		EXPECT_FALSE (s.empty ());
-		const string* ps = nullptr;
+		const std::string* ps = nullptr;
 		EXPECT_TRUE (a >>= ps);
 		EXPECT_TRUE (ps);
 		EXPECT_EQ (s, *ps);
-		string s1;
+		std::string s1;
 		EXPECT_TRUE (a >>= s1);
 		EXPECT_EQ (s, s1);
-		a <<= move (s);
+		a <<= std::move (s);
 		EXPECT_TRUE (s.empty ());
 		Long l;
 		EXPECT_FALSE (a >>= l);
 	}
 	{
-		vector <string> vs = { "test1",  "test2",  "test3" };
+		std::vector <std::string> vs = { "test1",  "test2",  "test3" };
 		a <<= vs;
 		EXPECT_FALSE (vs.empty ());
-		vector <string> vs1;
+		std::vector <std::string> vs1;
 		EXPECT_TRUE (a >>= vs1);
 		EXPECT_EQ (vs, vs1);
-		a <<= move (vs);
+		a <<= std::move (vs);
 		EXPECT_TRUE (vs.empty ());
-		vector <Long> vl;
+		std::vector <Long> vl;
 		EXPECT_FALSE (a >>= vl);
 	}
 	{
-		array <string, 3> as = { "test1",  "test2",  "test3" };
+		std::array <std::string, 3> as = { "test1",  "test2",  "test3" };
 		a <<= as;
-		array <string, 3> as1;
+		std::array <std::string, 3> as1;
 		EXPECT_TRUE (a >>= as1);
 		EXPECT_EQ (as, as1);
-		a <<= move (as);
+		a <<= std::move (as);
 		EXPECT_TRUE (as [0].empty ());
-		array <string, 4> as4;
+		std::array <std::string, 4> as4;
 		EXPECT_FALSE (a >>= as4);
 	}
 	{

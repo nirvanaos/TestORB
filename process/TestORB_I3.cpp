@@ -7,7 +7,6 @@
 #include "IDL/Test_V3.h"
 #include <signal.h>
 
-using namespace std;
 using namespace CORBA;
 using namespace Test;
 

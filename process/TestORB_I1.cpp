@@ -4,7 +4,6 @@
 #include "I1_factory_portable.h"
 #include "I1_factory_tied.h"
 
-using namespace std;
 using namespace CORBA;
 using namespace Test;
 
@@ -115,17 +114,17 @@ void test_interface (I1::_ptr_type p)
 	EXPECT_TRUE (p->_is_a ("IDL:Test/I1:1.0"));
 
 	{
-		string out = "this text will be lost", inout = "inout string";
-		string in = "in string";
-		string ret = p->string_op (in, out, inout);
+		std::string out = "this text will be lost", inout = "inout string";
+		std::string in = "in string";
+		std::string ret = p->string_op (in, out, inout);
 		EXPECT_STREQ (ret.c_str (), "inout string");
 		EXPECT_STREQ (out.c_str (), "in string");
 		EXPECT_STREQ (inout.c_str (), "in string");
 	}
 
 	{ // Pass string constant as in parameter
-		string out = "this text will be lost", inout = "inout string";
-		string ret = p->string_op ("in string", out, inout);
+		std::string out = "this text will be lost", inout = "inout string";
+		std::string ret = p->string_op ("in string", out, inout);
 		EXPECT_STREQ (ret.c_str (), "inout string");
 		EXPECT_STREQ (out.c_str (), "in string");
 		EXPECT_STREQ (inout.c_str (), "in string");
@@ -140,18 +139,18 @@ void test_interface (I1::_ptr_type p)
 	}
 
 	{
-		vector <Long> out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
-		vector <Long> ret = p->seq_op (vector <Long> { 9, 10, 11, 12 }, out, inout);
-		EXPECT_EQ (ret, vector <Long> ({ 5, 6, 7, 8 }));
-		EXPECT_EQ (out, vector <Long> ({ 9, 10, 11, 12 }));
-		EXPECT_EQ (inout, vector <Long> ({ 9, 10, 11, 12 }));
+		std::vector <Long> out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
+		std::vector <Long> ret = p->seq_op (std::vector <Long> { 9, 10, 11, 12 }, out, inout);
+		EXPECT_EQ (ret, std::vector <Long> ({ 5, 6, 7, 8 }));
+		EXPECT_EQ (out, std::vector <Long> ({ 9, 10, 11, 12 }));
+		EXPECT_EQ (inout, std::vector <Long> ({ 9, 10, 11, 12 }));
 	}
 
 	{ // Large sequence
 		size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 		if (sa) {
 			Long size = sa * 2 / sizeof (Long);
-			vector <Long> out, inout, in;
+			std::vector <Long> out, inout, in;
 			out.resize (size);
 			inout.resize (size);
 			in.resize (size);
@@ -164,8 +163,8 @@ void test_interface (I1::_ptr_type p)
 			for (Long i = 0; i < size; ++i) {
 				in [i] = i + size * 2;
 			}
-			vector <Long> inout_copy = inout;
-			vector <Long> ret = p->seq_op (in, out, inout);
+			std::vector <Long> inout_copy = inout;
+			std::vector <Long> ret = p->seq_op (in, out, inout);
 			EXPECT_EQ (ret, inout_copy);
 			EXPECT_EQ (out, in);
 			EXPECT_EQ (inout, in);
@@ -179,15 +178,15 @@ void test_interface (I1::_ptr_type p)
 	}
 
 	{
-		string out, inout;
-		string ret;
+		std::string out, inout;
+		std::string ret;
 		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
 	}
 
 	{
-		vector <Long> out, inout;
-		vector <Long> ret;
-		EXPECT_THROW (ret = p->short_seq_op (vector <Long> { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
+		std::vector <Long> out, inout;
+		std::vector <Long> ret;
+		EXPECT_THROW (ret = p->short_seq_op (std::vector <Long> { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
 	}
 
 	{

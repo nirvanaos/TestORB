@@ -5,7 +5,6 @@
 
 #include "IDL/Union.h"
 
-using namespace std;
 using namespace CORBA;
 using namespace Test;
 
