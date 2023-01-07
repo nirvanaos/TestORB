@@ -1,6 +1,6 @@
 #include "Test_A1.idl"
 
-module Test{
+module Test {
 
 const wchar char_const = L'c';
 const string string_const = "string_const";
