@@ -173,7 +173,7 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		V2_var v = V2_factory::_factory->create ();
 		v->val_v2 (1234);
 		{
-			V1_var out, inout = V1::_duplicate (v);
+			V1_var out, inout (V1::_duplicate (v));
 			V1_var ret = V1::_duplicate (p->value_op (v, out, inout));
 			V2_var v2 = V2::_duplicate (V2::_downcast (ret));
 			ASSERT_TRUE (v2);
@@ -193,7 +193,7 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 			EXPECT_TRUE (v2);
 		}
 
-		A1_var out, inout (v);
+		A1_var out, inout (A1::_duplicate (v));
 		A1_var ret = p->abstract_op (v, out, inout);
 		V2_ptr v2 = V2::_downcast (ret->_to_value ());
 		EXPECT_TRUE (v2);
