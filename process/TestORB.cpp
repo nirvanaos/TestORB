@@ -12,6 +12,14 @@ using namespace Test;
 
 namespace TestORB {
 
+typedef TypeCode::
+#ifdef LEGACY_CORBA_CPP
+_var_type
+#else
+_ref_type
+#endif
+TC;
+
 TEST_F (TestORB, UserException)
 {
 	::Test::MyException e;
@@ -99,19 +107,27 @@ TEST_F (TestORB, TypeCode)
 		EXPECT_EQ (_tc_MyStruct->member_type (2)->kind (), TCKind::tk_objref);
 #endif
 
+	EXPECT_EQ (_tc_MyEnum->kind (), TCKind::tk_enum);
+	EXPECT_EQ (_tc_MyEnum->id (), "IDL:Test/MyEnum:1.0");
+	EXPECT_EQ (_tc_MyEnum->name (), "MyEnum");
+	EXPECT_EQ (_tc_MyEnum->member_count (), 3u);
+	EXPECT_EQ (_tc_MyEnum->member_name (0), "a");
+	EXPECT_EQ (_tc_MyEnum->member_name (1), "b");
+	EXPECT_EQ (_tc_MyEnum->member_name (2), "c");
+
+	TC compact = _tc_MyEnum->get_compact_typecode ();
+	EXPECT_TRUE (_tc_MyEnum->equivalent (compact));
+	EXPECT_EQ (compact->name (), "");
+	EXPECT_EQ (compact->member_name (0), "");
+	EXPECT_EQ (compact->member_name (1), "");
+	EXPECT_EQ (compact->member_name (2), "");
+	compact = TypeCode::_nil ();
+
 	EXPECT_EQ (_tc_SeqLong->kind (), TCKind::tk_alias);
 	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
 	EXPECT_EQ (_tc_SeqLong->name (), "SeqLong");
 
-	TypeCode::
-#ifdef LEGACY_CORBA_CPP
-		_var_type
-#else
-		_ref_type
-#endif
-		cont;
-
-	cont = _tc_SeqLong->content_type ();
+	TC cont = _tc_SeqLong->content_type ();
 
 	EXPECT_EQ (cont->kind (), TCKind::tk_sequence);
 	EXPECT_EQ (cont->length (), 0);
@@ -238,14 +254,6 @@ TEST_F (TestORB, TypeCodeRecursive)
 	EXPECT_TRUE (_tc_RecursiveStruct1->equal (_tc_RecursiveStruct1));
 	EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (_tc_RecursiveStruct1));
 
-	typedef TypeCode::
-#ifdef LEGACY_CORBA_CPP
-		_var_type
-#else
-		_ref_type
-#endif
-		TC;
-
 	{
 		TC tc_struct;
 		{
@@ -268,6 +276,12 @@ TEST_F (TestORB, TypeCodeRecursive)
 		}
 		EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (tc_struct));
 		EXPECT_TRUE (tc_struct->equivalent (_tc_RecursiveStruct1));
+	}
+
+	{
+		TC compact = _tc_RecursiveStruct1->get_compact_typecode ();
+		EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (compact));
+		EXPECT_TRUE (compact->equivalent (_tc_RecursiveStruct1));
 	}
 
 	EXPECT_TRUE (_tc_V1->equal (_tc_V1));
