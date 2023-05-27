@@ -1,8 +1,9 @@
 #include "TestORB_I1.h"
-#include "I1_static.h"
-#include "I1_factory_dynamic.h"
-#include "I1_factory_portable.h"
-#include "I1_factory_tied.h"
+#include <I1_static.h>
+#include <I1_factory_dynamic.h>
+#include <I1_factory_portable.h>
+#include <I1_factory_tied.h>
+#include <I1_factory_sysdomain.h>
 
 using namespace CORBA;
 using namespace Test;
@@ -221,17 +222,12 @@ void test_performance (I1::_ptr_type p)
 
 // The fixture for testing simple interface.
 
-typedef ::testing::Types < ::Nirvana::Static <I1_factory_dynamic>
-#ifndef TEST_NO_POA
-	, Nirvana::Static <I1_factory_portable>
-#endif
-#ifndef TEST_NO_STATIC
-	, Nirvana::Static <I1_static>
-#endif
-#ifndef TEST_NO_TIED
-	, Nirvana::Static <I1_factory_tied>
-	, Nirvana::Static <I1_tied_derived>
-#endif
+typedef ::testing::Types <Nirvana::Static <I1_factory_dynamic> // 0
+	, Nirvana::Static <I1_factory_portable> // 1
+	, Nirvana::Static <I1_static> // 2
+	, Nirvana::Static <I1_factory_tied> // 3
+	, Nirvana::Static <I1_tied_derived> // 4
+	, Nirvana::Static <I1_factory_sysdomain> // 5
 > ServantTypesI1;
 
 template <class Factory>

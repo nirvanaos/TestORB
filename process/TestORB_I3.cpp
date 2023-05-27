@@ -1,9 +1,9 @@
 #include "TestORB_I1.h"
 #include <I1_static.h>
 #include <I3_static.h>
-#include "I3_factory_dynamic.h"
-#include "I3_factory_portable.h"
-#include "I3_factory_tied.h"
+#include <I3_factory_dynamic.h>
+#include <I3_factory_portable.h>
+#include <I3_factory_tied.h>
 #include "IDL/Test_V3.h"
 #include <signal.h>
 
@@ -14,16 +14,10 @@ namespace TestORB {
 // The fixture for testing complex interface.
 
 typedef ::testing::Types < ::Nirvana::Static <I3_factory_dynamic>
-#ifndef TEST_NO_POA
 	, ::Nirvana::Static <I3_factory_portable>
-#endif
-#ifndef TEST_NO_STATIC
 	, ::Nirvana::Static <I3_static>
-#endif
-#ifndef TEST_NO_TIED
 	, ::Nirvana::Static <I3_factory_tied>
 	, ::Nirvana::Static <I3_tied_derived>
-#endif
 > ServantTypesI3;
 
 template <class Factory>
