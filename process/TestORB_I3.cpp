@@ -13,6 +13,12 @@ using namespace Test;
 namespace TestORB {
 // The fixture for testing complex interface.
 
+#ifdef LEGACY_CORBA_CPP
+typedef I3_var I3_ref;
+#else
+typedef I3::_ref_type I3_ref;
+#endif
+
 typedef ::testing::Types < ::Nirvana::Static <I3_factory_dynamic>
 	, ::Nirvana::Static <I3_factory_portable>
 	, ::Nirvana::Static <I3_static>
@@ -31,48 +37,33 @@ protected:
 	virtual ~TestORB_I3 ()
 	{}
 
+	static I3_ref incarnate (I3_factory::_ptr_type factory)
+	{
+		return factory->create (MAGIC_CONST);
+	}
+
+	static I3_ref incarnate (I3::_ptr_type obj)
+	{
 #ifdef LEGACY_CORBA_CPP
-
-	static I3_ptr incarnate (I3_factory_ptr factory)
-	{
-		return factory->create (MAGIC_CONST);
-	}
-
-	static I3_ptr incarnate (I3_ptr obj)
-	{
 		return I3::_duplicate (obj);
-	}
-
-	static I3_ptr incarnate ()
-	{
-		return incarnate (Factory::ptr ());
-	}
-
 #else
-
-	static I3::_ref_type incarnate (I3_factory::_ptr_type factory)
-	{
-		return factory->create (MAGIC_CONST);
-	}
-
-	static I3::_ref_type incarnate (I3::_ptr_type obj)
-	{
 		return obj;
+#endif
 	}
 
-	static I3::_ref_type incarnate ()
+	static I3_ref incarnate ()
 	{
 		return incarnate (Factory::ptr ());
 	}
 
-#endif
 };
 
 TYPED_TEST_SUITE (TestORB_I3, ServantTypesI3);
 
 TYPED_TEST (TestORB_I3, Interface)
 {
-	test_interface (TestORB_I3 <TypeParam>::incarnate ());
+	I3_ref p = TestORB_I3 <TypeParam>::incarnate ();
+	test_interface (p);
 }
 
 TYPED_TEST (TestORB_I3, Signal)
