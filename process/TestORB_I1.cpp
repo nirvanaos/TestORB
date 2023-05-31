@@ -192,9 +192,7 @@ typedef ::testing::Types <Nirvana::Static <I1_factory_dynamic> // 0
 	, Nirvana::Static <I1_static> // 2
 	, Nirvana::Static <I1_factory_tied> // 3
 	, Nirvana::Static <I1_tied_derived> // 4
-	/*
 	, Nirvana::Static <I1_factory_sysdomain> // 5
-	*/
 > ServantTypesI1;
 
 template <class Factory>
@@ -239,11 +237,11 @@ TYPED_TEST (TestORB_I1, Interface)
 
 TYPED_TEST (TestORB_I1, LargeSeq)
 {
-	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
-
 	// Large sequence
 	size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 	if (sa) {
+		I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
+
 		Long size = (Long)(sa * 2 / sizeof (Long));
 		std::vector <Long> out, inout, in;
 		out.resize (size);
@@ -268,10 +266,11 @@ TYPED_TEST (TestORB_I1, LargeSeq)
 
 TYPED_TEST (TestORB_I1, LargeString)
 {
-	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
 	// Large string
 	size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 	if (sa) {
+		I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
+
 		size_t size = sa * 2;
 		std::string out, inout, in;
 		out.resize (size, 'o');
