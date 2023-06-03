@@ -1,6 +1,7 @@
 #include <CORBA/Server.h>
 #include "I3_factory_tied.h"
 #include "ImplI1.h"
+#include "ImplI2.h"
 #include "ImplI3.h"
 #include <IDL/Test_I3_s.h>
 #include <IDL/Test_I3_factory_s.h>
@@ -11,6 +12,7 @@ namespace Test {
 
 class TiedI3 :
 	public ImplI1,
+	public ImplI2,
 	public ImplI3
 {
 public:

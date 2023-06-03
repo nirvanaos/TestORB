@@ -1,4 +1,7 @@
 #include "Test_A1.idl"
+#include "Test_V1.idl"
+#include "Union.idl"
+#include "ValueBox.idl"
 
 module Test {
 
@@ -9,11 +12,9 @@ const long long_const = 123;
 const float float_const = 4.56;
 typedef double Dbl;
 const Dbl double_const = 7.890;
-const fixed fixed_const = 1.234D;
 
 interface I2 : A1
 {
-
 	const wchar char_const = L'c';
 	const string string_const = "string_const";
 	const wstring wstring_const = L"wstring_const";
@@ -24,6 +25,19 @@ interface I2 : A1
 	const fixed fixed_const = 1.234D;
 
 	long op2 (in long p1);
+
+	long divide (in long a, in long b);
+
+	A1 abstract_op (in A1 in_obj, out A1 out_obj, inout A1 inout_obj);
+
+	V1 value_op (in V1 in_obj, out V1 out_obj, inout V1 inout_obj);
+
+	StringValue box_op (in StringValue in_obj, out StringValue out_obj, inout StringValue inout_obj);
+
+	BoxArray box_array_op (in BoxArray in_ar, out BoxArray out_ar, inout BoxArray inout_ar);
+
+	U union_op (in U in_u, out U out_u, inout U inout_u);
+
 };
 
 interface I2_factory

@@ -32,7 +32,19 @@ typedef string <8> ShortString;
 typedef sequence <long, 4> ShortSeqLong;
 typedef sequence <string> SeqString;
 typedef sequence <MyStruct> SeqStruct;
+typedef MyStruct StructArray [3];
 typedef fixed <8, 2> Fixed_8_2;
+const fixed fixed_const = 1.234D;
+typedef long LongArray [3][4];
+
+struct StructFixLen
+{
+	long lval;
+	long larr [3][4];
+	fixed <4, 3> f;
+};
+
+typedef StructFixLen FixStructArray [5][7];
 
 const fixed const_neg_exp = 1000D;
 
@@ -51,8 +63,12 @@ interface I1
 	SeqString seq_string_op (in SeqString in_s, out SeqString out_s, inout SeqString inout_s);
 	MyStruct struct_op (in MyStruct in_s, out MyStruct out_s, inout MyStruct inout_s);
 	SeqStruct seq_struct_op (in SeqStruct in_s, out SeqStruct out_s, inout SeqStruct inout_s);
+	StructArray struct_array_op (in StructArray in_ar, out StructArray out_ar, inout StructArray inout_ar);
 	boolean bool_op (in boolean in_b, out boolean out_b, inout boolean inout_b);
 	Fixed_8_2 fixed_op (in Fixed_8_2 in_f, out Fixed_8_2 out_f, inout Fixed_8_2 inout_f);
+	StructFixLen fix_struct_op (in StructFixLen in_s, out StructFixLen out_s, inout StructFixLen inout_s);
+	LongArray long_array_op (in LongArray in_ar, out LongArray out_ar, inout LongArray inout_ar);
+	FixStructArray fix_struct_array_op (in FixStructArray in_ar, out FixStructArray out_ar, inout FixStructArray inout_ar);
 };
 
 };

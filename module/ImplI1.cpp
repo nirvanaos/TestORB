@@ -100,6 +100,14 @@ std::vector <MyStruct> ImplI1::seq_struct_op (
 	return tmp;
 }
 
+StructArray ImplI1::struct_array_op (const StructArray& in_ar, StructArray& out_ar, StructArray& inout_ar)
+{
+	StructArray tmp (inout_ar);
+	out_ar = in_ar;
+	inout_ar = in_ar;
+	return tmp;
+}
+
 bool ImplI1::bool_op (bool in_b, bool& out_b, bool& inout_b)
 {
 	bool tmp = inout_b;
@@ -113,6 +121,30 @@ Fixed_8_2 ImplI1::fixed_op (Fixed_8_2 in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f
 	Fixed_8_2 tmp = inout_f;
 	out_f = in_f;
 	inout_f = in_f;
+	return tmp;
+}
+
+StructFixLen ImplI1::fix_struct_op (const StructFixLen& in_s, StructFixLen& out_s, StructFixLen& inout_s)
+{
+	StructFixLen tmp (inout_s);
+	out_s = in_s;
+	inout_s = in_s;
+	return tmp;
+}
+
+LongArray ImplI1::long_array_op (const LongArray& in_ar, LongArray& out_ar, LongArray& inout_ar)
+{
+	LongArray tmp (inout_ar);
+	out_ar = in_ar;
+	inout_ar = in_ar;
+	return tmp;
+}
+
+FixStructArray ImplI1::fix_struct_array_op (const FixStructArray& in_ar, FixStructArray& out_ar, FixStructArray& inout_ar)
+{
+	FixStructArray tmp (inout_ar);
+	out_ar = in_ar;
+	inout_ar = in_ar;
 	return tmp;
 }
 

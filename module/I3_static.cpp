@@ -2,6 +2,7 @@
 #include "I1_static.h"
 #include "I3_static.h"
 #include "ImplI1.h"
+#include "ImplI2.h"
 #include "ImplI3.h"
 #include <IDL/Test_I1_s.h>
 #include <IDL/Test_I2_s.h>
@@ -14,6 +15,7 @@ namespace Test {
 class I3_static :
 	public CORBA::servant_traits <I3>::ServantStatic <I3_static>,
 	public ImplI1,
+	public ImplI2,
 	public ImplI3
 {
 public:

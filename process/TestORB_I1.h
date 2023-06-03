@@ -2,7 +2,7 @@
 #define NIRVANA_TESTORB_TESTORB_I1_H_
 #pragma once
 
-#include "TestORB.h"
+#include <CORBA/CORBA.h>
 #include "IDL/Test_I1.h"
 
 namespace TestORB {

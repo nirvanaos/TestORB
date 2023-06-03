@@ -1,43 +1,11 @@
 #include "Test_I1.idl"
 #include "Test_I2.idl"
-#include "Test_V1.idl"
-#include "Union.idl"
-#include "ValueBox.idl"
 
 module Test {
-
-typedef long LongArray [3][4];
-typedef MyStruct StructArray [3];
-
-struct StructFixLen
-{
-	long lval;
-	long larr [3][4];
-	fixed <4, 3> f;
-};
-
-typedef StructFixLen FixStructArray [5][7];
 
 local interface I3 : I1, I2
 {
 	long op3 (in long p1);
-
-	long divide (in long a, in long b);
-
-	A1 abstract_op (in A1 in_obj, out A1 out_obj, inout A1 inout_obj);
-
-	V1 value_op (in V1 in_obj, out V1 out_obj, inout V1 inout_obj);
-
-	StructFixLen fix_struct_op (in StructFixLen in_s, out StructFixLen out_s, inout StructFixLen inout_s);
-	LongArray long_array_op (in LongArray in_ar, out LongArray out_ar, inout LongArray inout_ar);
-	StructArray struct_array_op (in StructArray in_ar, out StructArray out_ar, inout StructArray inout_ar);
-	FixStructArray fix_struct_array_op (in FixStructArray in_ar, out FixStructArray out_ar, inout FixStructArray inout_ar);
-
-	StringValue box_op (in StringValue in_obj, out StringValue out_obj, inout StringValue inout_obj);
-
-	BoxArray box_array_op (in BoxArray in_ar, out BoxArray out_ar, inout BoxArray inout_ar);
-
-	U union_op (in U in_u, out U out_u, inout U inout_u);
 
 };
 

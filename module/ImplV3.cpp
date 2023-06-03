@@ -1,12 +1,14 @@
 #include <CORBA/Server.h>
 #include <IDL/Test_V3_s.h>
 #include <I2_factory_V3.h>
+#include "ImplI2.h"
 
 using namespace CORBA;
 
 namespace Test {
 
-class ImplV3 : public CORBA::servant_traits <V3>::Servant <ImplV3>
+class ImplV3 : public CORBA::servant_traits <V3>::Servant <ImplV3>,
+	public ImplI2
 {
 public:
 	ImplV3 ()

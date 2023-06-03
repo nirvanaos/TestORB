@@ -38,3 +38,4 @@ public:
 
 }
 
+NIRVANA_STATIC_EXP (Test, I2_factory_dynamic)

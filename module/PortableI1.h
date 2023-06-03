@@ -102,6 +102,11 @@ public:
 		return ImplI1::seq_struct_op (in_s, out_s, inout_s);
 	}
 
+	virtual StructArray struct_array_op (const StructArray& in_ar, StructArray& out_ar, StructArray& inout_ar)
+	{
+		return ImplI1::struct_array_op (in_ar, out_ar, inout_ar);
+	}
+
 	virtual bool bool_op (bool in_b, bool& out_b, bool& inout_b)
 	{
 		return ImplI1::bool_op (in_b, out_b, inout_b);
@@ -110,6 +115,21 @@ public:
 	virtual Fixed_8_2 fixed_op (const Fixed_8_2& in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
 	{
 		return ImplI1::fixed_op (in_f, out_f, inout_f);
+	}
+
+	virtual StructFixLen fix_struct_op (const StructFixLen& in_s, StructFixLen& out_s, StructFixLen& inout_s)
+	{
+		return ImplI1::fix_struct_op (in_s, out_s, inout_s);
+	}
+
+	virtual LongArray long_array_op (const LongArray& in_ar, LongArray& out_ar, LongArray& inout_ar)
+	{
+		return ImplI1::long_array_op (in_ar, out_ar, inout_ar);
+	}
+
+	virtual FixStructArray fix_struct_array_op (const FixStructArray& in_ar, FixStructArray& out_ar, FixStructArray& inout_ar)
+	{
+		return ImplI1::fix_struct_array_op (in_ar, out_ar, inout_ar);
 	}
 
 private:

@@ -4,6 +4,7 @@
 #include <I1_factory_portable.h>
 #include <I1_factory_tied.h>
 #include <I1_factory_sysdomain.h>
+#include <gtest/gtest.h>
 
 using namespace CORBA;
 using namespace Test;
@@ -16,13 +17,12 @@ typedef I1_var I1_ref;
 typedef I1::_ref_type I1_ref;
 #endif
 
-#ifdef LEGACY_CORBA_CPP
-
 void test_interface (I1::_ptr_type p)
 {
 	ASSERT_FALSE (is_nil (p));
 	ASSERT_FALSE (p->_non_existent ());
 	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
+#ifdef LEGACY_CORBA_CPP
 	Object_ptr object = p;
 	ASSERT_FALSE (is_nil (object));
 	ASSERT_FALSE (object->_non_existent ());
@@ -32,94 +32,7 @@ void test_interface (I1::_ptr_type p)
 		ASSERT_FALSE (p1->_non_existent ());
 		EXPECT_EQ (p1->op1 (1), MAGIC_CONST + 1);
 	}
-	ASSERT_FALSE (p->_non_existent ());
-	EXPECT_TRUE (p->_is_a ("IDL:omg.org/CORBA/Object:1.0"));
-	EXPECT_TRUE (p->_is_a ("IDL:Test/I1:1.0"));
-
-	{
-		String_var out = "this text will be lost", inout = "inout string";
-		String_var in = "in string";
-		String_var ret = p->string_op (in, out, inout);
-		EXPECT_STREQ (ret.c_str (), "inout string");
-		EXPECT_STREQ (out.c_str (), "in string");
-		EXPECT_STREQ (inout.c_str (), "in string");
-	}
-
-	{ // Pass string constant as in parameter
-		String_var out = "this text will be lost", inout = "inout string";
-		String_var ret = p->string_op ("in string", out, inout);
-		EXPECT_STREQ (ret.c_str (), "inout string");
-		EXPECT_STREQ (out.c_str (), "in string");
-		EXPECT_STREQ (inout.c_str (), "in string");
-	}
-
-	{
-		I1_var out, inout (I1::_duplicate (p));
-		I1_var ret = p->object_op (p, out, inout);
-		EXPECT_TRUE (out && out->_is_equivalent (p));
-		EXPECT_TRUE (inout && inout->_is_equivalent (p));
-		EXPECT_TRUE (ret && ret->_is_equivalent (p));
-	}
-
-	{
-		SeqLong out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
-		SeqLong ret = p->seq_op (SeqLong{ 9, 10, 11, 12 }, out, inout);
-		EXPECT_EQ (ret, SeqLong ({ 5, 6, 7, 8 }));
-		EXPECT_EQ (out, SeqLong ({ 9, 10, 11, 12 }));
-		EXPECT_EQ (inout, SeqLong ({ 9, 10, 11, 12 }));
-	}
-
-	{ // Any
-		Any out, inout;
-		Any in;
-		Any ret = p->any_op (in, out, inout);
-	}
-
-	{ // Bounded string violation
-		String_var out, inout;
-		String_var ret;
-		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
-	}
-
-	{ // Bounded sequence violation
-		SeqLong out, inout;
-		ShortSeqLong ret;
-		EXPECT_THROW (ret = p->short_seq_op (SeqLong{ 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
-	}
-
-	{ // Structure
-		MyStruct_var out (new MyStruct{ L"out", 2, I1::_duplicate (p) });
-		MyStruct_var inout (new MyStruct{ L"inout", 3, I1::_duplicate (p) });
-		MyStruct_var ret = p->struct_op (MyStruct{ L"in", 1, I1::_duplicate (p) }, out.out (), inout.inout ());
-		EXPECT_EQ (ret->ws_member, L"inout");
-		EXPECT_EQ (out->ws_member, L"in");
-		EXPECT_EQ (inout->ws_member, L"in");
-	}
-
-	{ // boolean
-		bool out, inout = true;
-		bool ret = p->bool_op (false, out, inout);
-		EXPECT_TRUE (ret);
-		EXPECT_FALSE (out);
-		EXPECT_FALSE (inout);
-	}
-
-	{ // Fixed
-		Fixed_8_2 out (1.5), inout (3.5);
-		Fixed_8_2 ret = p->fixed_op (Fixed_8_2 (const_neg_exp), out, inout);
-		EXPECT_EQ (ret, Fixed_8_2 (3.5));
-		EXPECT_EQ (out, Fixed_8_2 (const_neg_exp));
-		EXPECT_EQ (inout, Fixed_8_2 (const_neg_exp));
-	}
-}
-
 #else
-
-void test_interface (I1::_ptr_type p)
-{
-	ASSERT_FALSE (is_nil (p));
-	ASSERT_FALSE (p->_non_existent ());
-	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
 	Object::_ptr_type object = p;
 	ASSERT_TRUE (object);
 	ASSERT_FALSE (object->_non_existent ());
@@ -129,67 +42,125 @@ void test_interface (I1::_ptr_type p)
 		ASSERT_FALSE (p1->_non_existent ());
 		EXPECT_EQ (p1->op1 (1), MAGIC_CONST + 1);
 	}
+#endif
 	ASSERT_FALSE (p->_non_existent ());
 	EXPECT_TRUE (p->_is_a ("IDL:omg.org/CORBA/Object:1.0"));
 	EXPECT_TRUE (p->_is_a ("IDL:Test/I1:1.0"));
 
-	{
+	{ // String operation
+#ifdef LEGACY_CORBA_CPP
+		String_var out = "this text will be lost", inout = "inout string";
+		String_var in = "in string";
+		String_var ret = p->string_op (in, out, inout);
+		EXPECT_STREQ ((const char*)ret, "inout string");
+		EXPECT_STREQ ((const char*)out, "in string");
+		EXPECT_STREQ ((const char*)inout, "in string");
+#else
 		std::string out = "this text will be lost", inout = "inout string";
 		std::string in = "in string";
 		std::string ret = p->string_op (in, out, inout);
 		EXPECT_STREQ (ret.c_str (), "inout string");
 		EXPECT_STREQ (out.c_str (), "in string");
 		EXPECT_STREQ (inout.c_str (), "in string");
+#endif
 	}
 
 	{ // Pass string constant as in parameter
+#ifdef LEGACY_CORBA_CPP
+		String_var out = "this text will be lost", inout = "inout string";
+		String_var ret = p->string_op ("in string", out, inout);
+		EXPECT_STREQ ((const char*)ret, "inout string");
+		EXPECT_STREQ ((const char*)out, "in string");
+		EXPECT_STREQ ((const char*)inout, "in string");
+#else
 		std::string out = "this text will be lost", inout = "inout string";
 		std::string ret = p->string_op ("in string", out, inout);
 		EXPECT_STREQ (ret.c_str (), "inout string");
 		EXPECT_STREQ (out.c_str (), "in string");
 		EXPECT_STREQ (inout.c_str (), "in string");
+#endif
 	}
 
-	{
+	{ // Object operation
+#ifdef LEGACY_CORBA_CPP
+		I1_var out, inout (I1::_duplicate (p));
+		I1_var ret = p->object_op (p, out, inout);
+#else
 		I1::_ref_type out, inout (p);
 		I1::_ref_type ret = p->object_op (p, out, inout);
+#endif
 		EXPECT_TRUE (out && out->_is_equivalent (p));
 		EXPECT_TRUE (inout && inout->_is_equivalent (p));
 		EXPECT_TRUE (ret && ret->_is_equivalent (p));
 	}
 
-	{
+	{ // Sequence operation
+#ifdef LEGACY_CORBA_CPP
+		SeqLong out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
+		SeqLong ret = p->seq_op (SeqLong{ 9, 10, 11, 12 }, out, inout);
+		EXPECT_EQ (ret, SeqLong ({ 5, 6, 7, 8 }));
+		EXPECT_EQ (out, SeqLong ({ 9, 10, 11, 12 }));
+		EXPECT_EQ (inout, SeqLong ({ 9, 10, 11, 12 }));
+#else
 		std::vector <Long> out = { 1, 2, 3, 4 }, inout = { 5, 6, 7, 8 };
 		std::vector <Long> ret = p->seq_op (std::vector <Long> { 9, 10, 11, 12 }, out, inout);
 		EXPECT_EQ (ret, std::vector <Long> ({ 5, 6, 7, 8 }));
 		EXPECT_EQ (out, std::vector <Long> ({ 9, 10, 11, 12 }));
 		EXPECT_EQ (inout, std::vector <Long> ({ 9, 10, 11, 12 }));
+#endif
 	}
 
-	{ // Any
+	{ // Any operation
+#ifdef LEGACY_CORBA_CPP
+		Any_var out, inout;
+		Any in;
+		Any ret = p->any_op (in, out, inout);
+#else
 		Any out, inout;
 		Any in;
 		Any ret = p->any_op (in, out, inout);
+#endif
 	}
 
 	{ // Bounded string violation
+#ifdef LEGACY_CORBA_CPP
+		String_var out, inout;
+		String_var ret;
+		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+#else
 		std::string out, inout;
 		std::string ret;
 		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+#endif
 	}
 
 	{ // Bounded sequence violation
+#ifdef LEGACY_CORBA_CPP
+		SeqLong out, inout;
+		ShortSeqLong ret;
+		EXPECT_THROW (ret = p->short_seq_op (SeqLong{ 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
+#else
 		std::vector <Long> out, inout;
 		std::vector <Long> ret;
 		EXPECT_THROW (ret = p->short_seq_op (std::vector <Long> { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
+#endif
 	}
 
-	{ // Structure
+	{ // Structure operation
+#ifdef LEGACY_CORBA_CPP
+		MyStruct_var out (new MyStruct{ L"out", 2, I1::_duplicate (p) });
+		MyStruct_var inout (new MyStruct{ L"inout", 3, I1::_duplicate (p) });
+		MyStruct_var ret = p->struct_op (MyStruct{ L"in", 1, I1::_duplicate (p) }, out.out (), inout.inout ());
+		EXPECT_EQ (ret->ws_member, L"inout");
+		EXPECT_EQ (out->ws_member, L"in");
+		EXPECT_EQ (inout->ws_member, L"in");
+#else
 		MyStruct out (L"out", 2, p), inout (L"inout", 3, p);
 		MyStruct ret = p->struct_op (MyStruct (L"in", 1, p), out, inout);
 		EXPECT_EQ (ret.ws_member (), L"inout");
 		EXPECT_EQ (out.ws_member (), L"in");
 		EXPECT_EQ (inout.ws_member (), L"in");
+#endif
 	}
 
 	{ // boolean
@@ -207,9 +178,22 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (out, Fixed_8_2 (const_neg_exp));
 		EXPECT_EQ (inout, Fixed_8_2 (const_neg_exp));
 	}
-}
 
+	{ // Fixed-length struct
+		StructFixLen in, out, inout;
+#ifdef LEGACY_CORBA_CPP
+		in.f = fixed_const;
+#else
+		in.f (fixed_const);
 #endif
+		StructFixLen ret = p->fix_struct_op (in, out, inout);
+	}
+
+	{ // Array
+		FixStructArray out, inout;
+		FixStructArray ret = p->fix_struct_array_op (FixStructArray (), out, inout);
+	}
+}
 
 void test_performance (I1::_ptr_type p)
 {

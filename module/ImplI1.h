@@ -31,8 +31,12 @@ public:
 	static std::vector <std::string> seq_string_op (const std::vector <std::string>& in_s, std::vector <std::string>& out_s, std::vector <std::string>& inout_s);
 	static MyStruct struct_op (const MyStruct& in_s, MyStruct& out_s, MyStruct& inout_s);
 	static std::vector <MyStruct> seq_struct_op (const std::vector <MyStruct>& in_s, std::vector <MyStruct>& out_s, std::vector <MyStruct>& inout_s);
+	static StructArray struct_array_op (const StructArray& in_ar, StructArray& out_ar, StructArray& inout_ar);
 	static bool bool_op (bool in_b, bool& out_b, bool& inout_b);
 	static Fixed_8_2 fixed_op (Fixed_8_2 in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f);
+	static StructFixLen fix_struct_op (const StructFixLen& in_s, StructFixLen& out_s, StructFixLen& inout_s);
+	static LongArray long_array_op (const LongArray& in_ar, LongArray& out_ar, LongArray& inout_ar);
+	static FixStructArray fix_struct_array_op (const FixStructArray& in_ar, FixStructArray& out_ar, FixStructArray& inout_ar);
 };
 
 }
