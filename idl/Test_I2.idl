@@ -10,7 +10,6 @@ const float float_const = 4.56;
 typedef double Dbl;
 const Dbl double_const = 7.890;
 const fixed fixed_const = 1.234D;
-const fixed const_neg_exp = 1000D;
 
 interface I2 : A1
 {

@@ -68,12 +68,7 @@ TYPED_TEST (TestORB_I3, Interface)
 
 TYPED_TEST (TestORB_I3, Signal)
 {
-#ifdef LEGACY_CORBA_CPP
-	I3_var
-#else
-	I3::_ref_type
-#endif
-		p = TestORB_I3 <TypeParam>::incarnate ();
+	I3_ref p = TestORB_I3 <TypeParam>::incarnate ();
 
 	EXPECT_EQ (p->divide (6, 2), 3);
 
@@ -91,7 +86,8 @@ TYPED_TEST (TestORB_I3, Signal)
 
 TYPED_TEST (TestORB_I3, Performance)
 {
-	test_performance (TestORB_I3 <TypeParam>::incarnate ());
+	I3_ref p = TestORB_I3 <TypeParam>::incarnate ();
+	test_performance (p);
 }
 
 #ifdef LEGACY_CORBA_CPP
@@ -216,23 +212,6 @@ TYPED_TEST (TestORB_I3, MultiInherit)
 		EXPECT_EQ (out.z (), "in string");
 		EXPECT_EQ (inout.z (), "in string");
 	}
-
-	{ // boolean
-		bool out, inout = true;
-		bool ret = p->bool_op (false, out, inout);
-		EXPECT_TRUE (ret);
-		EXPECT_FALSE (out);
-		EXPECT_FALSE (inout);
-	}
-
-	{ // Fixed
-		Fixed_8_2 out (1.5), inout (3.5);
-		Fixed_8_2 ret = p->fixed_op (Fixed_8_2 (const_neg_exp), out, inout);
-		EXPECT_EQ (ret, Fixed_8_2 (3.5));
-		EXPECT_EQ (out, Fixed_8_2 (const_neg_exp));
-		EXPECT_EQ (inout, Fixed_8_2 (const_neg_exp));
-	}
-	// release (p) must be called automatically.
 }
 
 #else

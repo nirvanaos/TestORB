@@ -4,7 +4,7 @@
 #include "IDL/Test_V1.h"
 #include "IDL/Test_V3.h"
 #include "IDL/RecursiveStruct.h"
-#include <I2_factory_impl.h>
+#include <I2_factory_V3.h>
 #include <I1_static.h>
 
 using namespace CORBA;
@@ -335,15 +335,16 @@ TEST_F (TestORB, ORBInit)
 		orb = ORB_init (argc, nullptr, nullptr);
 }
 
-TEST_F (TestORB, I2)
+TEST_F (TestORB, V3)
 {
+	// Create V3 value with interface I2
 	I2::
 #ifdef LEGACY_CORBA_CPP
 		_var_type
 #else
 		_ref_type
 #endif
-		p = Nirvana::Static <I2_factory_impl>::ptr ()->create (MAGIC_CONST);
+		p = Nirvana::Static <I2_factory_V3>::ptr ()->create (MAGIC_CONST);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
 
 	// Legacy process can not create value with concrete interface support

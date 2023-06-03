@@ -3,26 +3,24 @@
 #pragma once
 
 #include "PortableI1.h"
+#include "PortableI2.h"
 #include "ImplI3.h"
 #include <IDL/Test_I3_s.h>
 
 namespace Test {
 
-// Portable implementation
+// Portable implementation of local interface I3
 
 class PortableI3 :
 	public virtual CORBA::servant_traits <I3>::base_type,
-	public virtual PortableI1 // Implementation inheritance
+	public virtual PortableI1, // Implementation inheritance
+	public virtual PortableI2 // Implementation inheritance
 {
 public:
 	PortableI3 (CORBA::Long addendum) :
-		PortableI1 (addendum)
+		PortableI1 (addendum),
+		PortableI2 (addendum)
 	{}
-
-	virtual CORBA::Long op2 (CORBA::Long p1)
-	{
-		return p1 + 2 * addendum ();
-	}
 
 	virtual CORBA::Long op3 (CORBA::Long p1)
 	{
@@ -100,16 +98,6 @@ public:
 	virtual U union_op (const U& in_u, U& out_u, U& inout_u)
 	{
 		return ImplI3::union_op (in_u, out_u, inout_u);
-	}
-
-	virtual bool bool_op (bool in_b, bool& out_b, bool& inout_b)
-	{
-		return ImplI3::bool_op (in_b, out_b, inout_b);
-	}
-
-	virtual Fixed_8_2 fixed_op (const Fixed_8_2& in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
-	{
-		return ImplI3::fixed_op (in_f, out_f, inout_f);
 	}
 };
 

@@ -7,7 +7,7 @@
 
 namespace Test {
 
-// Dynamic implementation
+// Dynamic implementation of the interface Test::I1
 
 class DynamicI1 :
 	public CORBA::servant_traits <I1>::Servant <DynamicI1>,

@@ -1,6 +1,6 @@
 #include <CORBA/Server.h>
 #include <IDL/Test_V3_s.h>
-#include <I2_factory_impl.h>
+#include <I2_factory_V3.h>
 
 using namespace CORBA;
 
@@ -47,8 +47,8 @@ public:
 	}
 };
 
-class I2_factory_impl :
-	public servant_traits <I2_factory>::ServantStatic <I2_factory_impl>
+class I2_factory_V3 :
+	public servant_traits <I2_factory>::ServantStatic <I2_factory_V3>
 {
 public:
 	static
@@ -79,5 +79,4 @@ public:
 }
 
 NIRVANA_VALUETYPE_IMPL (Test::V3, Test::ImplV3)
-NIRVANA_STATIC_EXP (Test, I2_factory_impl)
-
+NIRVANA_STATIC_EXP (Test, I2_factory_V3)

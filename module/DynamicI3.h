@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ImplI1.h"
+#include "ImplI2.h"
 #include "ImplI3.h"
 #include <IDL/Test_I3_s.h>
 #include <IDL/Test_I2_s.h>
@@ -10,11 +11,12 @@
 
 namespace Test {
 
-// Dynamic implementation
+// Dynamic implementation of the interface Test::I3
 
 class DynamicI3 :
 	public CORBA::servant_traits <I3>::Servant <DynamicI3>,
 	public ImplI1,
+	public ImplI2,
 	public ImplI3
 {
 public:

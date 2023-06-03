@@ -2,7 +2,7 @@
 #define NIRVANA_TESTORB_IMPLI1_H_
 #pragma once
 
-#include <CORBA/CORBA.h>
+#include <CORBA/Server.h>
 #include <IDL/Test_I1.h>
 
 namespace Test {
@@ -31,6 +31,8 @@ public:
 	static std::vector <std::string> seq_string_op (const std::vector <std::string>& in_s, std::vector <std::string>& out_s, std::vector <std::string>& inout_s);
 	static MyStruct struct_op (const MyStruct& in_s, MyStruct& out_s, MyStruct& inout_s);
 	static std::vector <MyStruct> seq_struct_op (const std::vector <MyStruct>& in_s, std::vector <MyStruct>& out_s, std::vector <MyStruct>& inout_s);
+	static bool bool_op (bool in_b, bool& out_b, bool& inout_b);
+	static Fixed_8_2 fixed_op (Fixed_8_2 in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f);
 };
 
 }

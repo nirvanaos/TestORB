@@ -7,7 +7,7 @@
 
 namespace Test {
 
-// Portable implementation
+// Portable implementation of interface I1
 
 class PortableI1 :
 	public virtual CORBA::servant_traits <I1>::base_type,
@@ -100,6 +100,16 @@ public:
 	virtual std::vector <MyStruct> seq_struct_op (const std::vector <MyStruct>& in_s, std::vector <MyStruct>& out_s, std::vector <MyStruct>& inout_s)
 	{
 		return ImplI1::seq_struct_op (in_s, out_s, inout_s);
+	}
+
+	virtual bool bool_op (bool in_b, bool& out_b, bool& inout_b)
+	{
+		return ImplI1::bool_op (in_b, out_b, inout_b);
+	}
+
+	virtual Fixed_8_2 fixed_op (const Fixed_8_2& in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
+	{
+		return ImplI1::fixed_op (in_f, out_f, inout_f);
 	}
 
 private:

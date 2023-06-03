@@ -95,6 +95,22 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (out->ws_member, L"in");
 		EXPECT_EQ (inout->ws_member, L"in");
 	}
+
+	{ // boolean
+		bool out, inout = true;
+		bool ret = p->bool_op (false, out, inout);
+		EXPECT_TRUE (ret);
+		EXPECT_FALSE (out);
+		EXPECT_FALSE (inout);
+	}
+
+	{ // Fixed
+		Fixed_8_2 out (1.5), inout (3.5);
+		Fixed_8_2 ret = p->fixed_op (Fixed_8_2 (const_neg_exp), out, inout);
+		EXPECT_EQ (ret, Fixed_8_2 (3.5));
+		EXPECT_EQ (out, Fixed_8_2 (const_neg_exp));
+		EXPECT_EQ (inout, Fixed_8_2 (const_neg_exp));
+	}
 }
 
 #else
@@ -174,6 +190,22 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (ret.ws_member (), L"inout");
 		EXPECT_EQ (out.ws_member (), L"in");
 		EXPECT_EQ (inout.ws_member (), L"in");
+	}
+
+	{ // boolean
+		bool out, inout = true;
+		bool ret = p->bool_op (false, out, inout);
+		EXPECT_TRUE (ret);
+		EXPECT_FALSE (out);
+		EXPECT_FALSE (inout);
+	}
+
+	{ // Fixed
+		Fixed_8_2 out (1.5), inout (3.5);
+		Fixed_8_2 ret = p->fixed_op (Fixed_8_2 (const_neg_exp), out, inout);
+		EXPECT_EQ (ret, Fixed_8_2 (3.5));
+		EXPECT_EQ (out, Fixed_8_2 (const_neg_exp));
+		EXPECT_EQ (inout, Fixed_8_2 (const_neg_exp));
 	}
 }
 

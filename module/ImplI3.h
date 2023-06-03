@@ -2,7 +2,7 @@
 #define NIRVANA_TESTORB_IMPLI3_H_
 #pragma once
 
-#include <CORBA/CORBA.h>
+#include <CORBA/Server.h>
 #include <IDL/Test_I3.h>
 
 namespace Test {
@@ -133,22 +133,6 @@ public:
 		U tmp (inout_u);
 		out_u = in_u;
 		inout_u = in_u;
-		return tmp;
-	}
-
-	static bool bool_op (bool in_b, bool& out_b, bool& inout_b)
-	{
-		bool tmp = inout_b;
-		out_b = in_b;
-		inout_b = in_b;
-		return tmp;
-	}
-
-	static Fixed_8_2 fixed_op (Fixed_8_2 in_f, Fixed_8_2& out_f, Fixed_8_2& inout_f)
-	{
-		Fixed_8_2 tmp = inout_f;
-		out_f = in_f;
-		inout_f = in_f;
 		return tmp;
 	}
 };
