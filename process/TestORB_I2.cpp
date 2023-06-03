@@ -1,7 +1,9 @@
 #include <Nirvana/Nirvana.h>
 #include <gtest/gtest.h>
+#include "IDL/Test_I1.h"
 #include "IDL/Test_I2.h"
 #include "IDL/Test_V3.h"
+#include "IDL/RecursiveStruct.h"
 #include <I2_factory_dynamic.h>
 
 using namespace CORBA;
@@ -88,8 +90,11 @@ TYPED_TEST (TestORB_I2, Abstract)
 	A1::_ref_type out, inout (p);
 	A1::_ref_type ret = p->abstract_op (p, out, inout);
 #endif
+	ASSERT_TRUE (out);
 	EXPECT_TRUE (p->_is_equivalent (out->_to_object ()));
+	ASSERT_TRUE (inout);
 	EXPECT_TRUE (p->_is_equivalent (inout->_to_object ()));
+	ASSERT_TRUE (ret);
 	EXPECT_TRUE (p->_is_equivalent (ret->_to_object ()));
 }
 
@@ -181,6 +186,7 @@ TYPED_TEST (TestORB_I2, ValueBox)
 TYPED_TEST (TestORB_I2, Union)
 {
 	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+
 	U in, out, inout;
 	out.z ("this text will be lost");
 	inout.z ("inout string");
@@ -189,6 +195,102 @@ TYPED_TEST (TestORB_I2, Union)
 	EXPECT_EQ (ret.z (), "inout string");
 	EXPECT_EQ (out.z (), "in string");
 	EXPECT_EQ (inout.z (), "in string");
+}
+
+typedef TypeCode::
+#ifdef LEGACY_CORBA_CPP
+_var_type
+#else
+_ref_type
+#endif
+TC;
+
+#ifdef LEGACY_CORBA_CPP
+inline TC assign_tc (TypeCode_ptr tc)
+{
+	return TypeCode::_duplicate (tc);
+}
+#else
+inline TC assign_tc (TypeCode::_ptr_type tc)
+{
+	return tc;
+}
+#endif
+
+TYPED_TEST (TestORB_I2, TypeCode)
+{
+	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+
+	// Primitive
+	TC out, inout;
+	inout = assign_tc (_tc_long);
+	TC ret = p->type_code_op (_tc_long, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_long));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_long));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_long));
+
+	// Exception
+	inout = assign_tc (_tc_MyException);
+	ret = p->type_code_op (_tc_MyException, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_MyException));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_MyException));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_MyException));
+
+	// Struct
+	inout = assign_tc (_tc_MyStruct);
+	ret = p->type_code_op (_tc_MyStruct, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_MyStruct));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_MyStruct));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_MyStruct));
+
+	// Enum
+	inout = assign_tc (_tc_MyEnum);
+	ret = p->type_code_op (_tc_MyEnum, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_MyEnum));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_MyEnum));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_MyEnum));
+
+	// Sequence
+	inout = assign_tc (_tc_SeqLong);
+	ret = p->type_code_op (_tc_SeqLong, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_SeqLong));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_SeqLong));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_SeqLong));
+
+	// Bounded string
+	inout = assign_tc (_tc_ShortString);
+	ret = p->type_code_op (_tc_ShortString, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_ShortString));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_ShortString));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_ShortString));
+
+	// Recursive
+	inout = assign_tc (_tc_RecursiveStruct1);
+	ret = p->type_code_op (_tc_RecursiveStruct1, out, inout);
+	ASSERT_TRUE (ret);
+	EXPECT_TRUE (ret->equal (_tc_RecursiveStruct1));
+	ASSERT_TRUE (out);
+	EXPECT_TRUE (out->equal (_tc_RecursiveStruct1));
+	ASSERT_TRUE (inout);
+	EXPECT_TRUE (inout->equal (_tc_RecursiveStruct1));
 }
 
 }

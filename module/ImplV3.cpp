@@ -61,7 +61,12 @@ public:
 #endif
 		create (int32_t addendum)
 	{
-		V3::_ref_type v = V3_factory::_factory->create (addendum);
+#ifdef LEGACY_CORBA_CPP
+		V3::_var_type
+#else
+		V3::_ref_type
+#endif
+			v = V3_factory::_factory->create (addendum);
 
 		// Supported interface operations must be available
 		v->op2 (0);

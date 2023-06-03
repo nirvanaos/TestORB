@@ -1,9 +1,9 @@
 #include <Nirvana/Nirvana.h>
 #include "ImplI1.h"
 
-namespace Test {
-
 using namespace CORBA;
+
+namespace Test {
 
 void ImplI1::throw_no_implement ()
 {

@@ -77,6 +77,17 @@ public:
 		return ImplI2::union_op (in_u, out_u, inout_u);
 	}
 
+#ifdef LEGACY_CORBA_CPP
+	virtual CORBA::TypeCode::_ptr_type type_code_op (CORBA::TypeCode::_ptr_type in_tc,
+		CORBA::TypeCode::_var_type& out_tc, CORBA::TypeCode::_var_type& inout_tc)
+#else
+	virtual CORBA::TypeCode::_ref_type type_code_op (CORBA::TypeCode::_ptr_type in_tc,
+		CORBA::TypeCode::_ref_type& out_tc, CORBA::TypeCode::_ref_type& inout_tc)
+#endif
+	{
+		return ImplI2::type_code_op (in_tc, out_tc, inout_tc);
+	}
+
 private:
 	int32_t addendum_;
 };

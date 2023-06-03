@@ -3,6 +3,10 @@
 #include "Union.idl"
 #include "ValueBox.idl"
 
+module CORBA {
+pseudo interface TypeCode;
+};
+
 module Test {
 
 const wchar char_const = L'c';
@@ -38,6 +42,7 @@ interface I2 : A1
 
 	U union_op (in U in_u, out U out_u, inout U inout_u);
 
+	CORBA::TypeCode type_code_op (in CORBA::TypeCode in_tc, out CORBA::TypeCode out_tc, inout CORBA::TypeCode inout_tc);
 };
 
 interface I2_factory
