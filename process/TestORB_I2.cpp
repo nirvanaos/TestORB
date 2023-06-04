@@ -84,18 +84,26 @@ TYPED_TEST (TestORB_I2, Abstract)
 	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
 
 #ifdef LEGACY_CORBA_CPP
-	A1_var out, inout (I2::_duplicate (p));
+	A1_var out, inout (A1::_duplicate (p));
 	A1_var ret = p->abstract_op (p, out, inout);
+	Object_var obj;
 #else
 	A1::_ref_type out, inout (p);
 	A1::_ref_type ret = p->abstract_op (p, out, inout);
+	Object::_ref_type obj;
 #endif
 	ASSERT_TRUE (out);
-	EXPECT_TRUE (p->_is_equivalent (out->_to_object ()));
+	obj = out->_to_object ();
+	EXPECT_TRUE (obj);
+	EXPECT_TRUE (p->_is_equivalent (obj));
 	ASSERT_TRUE (inout);
-	EXPECT_TRUE (p->_is_equivalent (inout->_to_object ()));
+	obj = inout->_to_object ();
+	EXPECT_TRUE (obj);
+	EXPECT_TRUE (p->_is_equivalent (obj));
 	ASSERT_TRUE (ret);
-	EXPECT_TRUE (p->_is_equivalent (ret->_to_object ()));
+	obj = ret->_to_object ();
+	EXPECT_TRUE (obj);
+	EXPECT_TRUE (p->_is_equivalent (obj));
 }
 
 TYPED_TEST (TestORB_I2, ValueType)
