@@ -1,3 +1,6 @@
+#ifndef TEST_V1_IDL_
+#define TEST_V1_IDL_
+
 module Test {
 
 valuetype V1
@@ -15,3 +18,4 @@ valuetype V1
 
 };
 
+#endif

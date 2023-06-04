@@ -15,18 +15,18 @@ class I1_factory_sysdomain :
 public:
 	static
 #ifdef LEGACY_CORBA_CPP
-		I1::_var_type
+		I1::_ptr_type
 #else
 		I1::_ref_type
 #endif
 		create (Long addendum)
 	{
 #ifdef LEGACY_CORBA_CPP
-		SysDomain::_var_type
+		Object_var obj (g_ORB->resolve_initial_references ("SysDomain"));
+		SysDomain_var sys_domain = SysDomain::_narrow (obj);
 #else
-		SysDomain::_ref_type
+		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 #endif
-			sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 
 #ifdef LEGACY_CORBA_CPP
 		ProtDomain::_var_type
@@ -36,12 +36,12 @@ public:
 			prot_domain = sys_domain->prot_domain ();
 
 #ifdef LEGACY_CORBA_CPP
-		I1_factory::_var_type
+		obj = prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_);
+		I1_factory::_var_type factory = I1_factory::_narrow (obj);
 #else
-		I1_factory::_ref_type
+		I1_factory::_ref_type factory = I1_factory::_narrow (prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_));
 #endif
-			factory = I1_factory::_narrow (prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_));
-		
+
 		return factory->create (addendum);
 	}
 };

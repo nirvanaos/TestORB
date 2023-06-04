@@ -84,7 +84,7 @@ TYPED_TEST (TestORB_I2, Abstract)
 	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
 
 #ifdef LEGACY_CORBA_CPP
-	A1_var out, inout (p);
+	A1_var out, inout (I2::_duplicate (p));
 	A1_var ret = p->abstract_op (p, out, inout);
 #else
 	A1::_ref_type out, inout (p);

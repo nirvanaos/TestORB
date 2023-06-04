@@ -14,7 +14,7 @@ class I1_factory_dynamic :
 public:
 	static
 #ifdef LEGACY_CORBA_CPP
-		I1::_var_type
+		I1::_ptr_type
 #else
 		I1::_ref_type
 #endif
