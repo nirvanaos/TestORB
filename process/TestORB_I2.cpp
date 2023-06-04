@@ -5,6 +5,7 @@
 #include "IDL/Test_V3.h"
 #include "IDL/RecursiveStruct.h"
 #include <I2_factory_dynamic.h>
+#include <I2_factory_sysdomain.h>
 
 using namespace CORBA;
 using namespace Test;
@@ -22,7 +23,7 @@ typedef I2::_ref_type I2_ref;
 // The fixture for testing complex interface.
 
 typedef ::testing::Types <Nirvana::Static <I2_factory_dynamic> // 0
-//	, Nirvana::Static <I2_factory_sysdomain> // 5
+	, Nirvana::Static <I2_factory_sysdomain> // 1
 > ServantTypesI2;
 
 template <class Factory>
