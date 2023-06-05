@@ -253,8 +253,6 @@ TYPED_TEST (TestORB_I2, TypeCode)
 	// Enum
 	test_type_code (p, _tc_MyEnum);
 
-	return; // Not yet debugged
-
 	// Exception
 	test_type_code (p, _tc_MyException);
 
