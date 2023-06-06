@@ -75,9 +75,9 @@ void test_interface (I1::_ptr_type p)
 #else
 		std::string out = "this text will be lost", inout = "inout string";
 		std::string ret = p->string_op ("in string", out, inout);
-		EXPECT_STREQ (ret.c_str (), "inout string");
-		EXPECT_STREQ (out.c_str (), "in string");
-		EXPECT_STREQ (inout.c_str (), "in string");
+		EXPECT_EQ (ret, "inout string");
+		EXPECT_EQ (out, "in string");
+		EXPECT_EQ (inout, "in string");
 #endif
 	}
 
@@ -119,30 +119,6 @@ void test_interface (I1::_ptr_type p)
 		Any out, inout;
 		Any in;
 		Any ret = p->any_op (in, out, inout);
-#endif
-	}
-
-	{ // Bounded string violation
-#ifdef LEGACY_CORBA_CPP
-		String_var out, inout;
-		String_var ret;
-		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
-#else
-		std::string out, inout;
-		std::string ret;
-		EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
-#endif
-	}
-
-	{ // Bounded sequence violation
-#ifdef LEGACY_CORBA_CPP
-		SeqLong out, inout;
-		ShortSeqLong ret;
-		EXPECT_THROW (ret = p->short_seq_op (SeqLong{ 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
-#else
-		std::vector <Long> out, inout;
-		std::vector <Long> ret;
-		EXPECT_THROW (ret = p->short_seq_op (std::vector <Long> { 9, 10, 11, 12, 13 }, out, inout), BAD_PARAM);
 #endif
 	}
 
@@ -329,6 +305,53 @@ TYPED_TEST (TestORB_I1, UserException)
 #endif
 	}
 	EXPECT_TRUE (thrown);
+}
+
+TYPED_TEST (TestORB_I1, BoundedString)
+{
+	// Bounded string violation
+	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
+#ifdef LEGACY_CORBA_CPP
+	String_var out, inout;
+	String_var ret;
+	EXPECT_NO_THROW (ret = p->short_string_op ("small", out, inout));
+	EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+	String_var in ("large string");
+	EXPECT_THROW (ret = p->short_string_op (in, out, inout), BAD_PARAM);
+	inout = "large string";
+	EXPECT_THROW (ret = p->short_string_op ("small", out, inout), BAD_PARAM);
+#else
+	std::string out, inout;
+	std::string ret;
+	EXPECT_NO_THROW (ret = p->short_string_op ("small", out, inout));
+	EXPECT_THROW (ret = p->short_string_op ("large string", out, inout), BAD_PARAM);
+	std::string in ("large string");
+	EXPECT_THROW (ret = p->short_string_op (in, out, inout), BAD_PARAM);
+	inout = "large string";
+	EXPECT_THROW (ret = p->short_string_op ("small", out, inout), BAD_PARAM);
+#endif
+}
+
+TYPED_TEST (TestORB_I1, BoundedSeq)
+{ // Bounded sequence violation
+	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
+#ifdef LEGACY_CORBA_CPP
+	SeqLong_var out, inout;
+	ShortSeqLong_var ret;
+	SeqLong small { 9, 10, 11, 12 };
+	EXPECT_NO_THROW (ret = p->short_seq_op (small, out, inout));
+	SeqLong large { 9, 10, 11, 12, 13 };
+	EXPECT_THROW (ret = p->short_seq_op (large, out, inout), BAD_PARAM);
+#else
+	std::vector <Long> out, inout;
+	std::vector <Long> ret;
+	std::vector <Long> small { 9, 10, 11, 12 };
+	EXPECT_NO_THROW (ret = p->short_seq_op (small, out, inout));
+	std::vector <Long> large { 9, 10, 11, 12, 13 };
+	EXPECT_THROW (ret = p->short_seq_op (large, out, inout), BAD_PARAM);
+#endif
+	inout = std::move (large);
+	EXPECT_THROW (ret = p->short_seq_op (small, out, inout), BAD_PARAM);
 }
 
 }
