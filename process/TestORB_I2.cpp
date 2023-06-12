@@ -267,4 +267,37 @@ TYPED_TEST (TestORB_I2, TypeCode)
 	test_type_code (p, _tc_RecursiveStruct1);
 }
 
+TYPED_TEST (TestORB_I2, Stringify)
+{
+	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+
+#ifdef LEGACY_CORBA_CPP
+	ORB_var
+#else
+	ORB::_ref_type
+#endif
+		orb = p->_get_ORB ();
+
+	ASSERT_TRUE (orb);
+
+#ifdef LEGACY_CORBA_CPP
+	String_var
+#else
+	IDL::String
+#endif
+		str = orb->object_to_string (p);
+
+#ifdef LEGACY_CORBA_CPP
+	Object_var
+#else
+	Object::_ref_type
+#endif
+		obj = orb->string_to_object (str);
+
+	I2_ref p1 = I2::_narrow (obj);
+	ASSERT_TRUE (p1);
+	EXPECT_TRUE (p1->_is_equivalent (p));
+	EXPECT_TRUE (p->_is_equivalent (p1));
+}
+
 }
