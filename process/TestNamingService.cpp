@@ -1,6 +1,15 @@
 #include <Nirvana/Nirvana.h>
 #include <gtest/gtest.h>
 
+namespace CosNaming {
+
+bool operator == (const NameComponent& l, const NameComponent& r)
+{
+	return l.id () == r.id () && l.kind () == r.kind ();
+}
+
+}
+
 using namespace CORBA;
 using namespace CosNaming;
 
@@ -66,7 +75,15 @@ TEST_F (TestNamingService, Orphans)
 	c->bind_context (name_a, a);
 
 	// Prevent cyclic orphans
-	EXPECT_THROW (service_->unbind (name_a), NamingContext::CannotProceed);
+	bool thrown = false;
+	try {
+		service_->unbind (name_a);
+	} catch (const NamingContext::CannotProceed& ex) {
+		thrown = true;
+		EXPECT_TRUE (service_->_is_equivalent (ex.cxt ()));
+		EXPECT_EQ (ex.rest_of_name (), name_a);
+	}
+	EXPECT_TRUE (thrown);
 
 	// Break cycle
 	c->unbind (name_a);
