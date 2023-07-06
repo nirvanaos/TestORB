@@ -1,4 +1,5 @@
 #include <Nirvana/Nirvana.h>
+#include <Nirvana/Domains.h>
 #include <CORBA/Server.h>
 #include <IDL/Test_I1_factory_s.h>
 #include "I1_factory_sysdomain.h"

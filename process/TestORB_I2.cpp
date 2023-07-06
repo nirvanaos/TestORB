@@ -6,6 +6,7 @@
 #include "IDL/RecursiveStruct.h"
 #include <I2_factory_dynamic.h>
 #include <I2_factory_sysdomain.h>
+#include <signal.h>
 
 using namespace CORBA;
 using namespace Test;

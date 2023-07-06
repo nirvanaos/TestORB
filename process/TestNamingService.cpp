@@ -1,4 +1,5 @@
 #include <Nirvana/Nirvana.h>
+#include <CORBA/CosNaming.h>
 #include <gtest/gtest.h>
 
 namespace CosNaming {
