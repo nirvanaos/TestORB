@@ -57,7 +57,7 @@ TEST_F (TestNamingService, Root)
 	EXPECT_EQ (BindingType::ncontext, bindings.front ().binding_type ());
 	ASSERT_EQ (1, bindings.front ().binding_name ().size ());
 	const NameComponent& nc = bindings.front ().binding_name ().front ();
-	EXPECT_EQ (nc.id (), "/");
+	EXPECT_TRUE (nc.id ().empty ());
 	EXPECT_TRUE (nc.kind ().empty ());
 }
 
