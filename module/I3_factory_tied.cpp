@@ -1,3 +1,28 @@
+/*
+* Nirvana test suite.
+*
+* This is a part of the Nirvana project.
+*
+* Author: Igor Popov
+*
+* Copyright (c) 2021 Igor Popov.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+*
+* Send comments and/or bug reports to:
+*  popov.nirvana@gmail.com
+*/
 #include <CORBA/Server.h>
 #include "I3_factory_tied.h"
 #include "ImplI1.h"
@@ -5,6 +30,9 @@
 #include "ImplI3.h"
 #include <IDL/Test_I3_s.h>
 #include <IDL/Test_I3_factory_s.h>
+
+using namespace CORBA;
+using namespace PortableServer;
 
 namespace Test {
 
@@ -55,46 +83,129 @@ private:
 };
 
 class I3_factory_tied :
-	public CORBA::servant_traits <I3_factory>::ServantStatic <I3_factory_tied>
+	public servant_traits <I3_factory>::ServantStatic <I3_factory_tied>
 {
 public:
-	static
 #ifdef LEGACY_CORBA_CPP
-		I3::_ptr_type
-#else
-		I3::_ref_type
-#endif
-		create (CORBA::Long addendum)
+
+	static I3::_ptr_type create (Long addendum)
 	{
-		return CORBA::make_reference <CORBA::servant_traits <I3>::tie_type <TiedI3> > (new TiedI3 (addendum))->_this ();
+		Servant_var <POA_Test::I3_tie <TiedI3> > serv = new POA_Test::I3_tie <TiedI3> (new TiedI3 (addendum));
+
+		// Direct conversion to LocalObject must be available
+		LocalObject::_ptr_type lo = serv;
+		assert (lo);
+
+		// Conversion to Object must be available
+		Object::_ptr_type obj = lo;
+		assert (obj);
+
+		// Object operations must be available
+		bool is = lo->_is_a (CORBA::Internal::RepIdOf <I3>::id);
+		assert (is);
+
+		return serv->_this ();
 	}
+
+#else
+
+	static I3::_ref_type create (Long addendum)
+	{
+		auto serv = make_reference <servant_traits <I3>::tie_type <TiedI3> > (new TiedI3 (addendum));
+
+		// Direct conversion to LocalObject must be available
+		LocalObject::_ptr_type lo = serv;
+		assert (lo);
+
+		// Conversion to Object must be available
+		Object::_ptr_type obj = lo;
+		assert (obj);
+
+		// Object operations must be available
+		bool is = lo->_is_a (CORBA::Internal::RepIdOf <I3>::id);
+		assert (is);
+
+		return serv->_this ();
+	}
+
+#endif
 };
 
+#ifdef LEGACY_CORBA_CPP
+
 class TiedDerivedI3 :
-	public CORBA::servant_traits <I3>::tie_type <TiedI3>,
+	public POA_Test::I3_tie <TiedI3>,
 	public TiedI3
 {
 public:
-	TiedDerivedI3 (CORBA::Long addendum) :
-		CORBA::servant_traits <I3>::tie_type <TiedI3> (static_cast <TiedI3&> (*this)),
+	TiedDerivedI3 (Long addendum) :
+		POA_Test::I3_tie <TiedI3> (static_cast <TiedI3&> (*this)),
 		TiedI3 (addendum)
 	{}
 };
 
-class I3_tied_derived :
-	public CORBA::Internal::ServantStatic <I3_tied_derived, I3_factory>
+#else
+
+class TiedDerivedI3 :
+	public servant_traits <I3>::tie_type <TiedI3>,
+	public TiedI3
 {
 public:
-	static
-#ifdef LEGACY_CORBA_CPP
-		I3::_ptr_type
-#else
-		I3::_ref_type
+	TiedDerivedI3 (Long addendum) :
+		servant_traits <I3>::tie_type <TiedI3> (static_cast <TiedI3&> (*this)),
+		TiedI3 (addendum)
+	{}
+};
+
 #endif
-		create (CORBA::Long addendum)
+
+class I3_tied_derived :
+	public servant_traits <I3_factory>::ServantStatic <I3_tied_derived>
+{
+public:
+#ifdef LEGACY_CORBA_CPP
+
+	static I3::_ptr_type create (Long addendum)
 	{
-		return CORBA::make_reference <TiedDerivedI3> (addendum)->_this ();
+		Servant_var <TiedDerivedI3> serv = new TiedDerivedI3 (addendum);
+
+		// Direct conversion to LocalObject must be available
+		LocalObject::_ptr_type lo = serv;
+		assert (lo);
+
+		// Conversion to Object must be available
+		Object::_ptr_type obj = lo;
+		assert (obj);
+
+		// Object operations must be available
+		bool is = lo->_is_a (CORBA::Internal::RepIdOf <I3>::id);
+		assert (is);
+
+		return serv->_this ();
 	}
+
+#else
+
+	static I3::_ref_type create (Long addendum)
+	{
+		servant_reference <TiedDerivedI3> serv = make_reference <TiedDerivedI3> (addendum);
+
+		// Direct conversion to LocalObject must be available
+		LocalObject::_ptr_type lo = serv;
+		assert (lo);
+
+		// Conversion to Object must be available
+		Object::_ptr_type obj = lo;
+		assert (obj);
+
+		// Object operations must be available
+		bool is = lo->_is_a (CORBA::Internal::RepIdOf <I3>::id);
+		assert (is);
+
+		return serv->_this ();
+	}
+
+#endif
 };
 
 }
