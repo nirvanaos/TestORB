@@ -138,7 +138,7 @@ TYPED_TEST (TestORB_I2, ValueType)
 	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
 
 #ifdef LEGACY_CORBA_CPP
-	V2_var v = V2_factory::_factory->create ();
+	V2_var v = V2::_factory->create ();
 	v->val_v2 (1234);
 	{
 		V1_var out, inout (V1::_duplicate (v));

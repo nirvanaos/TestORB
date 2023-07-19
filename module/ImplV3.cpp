@@ -91,7 +91,7 @@ public:
 #else
 		V3::_ref_type
 #endif
-			v = V3_factory::_factory->create (addendum);
+			v = V3::_factory->create (addendum);
 
 		// Supported interface operations must be available
 		v->op2 (0);

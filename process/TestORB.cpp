@@ -373,7 +373,7 @@ TEST_F (TestORB, V3)
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
 
 	// Legacy process can not create value with concrete interface support
-	EXPECT_THROW (V3_factory::_factory->create (MAGIC_CONST), NO_PERMISSION);
+	EXPECT_THROW (V3::_factory->create (MAGIC_CONST), NO_PERMISSION);
 }
 
 TEST_F (TestORB, ValueBox)
@@ -399,7 +399,7 @@ TEST_F (TestORB, ValueBox)
 	CORBA::Internal::Type <StringValue>::Var var;
 }
 
-TEST_F (TestORB, Factory)
+TEST_F (TestORB, FactoryBase)
 {
 	ValueFactoryBase::
 #ifndef LEGACY_CORBA_CPP
@@ -413,6 +413,16 @@ TEST_F (TestORB, Factory)
 	EXPECT_TRUE (f);
 	f = g_ORB->lookup_value_factory ("IDL:Test/StringValue:1.0");
 	EXPECT_TRUE (f);
+}
+
+TEST_F (TestORB, Factory)
+{
+#ifndef LEGACY_CORBA_CPP
+	V1::_ref_type
+#else
+	V1_var
+#endif
+		v1 = V1::_factory->create (1, "test");
 }
 
 TEST_F (TestORB, Any)
