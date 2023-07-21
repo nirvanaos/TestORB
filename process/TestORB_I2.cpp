@@ -166,7 +166,7 @@ TYPED_TEST (TestORB_I2, ValueType)
 	V2_ptr v2 = V2::_downcast (ret->_to_value ());
 	EXPECT_TRUE (v2);
 #else
-	V2::_ref_type v = V2_factory::_factory->create ();
+	V2::_ref_type v = V2::_factory->create ();
 	v->val_v2 (1234);
 	{
 		V1::_ref_type out, inout = v;
