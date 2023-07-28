@@ -24,17 +24,8 @@
 *  popov.nirvana@gmail.com
 */
 #include <Nirvana/Nirvana.h>
-#include <CORBA/CosNaming.h>
+#include <Nirvana/filesystem.h>
 #include <gtest/gtest.h>
-
-namespace CosNaming {
-
-bool operator == (const NameComponent& l, const NameComponent& r)
-{
-	return l.id () == r.id () && l.kind () == r.kind ();
-}
-
-}
 
 using namespace CORBA;
 using namespace CosNaming;
