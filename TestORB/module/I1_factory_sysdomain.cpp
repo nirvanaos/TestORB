@@ -39,6 +39,7 @@ class I1_factory_sysdomain :
 	public servant_traits <I1_factory>::ServantStatic <I1_factory_sysdomain>
 {
 public:
+#ifndef LEGACY_CORBA_CPP
 	static I1::_ref_type create (Long addendum)
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
@@ -46,6 +47,16 @@ public:
 		I1_factory::_ref_type factory = I1_factory::_narrow (prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_));
 		return factory->create (addendum);
 	}
+#else
+	static I1_ptr create (Long addendum)
+	{
+		Object_var obj = g_ORB->resolve_initial_references ("SysDomain");
+		SysDomain_var sys_domain = SysDomain::_narrow (obj);
+		ProtDomain_var prot_domain = sys_domain->prot_domain ();
+		I1_factory_var factory = I1_factory::_narrow (prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_));
+		return factory->create (addendum);
+	}
+#endif
 };
 
 }

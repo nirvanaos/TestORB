@@ -489,4 +489,26 @@ TEST_F (TestORB, Swap)
 
 #endif
 
+TEST_F (TestORB, ExceptionHolder)
+{
+	using Messaging::ExceptionHolder;
+
+	Any any;
+	any <<= UNKNOWN ();
+
+#ifdef LEGACY_CORBA_CPP
+	Messaging::ExceptionHolder_var eh = new Internal::ExceptionHolderImpl (std::move (any));
+#else
+	ExceptionHolder::_ref_type eh = make_reference <Internal::ExceptionHolderImpl> (std::move (any));
+#endif
+
+	EXPECT_THROW (eh->raise_exception (), UNKNOWN);
+
+	ValueBase::_ptr_type base = eh;
+	EXPECT_TRUE (base);
+
+	ExceptionHolder::_ptr_type eh1 = ExceptionHolder::_downcast (base);
+	EXPECT_TRUE (eh1);
+}
+
 }
