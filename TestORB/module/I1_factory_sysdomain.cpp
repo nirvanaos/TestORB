@@ -50,10 +50,11 @@ public:
 #else
 	static I1_ptr create (Long addendum)
 	{
-		Object_var obj = g_ORB->resolve_initial_references ("SysDomain");
-		SysDomain_var sys_domain = SysDomain::_narrow (obj);
+		Object_var osd = g_ORB->resolve_initial_references ("SysDomain");
+		SysDomain_var sys_domain = SysDomain::_narrow (osd);
 		ProtDomain_var prot_domain = sys_domain->prot_domain ();
-		I1_factory_var factory = I1_factory::_narrow (prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_));
+		Object_var of = prot_domain->bind (StaticId <I1_factory_dynamic>::static_id_);
+		I1_factory_var factory = I1_factory::_narrow (of);
 		return factory->create (addendum);
 	}
 #endif
