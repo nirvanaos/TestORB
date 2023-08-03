@@ -511,4 +511,29 @@ TEST_F (TestORB, ExceptionHolder)
 	EXPECT_TRUE (eh1);
 }
 
+TEST_F (TestORB, CORBA_Environment)
+{
+	{
+		CORBA::Environment::_ref_type env = make_reference <Environment> ();
+		CORBA::NO_MEMORY no_mem;
+		CORBA::Internal::set_exception (env, no_mem);
+		const CORBA::Exception* ex = env->exception ();
+		ASSERT_TRUE (ex);
+		EXPECT_STREQ (ex->_name (), "NO_MEMORY");
+		env->clear ();
+		CORBA::Environment::_ref_type ev = env;
+		ev = make_reference <Environment> ();
+		EXPECT_FALSE (ev->exception ());
+	}
+	{
+		CORBA::Environment env;
+		CORBA::NO_MEMORY no_mem;
+		CORBA::Internal::set_exception (&env, no_mem);
+		const CORBA::Exception* ex = env.exception ();
+		ASSERT_TRUE (ex);
+		EXPECT_STREQ (ex->_name (), "NO_MEMORY");
+		env.clear ();
+	}
+}
+
 }
