@@ -154,7 +154,7 @@ TEST_F (TestFile, Mnt)
 		} catch (const CORBA::INTERNAL& ex) {
 			EXPECT_EQ (get_minor_errno (ex.minor ()), EBUSY);
 		} catch (const CORBA::SystemException& ex) {
-			ADD_FAILURE () << ex._name ();
+			ADD_FAILURE () << nc.id () << ' ' << ex._name ();
 		}
 	}
 }
