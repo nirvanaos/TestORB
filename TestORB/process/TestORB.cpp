@@ -514,22 +514,31 @@ TEST_F (TestORB, ExceptionHolder)
 TEST_F (TestORB, CORBA_Environment)
 {
 	{
-		CORBA::Environment::_ref_type env = make_reference <Environment> ();
-		CORBA::NO_MEMORY no_mem;
-		CORBA::Internal::set_exception (env, no_mem);
-		const CORBA::Exception* ex = env->exception ();
+#ifdef LEGACY_CORBA_CPP
+		Environment_var env = new Environment ();
+#else
+		Environment::_ref_type env = make_reference <Environment> ();
+#endif
+		NO_MEMORY no_mem;
+		Internal::set_exception (env, no_mem);
+		const Exception* ex = env->exception ();
 		ASSERT_TRUE (ex);
 		EXPECT_STREQ (ex->_name (), "NO_MEMORY");
 		env->clear ();
-		CORBA::Environment::_ref_type ev = env;
-		ev = make_reference <Environment> ();
+#ifdef LEGACY_CORBA_CPP
+		Environment_var ev = new Environment ();
+#else
+		Environment::_ref_type ev = make_reference <Environment> ();
+#endif
+		ev = env;
+		
 		EXPECT_FALSE (ev->exception ());
 	}
 	{
-		CORBA::Environment env;
-		CORBA::NO_MEMORY no_mem;
-		CORBA::Internal::set_exception (&env, no_mem);
-		const CORBA::Exception* ex = env.exception ();
+		Environment env;
+		NO_MEMORY no_mem;
+		Internal::set_exception (&env, no_mem);
+		const Exception* ex = env.exception ();
 		ASSERT_TRUE (ex);
 		EXPECT_STREQ (ex->_name (), "NO_MEMORY");
 		env.clear ();
