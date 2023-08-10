@@ -23,13 +23,13 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
+#include "pch.h"
 #include "TestORB_I1.h"
 #include <I1_static.h>
 #include <I1_factory_dynamic.h>
 #include <I1_factory_portable.h>
 #include <I1_factory_tied.h>
 #include <I1_factory_sysdomain.h>
-#include <gtest/gtest.h>
 
 using namespace CORBA;
 using namespace Test;

@@ -23,7 +23,7 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/Server.h>
+#include "pch.h"
 #include <IDL/Test_V3_s.h>
 #include <I2_factory_V3.h>
 #include "ImplI2.h"
