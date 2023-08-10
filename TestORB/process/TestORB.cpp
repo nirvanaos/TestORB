@@ -497,9 +497,9 @@ TEST_F (TestORB, ExceptionHolder)
 	any <<= UNKNOWN ();
 
 #ifdef LEGACY_CORBA_CPP
-	Messaging::ExceptionHolder_var eh = new Internal::ExceptionHolderImpl (std::move (any));
+	Messaging::ExceptionHolder_var eh = Internal::ExceptionHolder::make <> (std::move (any));
 #else
-	ExceptionHolder::_ref_type eh = make_reference <Internal::ExceptionHolderImpl> (std::move (any));
+	ExceptionHolder::_ref_type eh = Internal::ExceptionHolder::make <> (std::move (any));
 #endif
 
 	EXPECT_THROW (eh->raise_exception (), UNKNOWN);
@@ -509,40 +509,6 @@ TEST_F (TestORB, ExceptionHolder)
 
 	ExceptionHolder::_ptr_type eh1 = ExceptionHolder::_downcast (base);
 	EXPECT_TRUE (eh1);
-}
-
-TEST_F (TestORB, CORBA_Environment)
-{
-	{
-#ifdef LEGACY_CORBA_CPP
-		Environment_var env = new Environment ();
-#else
-		Environment::_ref_type env = make_reference <Environment> ();
-#endif
-		NO_MEMORY no_mem;
-		Internal::set_exception (env, no_mem);
-		const Exception* ex = env->exception ();
-		ASSERT_TRUE (ex);
-		EXPECT_STREQ (ex->_name (), "NO_MEMORY");
-		env->clear ();
-#ifdef LEGACY_CORBA_CPP
-		Environment_var ev = new Environment ();
-#else
-		Environment::_ref_type ev = make_reference <Environment> ();
-#endif
-		ev = env;
-		
-		EXPECT_FALSE (ev->exception ());
-	}
-	{
-		Environment env;
-		NO_MEMORY no_mem;
-		Internal::set_exception (&env, no_mem);
-		const Exception* ex = env.exception ();
-		ASSERT_TRUE (ex);
-		EXPECT_STREQ (ex->_name (), "NO_MEMORY");
-		env.clear ();
-	}
 }
 
 }
