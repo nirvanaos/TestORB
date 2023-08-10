@@ -23,7 +23,7 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
+#include <Nirvana/Nirvana.h>
 #include <Nirvana/Domains.h>
 #include <CORBA/Server.h>
 #include <IDL/Test_I1_factory_s.h>
