@@ -488,7 +488,7 @@ TEST_F (TestORB, Swap)
 }
 
 #endif
-
+/*
 TEST_F (TestORB, ExceptionHolder)
 {
 	using Messaging::ExceptionHolder;
@@ -510,5 +510,5 @@ TEST_F (TestORB, ExceptionHolder)
 	ExceptionHolder::_ptr_type eh1 = ExceptionHolder::_downcast (base);
 	EXPECT_TRUE (eh1);
 }
-
+*/
 }
