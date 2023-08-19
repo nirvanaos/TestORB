@@ -31,7 +31,6 @@
 // Tests for the Nirvana::Legacy POSIX subsystem
 
 using namespace Nirvana;
-using namespace Nirvana::Legacy;
 using namespace CORBA;
 
 namespace TestLegacy {
@@ -65,11 +64,20 @@ protected:
 
 TEST_F (TestLegacy, Mutex)
 {
-	Mutex::_ref_type mtx = Legacy::g_system->create_mutex ();
+	Legacy::Mutex::_ref_type mtx = Legacy::g_system->create_mutex ();
 	ASSERT_TRUE (mtx);
 	mtx->lock ();
 	EXPECT_NO_THROW (mtx->unlock ());
 	EXPECT_THROW (mtx->unlock (), BAD_INV_ORDER);
+}
+
+TEST_F (TestLegacy, Sleep)
+{
+	TimeBase::TimeT t0 = g_system->steady_clock ();
+	Legacy::g_system->sleep (TimeBase::SECOND * 1);
+	TimeBase::TimeT d = g_system->steady_clock () - t0;
+	unsigned sec = (unsigned)(d / TimeBase::SECOND);
+	EXPECT_EQ (sec, 1);
 }
 
 }
