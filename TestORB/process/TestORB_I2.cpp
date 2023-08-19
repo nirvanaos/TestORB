@@ -58,12 +58,10 @@ class TestORB_I2 :
 {
 protected:
 	TestORB_I2 ()
-	{
-	}
+	{}
 
 	virtual ~TestORB_I2 ()
-	{
-	}
+	{}
 
 	static I2_ref incarnate (I2_factory::_ptr_type factory)
 	{
@@ -324,6 +322,28 @@ TYPED_TEST (TestORB_I2, Stringify)
 	ASSERT_TRUE (p1);
 	EXPECT_TRUE (p1->_is_equivalent (p));
 	EXPECT_TRUE (p->_is_equivalent (p1));
+}
+
+TYPED_TEST (TestORB_I2, Oneway)
+{
+	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	p->oneway_op (1);
+}
+
+TYPED_TEST (TestORB_I2, AMI)
+{
+	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+#ifdef LEGACY_CORBA_CPP
+	typedef AMI_I2Poller_var
+#else
+	typedef AMI_I2Poller::_ref_type
+#endif
+	Poller;
+
+	Poller poller = p->sendp_op2 (1);
+	Long ret;
+	poller->op2 (std::numeric_limits <uint32_t>::max (), ret);
+	EXPECT_EQ (ret, 2 * MAGIC_CONST + 1);
 }
 
 }

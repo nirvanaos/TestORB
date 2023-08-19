@@ -359,8 +359,8 @@ TYPED_TEST (TestORB_I1, BoundedString)
 
 TYPED_TEST (TestORB_I1, BoundedSeq)
 { // Bounded sequence violation
+	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
 #ifdef LEGACY_CORBA_CPP
-	I1_var p = TestORB_I1 <TypeParam>::incarnate ();
 	SeqLong_var out, inout;
 	ShortSeqLong_var ret;
 	SeqLong small { 9, 10, 11, 12 };
@@ -368,7 +368,6 @@ TYPED_TEST (TestORB_I1, BoundedSeq)
 	SeqLong large { 9, 10, 11, 12, 13 };
 	EXPECT_THROW (ret = p->short_seq_op (large, out, inout), BAD_PARAM);
 #else
-	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
 	std::vector <Long> out, inout;
 	std::vector <Long> ret;
 	std::vector <Long> small { 9, 10, 11, 12 };
@@ -379,22 +378,5 @@ TYPED_TEST (TestORB_I1, BoundedSeq)
 	inout = std::move (large);
 	EXPECT_THROW (ret = p->short_seq_op (small, out, inout), BAD_PARAM);
 }
-/*
-TYPED_TEST (TestORB_I1, AMI)
-{
-#ifdef LEGACY_CORBA_CPP
-	I1_var p = TestORB_I1 <TypeParam>::incarnate ();
-	typedef AMI_I1Poller_var
-#else
-	I1_ref p = TestORB_I1 <TypeParam>::incarnate ();
-	typedef AMI_I1Poller::_ref_type
-#endif
-	Poller;
 
-	Poller poller = p->sendp_op1 (1);
-	Long ret;
-	poller->op1 (std::numeric_limits <uint32_t>::max (), ret);
-	EXPECT_EQ (ret, MAGIC_CONST + 1);
-}
-*/
 }

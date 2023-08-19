@@ -116,6 +116,9 @@ public:
 		return ImplI2::type_code_op (in_tc, out_tc, inout_tc);
 	}
 
+	virtual void oneway_op (int32_t l)
+	{}
+
 private:
 	int32_t addendum_;
 };

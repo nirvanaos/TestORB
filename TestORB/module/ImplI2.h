@@ -65,6 +65,9 @@ public:
 	static CORBA::TypeCode::_ref_type type_code_op (CORBA::TypeCode::_ptr_type in_obj,
 		CORBA::TypeCode::_ref_type& out_obj, CORBA::TypeCode::_ref_type& inout_obj);
 #endif
+
+	static void oneway_op (long l)
+	{}
 };
 
 }
