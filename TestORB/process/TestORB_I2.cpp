@@ -134,17 +134,28 @@ TYPED_TEST (TestORB_I2, Abstract)
 TYPED_TEST (TestORB_I2, ValueType)
 {
 	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
-
 #ifdef LEGACY_CORBA_CPP
 	V2_var v = V2::_factory->create ();
+
+	ULong rcnt = v->_refcount_value ();
+	EXPECT_EQ (rcnt, 1);
+
 	v->val_v2 (1234);
+
 	{
 		V1_var out, inout (V1::_duplicate (v));
-		V1_var ret = V1::_duplicate (p->value_op (v, out, inout));
-		V2_var v2 = V2::_duplicate (V2::_downcast (ret));
+		V1_var ret = p->value_op (v, out, inout);
+		V2_ptr v2 = V2::_downcast (ret);
 		ASSERT_TRUE (v2);
 		EXPECT_EQ (v2->val_v2 (), v->val_v2 ());
+		rcnt = ret->_refcount_value ();
+		EXPECT_EQ (rcnt, 1);
+		rcnt = out->_refcount_value ();
+		EXPECT_EQ (rcnt, 2);
 	}
+
+	rcnt = v->_refcount_value ();
+	EXPECT_EQ (rcnt, 1);
 
 	{ // Abstract base
 		A1_ptr a1 = v;
@@ -159,10 +170,19 @@ TYPED_TEST (TestORB_I2, ValueType)
 		EXPECT_TRUE (v2);
 	}
 
-	A1_var out, inout (A1::_duplicate (v));
-	A1_var ret = p->abstract_op (v, out, inout);
-	V2_ptr v2 = V2::_downcast (ret->_to_value ());
-	EXPECT_TRUE (v2);
+	rcnt = v->_refcount_value ();
+	EXPECT_EQ (rcnt, 1);
+
+	{
+		A1_var out, inout (A1::_duplicate (v));
+		A1_var ret = p->abstract_op (v, out, inout);
+		ValueBase_var vb = ret->_to_value ();
+		V2_ptr v2 = V2::_downcast (vb);
+		EXPECT_TRUE (v2);
+	}
+	rcnt = v->_refcount_value ();
+	EXPECT_EQ (rcnt, 1);
+
 #else
 	V2::_ref_type v = V2::_factory->create ();
 	v->val_v2 (1234);

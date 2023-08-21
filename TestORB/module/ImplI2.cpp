@@ -61,7 +61,7 @@ A1::_ref_type ImplI2::abstract_op (A1::_ptr_type in_obj, A1::_ref_type& out_obj,
 
 V1::_ptr_type ImplI2::value_op (V1::_ptr_type in_obj, V1::_var_type& out_obj, V1::_var_type& inout_obj)
 {
-	V1::_var_type tmp = V1::_duplicate (V1::_downcast (inout_obj->_copy_value ()));
+	V1::_var_type tmp = V1::_downcast (inout_obj->_copy_value ());
 	out_obj = V1::_duplicate (in_obj);
 	inout_obj = V1::_duplicate (in_obj);
 	return tmp._retn ();
