@@ -73,11 +73,12 @@ TEST_F (TestLegacy, Mutex)
 
 TEST_F (TestLegacy, Sleep)
 {
+	static const TimeBase::TimeT SLEEP_TIME = TimeBase::SECOND * 1;
 	TimeBase::TimeT t0 = g_system->steady_clock ();
-	Legacy::g_system->sleep (TimeBase::SECOND * 1);
-	TimeBase::TimeT d = g_system->steady_clock () - t0;
-	unsigned sec = (unsigned)(d / TimeBase::SECOND);
-	EXPECT_EQ (sec, 1);
+	Legacy::g_system->sleep (SLEEP_TIME);
+	int64_t delay = g_system->steady_clock () - t0 - SLEEP_TIME;
+	EXPECT_GE (delay, 0);
+	EXPECT_LE (delay, 10 * (int64_t)TimeBase::MILLISECOND);
 }
 
 }
