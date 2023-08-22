@@ -361,6 +361,13 @@ TYPED_TEST (TestORB_I2, AMI)
 	Poller;
 
 	Poller poller = p->sendp_op2 (1);
+#ifdef LEGACY_CORBA_CPP
+	String_var
+#else
+	std::string
+#endif
+		op_name = poller->operation_name ();
+	EXPECT_EQ (op_name, "op2");
 	Long ret;
 	poller->op2 (std::numeric_limits <uint32_t>::max (), ret);
 	EXPECT_EQ (ret, 2 * MAGIC_CONST + 1);
