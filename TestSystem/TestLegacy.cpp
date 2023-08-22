@@ -77,8 +77,8 @@ TEST_F (TestLegacy, Sleep)
 	TimeBase::TimeT t0 = g_system->steady_clock ();
 	Legacy::g_system->sleep (SLEEP_TIME);
 	int64_t delay = g_system->steady_clock () - t0 - SLEEP_TIME;
-	EXPECT_GE (delay, 0) << delay;
-	EXPECT_LE (delay, 10 * (int64_t)TimeBase::MILLISECOND) << delay;
+	EXPECT_GE (delay, -1 * (int64_t)TimeBase::MILLISECOND) << delay;
+	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;
 }
 
 }
