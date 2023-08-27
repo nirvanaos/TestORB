@@ -23,14 +23,31 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_TEST_I1_FACTORY_DYNAMIC_H_
-#define NIRVANA_TESTORB_TEST_I1_FACTORY_DYNAMIC_H_
-#pragma once
+#include "TestORB.h"
+#include <PingPongFactory.h>
 
-#include <CORBA/CORBA.h>
-#include <IDL/Test_I1_factory.h>
-#include <Nirvana/static.h>
+using namespace CORBA;
+using namespace Test;
 
-NIRVANA_STATIC ((Test, I1_factory_dynamic), ::Test::I1_factory)
+namespace TestORB {
 
-#endif
+TEST_F (TestORB, PingPong)
+{
+	static const uint32_t COUNT = 100;
+
+	Pong::_ref_type pong = Nirvana::Static <ping_pong_factory>::ptr ()->create_pong ();
+	Ping::_ref_type ping = Nirvana::Static <ping_pong_factory>::ptr ()->create_ping (pong, COUNT);
+
+	auto poller = ping->sendp_wait ();
+
+	uint32_t count = 0;
+	try {
+		poller->wait (1000, count);
+	} catch (const TIMEOUT&) {
+		ping->cancel ();
+		ADD_FAILURE ();
+	}
+	EXPECT_EQ (count, COUNT);
+}
+
+}

@@ -23,14 +23,28 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_TEST_I1_FACTORY_DYNAMIC_H_
-#define NIRVANA_TESTORB_TEST_I1_FACTORY_DYNAMIC_H_
-#pragma once
+#ifndef TESTORB_TEST_PINGPONG_IDL_
+#define TESTORB_TEST_PINGPONG_IDL_
 
-#include <CORBA/CORBA.h>
-#include <IDL/Test_I1_factory.h>
-#include <Nirvana/static.h>
+module Test {
 
-NIRVANA_STATIC ((Test, I1_factory_dynamic), ::Test::I1_factory)
+interface Pong
+{
+	void ping ();
+};
+
+interface Ping : AMI_PongHandler
+{
+	unsigned long wait ();
+	void cancel ();
+};
+
+interface PingPongFactory
+{
+	Pong create_pong ();
+	Ping create_ping (in Pong pong, in unsigned long count);
+};
+
+};
 
 #endif

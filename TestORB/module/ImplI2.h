@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_IMPLI2_H_
-#define NIRVANA_TESTORB_IMPLI2_H_
+#ifndef NIRVANA_TESTORB_TEST_IMPLI2_H_
+#define NIRVANA_TESTORB_TEST_IMPLI2_H_
 #pragma once
 
 #include <CORBA/Server.h>

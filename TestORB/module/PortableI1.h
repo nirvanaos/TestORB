@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_PORTABLEI1_H_
-#define NIRVANA_TESTORB_PORTABLEI1_H_
+#ifndef NIRVANA_TESTORB_TEST_PORTABLEI1_H_
+#define NIRVANA_TESTORB_TEST_PORTABLEI1_H_
 #pragma once
 
 #include "ImplI1.h"

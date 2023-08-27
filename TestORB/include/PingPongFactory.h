@@ -23,14 +23,14 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_TEST_I1_FACTORY_DYNAMIC_H_
-#define NIRVANA_TESTORB_TEST_I1_FACTORY_DYNAMIC_H_
+#ifndef NIRVANA_TESTORB_TEST_PINGPONGFACTORY_H_
+#define NIRVANA_TESTORB_TEST_PINGPONGFACTORY_H_
 #pragma once
 
 #include <CORBA/CORBA.h>
-#include <IDL/Test_I1_factory.h>
+#include <IDL/PingPong.h>
 #include <Nirvana/static.h>
 
-NIRVANA_STATIC ((Test, I1_factory_dynamic), ::Test::I1_factory)
+NIRVANA_STATIC ((Test, ping_pong_factory), ::Test::PingPongFactory)
 
 #endif

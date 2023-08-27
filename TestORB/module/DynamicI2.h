@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_DYNAMICI2_H_
-#define NIRVANA_TESTORB_DYNAMICI2_H_
+#ifndef NIRVANA_TESTORB_TEST_DYNAMICI2_H_
+#define NIRVANA_TESTORB_TEST_DYNAMICI2_H_
 #pragma once
 
 #include "ImplI2.h"
