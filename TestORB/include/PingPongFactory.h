@@ -32,5 +32,7 @@
 #include <Nirvana/static.h>
 
 NIRVANA_STATIC ((Test, ping_pong_factory), ::Test::PingPongFactory)
+NIRVANA_STATIC ((Test, ping_pong_factory_ping_sysdomain), ::Test::PingPongFactory)
+NIRVANA_STATIC ((Test, ping_pong_factory_pong_sysdomain), ::Test::PingPongFactory)
 
 #endif

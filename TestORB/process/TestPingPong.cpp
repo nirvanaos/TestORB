@@ -23,7 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "TestORB.h"
+#include <CORBA/CORBA.h>
+#include <gtest/gtest.h>
 #include <PingPongFactory.h>
 
 using namespace CORBA;
@@ -31,12 +32,37 @@ using namespace Test;
 
 namespace TestORB {
 
-TEST_F (TestORB, PingPong)
+template <class Factory>
+class TestPingPong :
+	public ::testing::Test
+{
+protected:
+	TestPingPong ()
+	{}
+
+	virtual ~TestPingPong ()
+	{}
+
+	static PingPongFactory::_ptr_type factory ()
+	{
+		return Factory::ptr ();
+	}
+};
+
+typedef ::testing::Types <Nirvana::Static <ping_pong_factory> // 0
+	, Nirvana::Static <ping_pong_factory_ping_sysdomain> // 1
+	, Nirvana::Static <ping_pong_factory_pong_sysdomain> // 2
+> ServantTypesPingPong;
+
+TYPED_TEST_SUITE (TestPingPong, ServantTypesPingPong);
+
+TYPED_TEST (TestPingPong, PingPong)
 {
 	static const uint32_t COUNT = 100;
 
-	Pong::_ref_type pong = Nirvana::Static <ping_pong_factory>::ptr ()->create_pong ();
-	Ping::_ref_type ping = Nirvana::Static <ping_pong_factory>::ptr ()->create_ping (pong, COUNT);
+	PingPongFactory::_ptr_type factory = TestPingPong <TypeParam>::factory ();
+	Pong::_ref_type pong = factory->create_pong ();
+	Ping::_ref_type ping = factory->create_ping (pong, COUNT);
 
 	auto poller = ping->sendp_wait ();
 

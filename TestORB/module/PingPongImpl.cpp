@@ -27,9 +27,11 @@
 #include <IDL/PingPong_s.h>
 #include <CORBA/CosEventChannelAdmin.h>
 #include <PingPongFactory.h>
+#include <Nirvana/Domains.h>
 
 using namespace CORBA;
 using namespace CosEventChannelAdmin;
+using namespace Nirvana;
 
 namespace Test {
 
@@ -132,6 +134,44 @@ public:
 	}
 };
 
+class ping_pong_factory_ping_sysdomain :
+	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory_ping_sysdomain>
+{
+public:
+	static Pong::_ref_type create_pong ()
+	{
+		return make_reference <PongImpl> ()->_this ();
+	}
+
+	static Ping::_ref_type create_ping (Pong::_ptr_type pong, uint32_t count)
+	{
+		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
+		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
+		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
+		return factory->create_ping (pong, count);
+	}
+};
+
+class ping_pong_factory_pong_sysdomain :
+	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory_pong_sysdomain>
+{
+public:
+	static Pong::_ref_type create_pong ()
+	{
+		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
+		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
+		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
+		return factory->create_pong ();
+	}
+
+	static Ping::_ref_type create_ping (Pong::_ptr_type pong, uint32_t count)
+	{
+		return make_reference <PingImpl> (pong, count)->_this ();
+	}
+};
+
 }
 
 NIRVANA_STATIC_EXP (Test, ping_pong_factory)
+NIRVANA_STATIC_EXP (Test, ping_pong_factory_ping_sysdomain)
+NIRVANA_STATIC_EXP (Test, ping_pong_factory_pong_sysdomain)
