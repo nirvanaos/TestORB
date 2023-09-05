@@ -64,15 +64,23 @@ TYPED_TEST (TestPingPong, PingPong)
 	Pong::_ref_type pong = factory->create_pong ();
 	Ping::_ref_type ping = factory->create_ping (pong, COUNT);
 
-	auto poller = ping->sendp_wait ();
+	auto channel = ping->completed ();
+	auto supplier = channel->obtain_typed_pull_supplier (_tc_PullPingResult->id ());
+
+	supplier->connect_pull_consumer (nullptr);
+	auto typed_supplier = PullPingResult::_narrow (supplier->get_typed_supplier ());
+	ASSERT_TRUE (typed_supplier);
+
+	auto poller = typed_supplier->sendp_pull_completed ();
 
 	uint32_t count = 0;
 	try {
-		poller->wait (1000, count);
+		poller->pull_completed (1000, count);
 	} catch (const TIMEOUT&) {
 		ping->cancel ();
 		ADD_FAILURE ();
 	}
+	supplier->disconnect_pull_supplier ();
 	EXPECT_EQ (count, COUNT);
 }
 

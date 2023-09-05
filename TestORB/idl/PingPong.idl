@@ -26,6 +26,8 @@
 #ifndef TESTORB_TEST_PINGPONG_IDL_
 #define TESTORB_TEST_PINGPONG_IDL_
 
+#include <CORBA/CosTypedEventChannelAdmin.idl>
+
 module Test {
 
 interface Pong
@@ -35,8 +37,19 @@ interface Pong
 
 interface Ping : AMI_PongHandler
 {
-	unsigned long wait ();
+	CosTypedEventChannelAdmin::TypedConsumerAdmin completed ();
 	void cancel ();
+};
+
+interface PingResult
+{
+	void completed (in unsigned long count);
+};
+
+interface PullPingResult
+{
+	void pull_completed (out unsigned long count);
+	boolean try_completed (out unsigned long count);
 };
 
 interface PingPongFactory

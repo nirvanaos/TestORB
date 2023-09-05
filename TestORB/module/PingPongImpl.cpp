@@ -30,7 +30,7 @@
 #include <Nirvana/Domains.h>
 
 using namespace CORBA;
-using namespace CosEventChannelAdmin;
+using namespace CosTypedEventChannelAdmin;
 using namespace Nirvana;
 
 namespace Test {
@@ -49,11 +49,9 @@ public:
 		pong_ (pong),
 		count_ (count),
 		cur_count_ (0),
+		event_channel_ (g_ORB->create_typed_channel ()),
 		cancelled_ (false)
 	{
-		event_channel_ = g_ORB->create_event_channel ();
-		pull_supplier_ = event_channel_->for_consumers ()->obtain_pull_supplier ();
-		pull_supplier_->connect_pull_consumer (nullptr);
 		send ();
 	}
 
@@ -62,12 +60,9 @@ public:
 		event_channel_->destroy ();
 	}
 
-	uint32_t wait ()
+	CosTypedEventChannelAdmin::TypedConsumerAdmin::_ref_type completed () const
 	{
-		Any any = pull_supplier_->pull ();
-		uint32_t ret = 0;
-		any >>= ret;
-		return ret;
+		return event_channel_->for_consumers ();
 	}
 
 	void cancel ()
@@ -102,11 +97,11 @@ private:
 
 	void finish ()
 	{
-		ProxyPushConsumer::_ref_type consumer = event_channel_->for_suppliers ()->obtain_push_consumer ();
+		TypedProxyPushConsumer::_ref_type consumer = event_channel_->for_suppliers ()->
+			obtain_typed_push_consumer (_tc_PingResult->id ());
 		consumer->connect_push_supplier (nullptr);
-		Any any;
-		any <<= cur_count_;
-		consumer->push (any);
+		PingResult::_ref_type typed_consumer = PingResult::_narrow (consumer->get_typed_consumer ());
+		typed_consumer->completed (cur_count_);
 		consumer->disconnect_push_consumer ();
 	}
 
@@ -114,8 +109,7 @@ private:
 	Pong::_ref_type pong_;
 	const uint32_t count_;
 	uint32_t cur_count_;
-	EventChannel::_ref_type event_channel_;
-	ProxyPullSupplier::_ref_type pull_supplier_;
+	TypedEventChannel::_ref_type event_channel_;
 	bool cancelled_;
 };
 
