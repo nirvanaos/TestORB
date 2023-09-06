@@ -78,7 +78,7 @@ TYPED_TEST (TestPingPong, PingPong)
 		poller->pull_completed (1000, count);
 	} catch (const TIMEOUT&) {
 		ping->cancel ();
-		ADD_FAILURE ();
+		ADD_FAILURE () << " Timeout";
 	}
 	supplier->disconnect_pull_supplier ();
 	EXPECT_EQ (count, COUNT);
