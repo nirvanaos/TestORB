@@ -274,6 +274,50 @@ TEST_F (TestFile, Buf)
 	EXPECT_TRUE (file->_non_existent ());
 }
 
+TEST_F (TestFile, Size)
+{
+	// Obtain temporary directory object
+	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
+	ASSERT_TRUE (obj);
+	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
+	ASSERT_TRUE (tmp_dir);
+
+	// Create temporary file
+	const char PATTERN [] = "XXXXXX.tmp";
+	std::string file_name = PATTERN;
+	AccessDirect::_ref_type fa = AccessDirect::_narrow (
+		tmp_dir->mkostemps (file_name, 4, O_DIRECT)->_to_object ());
+	ASSERT_TRUE (fa);
+	EXPECT_NE (file_name, PATTERN);
+
+	EXPECT_EQ (fa->size (), 0);
+
+	const uint64_t FILE_SIZE = 0x100000;
+	const uint32_t BLOCK_SIZE = 0x400;
+
+	// Set size
+	fa->size (FILE_SIZE);
+	EXPECT_EQ (fa->size (), FILE_SIZE);
+
+	// Read
+	for (uint64_t pos = 0; pos < FILE_SIZE; pos += BLOCK_SIZE) {
+		std::vector <uint8_t> rbuf;
+		fa->read (FileLock (), pos, BLOCK_SIZE, LockType::LOCK_NONE, true, rbuf);
+		EXPECT_TRUE (std::all_of (rbuf.begin (), rbuf.end (), [&](uint8_t i) {return i == 0; }));
+	}
+
+	// Obtain file object
+	File::_ref_type file = fa->file ();
+
+	// Close file access
+	fa->close ();
+	fa = nullptr;
+
+	// Remove file
+	file->remove ();
+	EXPECT_TRUE (file->_non_existent ());
+}
+
 TEST_F (TestFile, DirectoryIterator)
 {
 	// Obtain directory object
