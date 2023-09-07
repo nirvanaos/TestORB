@@ -38,16 +38,27 @@ namespace Test {
 class PongImpl : public servant_traits <Pong>::Servant <PongImpl>
 {
 public:
-	void ping ()
+	PongImpl (uint32_t count) :
+		count_ (count)
 	{}
+
+	void ping ()
+	{
+		if (count_)
+			--count_;
+		else
+			throw ImTired ();
+	}
+
+private:
+	uint32_t count_;
 };
 
 class PingImpl : public servant_traits <Ping>::Servant <PingImpl>
 {
 public:
-	PingImpl (Pong::_ptr_type pong, uint32_t count) :
+	PingImpl (Pong::_ptr_type pong) :
 		pong_ (pong),
-		count_ (count),
 		cur_count_ (0),
 		event_channel_ (g_ORB->create_typed_channel ()),
 		cancelled_ (false)
@@ -81,18 +92,21 @@ public:
 
 	void ping_excep (Messaging::ExceptionHolder::_ptr_type eh)
 	{
+		try {
+			eh->raise_exception ();
+		} catch (const ImTired&) {
+		} catch (...) {
+			++cur_count_; // Signalize that not OK
+		}
+
 		finish ();
 	}
 
 private:
 	void send ()
 	{
-		if (!cancelled_) {
-			if (cur_count_ < count_)
-				pong_->sendc_ping (_this ());
-			else
-				finish ();
-		}
+		if (!cancelled_)
+			pong_->sendc_ping (_this ());
 	}
 
 	void finish ()
@@ -107,7 +121,6 @@ private:
 
 private:
 	Pong::_ref_type pong_;
-	const uint32_t count_;
 	uint32_t cur_count_;
 	TypedEventChannel::_ref_type event_channel_;
 	bool cancelled_;
@@ -117,14 +130,14 @@ class ping_pong_factory :
 	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory>
 {
 public:
-	static Pong::_ref_type create_pong ()
+	static Pong::_ref_type create_pong (uint32_t count)
 	{
-		return make_reference <PongImpl> ()->_this ();
+		return make_reference <PongImpl> (count)->_this ();
 	}
 
-	static Ping::_ref_type create_ping (Pong::_ptr_type pong, uint32_t count)
+	static Ping::_ref_type create_ping (Pong::_ptr_type pong)
 	{
-		return make_reference <PingImpl> (pong, count)->_this ();
+		return make_reference <PingImpl> (pong)->_this ();
 	}
 };
 
@@ -132,17 +145,17 @@ class ping_pong_factory_ping_sysdomain :
 	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory_ping_sysdomain>
 {
 public:
-	static Pong::_ref_type create_pong ()
+	static Pong::_ref_type create_pong (uint32_t count)
 	{
-		return make_reference <PongImpl> ()->_this ();
+		return make_reference <PongImpl> (count)->_this ();
 	}
 
-	static Ping::_ref_type create_ping (Pong::_ptr_type pong, uint32_t count)
+	static Ping::_ref_type create_ping (Pong::_ptr_type pong)
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
 		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
-		return factory->create_ping (pong, count);
+		return factory->create_ping (pong);
 	}
 };
 
@@ -150,17 +163,17 @@ class ping_pong_factory_pong_sysdomain :
 	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory_pong_sysdomain>
 {
 public:
-	static Pong::_ref_type create_pong ()
+	static Pong::_ref_type create_pong (uint32_t count)
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
 		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
-		return factory->create_pong ();
+		return factory->create_pong (count);
 	}
 
-	static Ping::_ref_type create_ping (Pong::_ptr_type pong, uint32_t count)
+	static Ping::_ref_type create_ping (Pong::_ptr_type pong)
 	{
-		return make_reference <PingImpl> (pong, count)->_this ();
+		return make_reference <PingImpl> (pong)->_this ();
 	}
 };
 

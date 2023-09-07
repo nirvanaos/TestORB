@@ -61,8 +61,8 @@ TYPED_TEST (TestPingPong, PingPong)
 	static const uint32_t COUNT = 100;
 
 	PingPongFactory::_ptr_type factory = TestPingPong <TypeParam>::factory ();
-	Pong::_ref_type pong = factory->create_pong ();
-	Ping::_ref_type ping = factory->create_ping (pong, COUNT);
+	Pong::_ref_type pong = factory->create_pong (COUNT);
+	Ping::_ref_type ping = factory->create_ping (pong);
 
 	auto channel = ping->completed ();
 	auto supplier = channel->obtain_typed_pull_supplier (_tc_PullPingResult->id ());

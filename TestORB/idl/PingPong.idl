@@ -30,9 +30,11 @@
 
 module Test {
 
+exception ImTired {};
+
 interface Pong
 {
-	void ping ();
+	void ping () raises (ImTired);
 };
 
 interface Ping : AMI_PongHandler
@@ -54,8 +56,8 @@ interface PullPingResult
 
 interface PingPongFactory
 {
-	Pong create_pong ();
-	Ping create_ping (in Pong pong, in unsigned long count);
+	Pong create_pong (in unsigned long count);
+	Ping create_ping (in Pong pong);
 };
 
 };
