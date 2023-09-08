@@ -92,12 +92,19 @@ public:
 
 	void ping_excep (Messaging::ExceptionHolder::_ptr_type eh)
 	{
-		try {
-			eh->raise_exception ();
-		} catch (const ImTired&) {
-		} catch (...) {
-			++cur_count_; // Signalize that not OK
+		bool ok = false;
+		if (eh) {
+			// On an error condition, eh may be nil
+			try {
+				eh->raise_exception ();
+			} catch (const ImTired&) {
+				ok = true;
+			} catch (...) {
+			}
 		}
+
+		if (!ok)
+			cur_count_ = std::numeric_limits <uint32_t>::max (); // Signalize that not all is OK
 
 		finish ();
 	}
