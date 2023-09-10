@@ -63,6 +63,11 @@ public:
 		event_channel_ (g_ORB->create_typed_channel ()),
 		cancelled_ (false)
 	{
+		TypedProxyPushConsumer::_ref_type consumer = event_channel_->for_suppliers ()->
+			obtain_typed_push_consumer (_tc_PingResult->id ());
+		consumer->connect_push_supplier (nullptr);
+		result_consumer_ = PingResult::_narrow (consumer->get_typed_consumer ());
+
 		send ();
 	}
 
@@ -118,18 +123,14 @@ private:
 
 	void finish ()
 	{
-		TypedProxyPushConsumer::_ref_type consumer = event_channel_->for_suppliers ()->
-			obtain_typed_push_consumer (_tc_PingResult->id ());
-		consumer->connect_push_supplier (nullptr);
-		PingResult::_ref_type typed_consumer = PingResult::_narrow (consumer->get_typed_consumer ());
-		typed_consumer->completed (cur_count_);
-		consumer->disconnect_push_consumer ();
+		result_consumer_->completed (cur_count_);
 	}
 
 private:
 	Pong::_ref_type pong_;
 	uint32_t cur_count_;
 	TypedEventChannel::_ref_type event_channel_;
+	PingResult::_ref_type result_consumer_;
 	bool cancelled_;
 };
 
