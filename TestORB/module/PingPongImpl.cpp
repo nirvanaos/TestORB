@@ -59,7 +59,7 @@ class PingImpl : public servant_traits <Ping>::Servant <PingImpl>
 public:
 	PingImpl (Pong::_ptr_type pong) :
 		pong_ (pong),
-		cur_count_ (0),
+		count_ (0),
 		event_channel_ (g_ORB->create_typed_channel ()),
 		cancelled_ (false)
 	{
@@ -91,7 +91,7 @@ public:
 
 	void ping ()
 	{
-		++cur_count_;
+		++count_;
 		send ();
 	}
 
@@ -109,9 +109,14 @@ public:
 		}
 
 		if (!ok)
-			cur_count_ = std::numeric_limits <uint32_t>::max (); // Signalize that not all is OK
+			count_ = std::numeric_limits <uint32_t>::max (); // Signalize that not all is OK
 
 		finish ();
+	}
+
+	uint32_t count () const noexcept
+	{
+		return count_;
 	}
 
 private:
@@ -123,12 +128,12 @@ private:
 
 	void finish ()
 	{
-		result_consumer_->completed (cur_count_);
+		result_consumer_->completed (count_);
 	}
 
 private:
 	Pong::_ref_type pong_;
-	uint32_t cur_count_;
+	uint32_t count_;
 	TypedEventChannel::_ref_type event_channel_;
 	PingResult::_ref_type result_consumer_;
 	bool cancelled_;

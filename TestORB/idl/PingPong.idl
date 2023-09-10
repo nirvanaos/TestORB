@@ -41,6 +41,7 @@ interface Ping : AMI_PongHandler
 {
 	CosTypedEventChannelAdmin::TypedConsumerAdmin completed ();
 	void cancel ();
+	readonly attribute unsigned long count;
 };
 
 interface PingResult

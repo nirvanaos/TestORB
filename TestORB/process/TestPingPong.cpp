@@ -82,6 +82,7 @@ TYPED_TEST (TestPingPong, PingPong)
 	}
 	supplier->disconnect_pull_supplier ();
 	EXPECT_EQ (count, COUNT);
+	EXPECT_EQ (ping->count (), COUNT);
 }
 
 }
