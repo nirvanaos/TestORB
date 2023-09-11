@@ -57,8 +57,7 @@ private:
 class PingImpl : public servant_traits <Ping>::Servant <PingImpl>
 {
 public:
-	PingImpl (Pong::_ptr_type pong) :
-		pong_ (pong),
+	PingImpl () :
 		count_ (0),
 		event_channel_ (g_ORB->create_typed_channel ()),
 		cancelled_ (false)
@@ -67,13 +66,20 @@ public:
 			obtain_typed_push_consumer (_tc_PingResult->id ());
 		consumer->connect_push_supplier (nullptr);
 		result_consumer_ = PingResult::_narrow (consumer->get_typed_consumer ());
-
-		send ();
 	}
 
 	~PingImpl ()
 	{
 		event_channel_->destroy ();
+	}
+
+	void start (Pong::_ptr_type pong)
+	{
+		if (pong_)
+			throw CORBA::BAD_INV_ORDER ();
+		pong_ = pong;
+		count_ = 0;
+		send ();
 	}
 
 	CosTypedEventChannelAdmin::TypedConsumerAdmin::_ref_type completed () const
@@ -148,9 +154,9 @@ public:
 		return make_reference <PongImpl> (count)->_this ();
 	}
 
-	static Ping::_ref_type create_ping (Pong::_ptr_type pong)
+	static Ping::_ref_type create_ping ()
 	{
-		return make_reference <PingImpl> (pong)->_this ();
+		return make_reference <PingImpl> ()->_this ();
 	}
 };
 
@@ -163,12 +169,12 @@ public:
 		return make_reference <PongImpl> (count)->_this ();
 	}
 
-	static Ping::_ref_type create_ping (Pong::_ptr_type pong)
+	static Ping::_ref_type create_ping ()
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
 		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
-		return factory->create_ping (pong);
+		return factory->create_ping ();
 	}
 };
 
@@ -184,9 +190,9 @@ public:
 		return factory->create_pong (count);
 	}
 
-	static Ping::_ref_type create_ping (Pong::_ptr_type pong)
+	static Ping::_ref_type create_ping ()
 	{
-		return make_reference <PingImpl> (pong)->_this ();
+		return make_reference <PingImpl> ()->_this ();
 	}
 };
 

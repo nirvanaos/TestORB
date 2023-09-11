@@ -62,7 +62,7 @@ TYPED_TEST (TestPingPong, PingPong)
 
 	PingPongFactory::_ptr_type factory = TestPingPong <TypeParam>::factory ();
 	Pong::_ref_type pong = factory->create_pong (COUNT);
-	Ping::_ref_type ping = factory->create_ping (pong);
+	Ping::_ref_type ping = factory->create_ping ();
 
 	auto channel = ping->completed ();
 	auto supplier = channel->obtain_typed_pull_supplier (_tc_PullPingResult->id ());
@@ -70,6 +70,8 @@ TYPED_TEST (TestPingPong, PingPong)
 	supplier->connect_pull_consumer (nullptr);
 	auto typed_supplier = PullPingResult::_narrow (supplier->get_typed_supplier ());
 	ASSERT_TRUE (typed_supplier);
+
+	ping->start (pong);
 
 	auto poller = typed_supplier->sendp_pull_completed ();
 

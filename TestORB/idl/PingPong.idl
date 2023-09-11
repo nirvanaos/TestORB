@@ -39,6 +39,7 @@ interface Pong
 
 interface Ping : AMI_PongHandler
 {
+	void start (in Pong pong);
 	CosTypedEventChannelAdmin::TypedConsumerAdmin completed ();
 	void cancel ();
 	readonly attribute unsigned long count;
@@ -58,7 +59,7 @@ interface PullPingResult
 interface PingPongFactory
 {
 	Pong create_pong (in unsigned long count);
-	Ping create_ping (in Pong pong);
+	Ping create_ping ();
 };
 
 };
