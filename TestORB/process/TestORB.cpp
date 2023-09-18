@@ -287,9 +287,9 @@ TEST_F (TestORB, TypeCodeRecursive)
 			StructMemberSeq members;
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
-			members.back ().type (_tc_long);
+			members.back ().type (TC (_tc_long));
 #else
-			members.back ().type = _tc_long;
+			members.back ().type = TypeCode::_duplicate (_tc_long);
 #endif
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
@@ -319,21 +319,21 @@ TEST_F (TestORB, TypeCodeRecursive)
 			ValueMemberSeq members;
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
-			members.back ().type (_tc_short);
+			members.back ().type (TC (_tc_short));
 #else
-			members.back ().type = _tc_short;
+			members.back ().type = TypeCode::_duplicate (_tc_short);
 #endif
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
-			members.back ().type (_tc_long);
+			members.back ().type (TC (_tc_long));
 #else
-			members.back ().type = _tc_long;
+			members.back ().type = TypeCode::_duplicate (_tc_long);
 #endif
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
-			members.back ().type (_tc_string);
+			members.back ().type (TC (_tc_string));
 #else
-			members.back ().type = _tc_string;
+			members.back ().type = TypeCode::_duplicate (_tc_string);
 #endif
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
