@@ -23,12 +23,11 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <Nirvana/Nirvana.h>
+#include "pch.h"
 #include <Nirvana/System.h>
 #include <Nirvana/File.h>
 #include <Nirvana/filesystem.h>
 #include <signal.h>
-#include <gtest/gtest.h>
 
 using namespace Nirvana;
 

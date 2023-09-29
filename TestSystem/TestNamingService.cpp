@@ -23,9 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <Nirvana/Nirvana.h>
+#include "pch.h"
 #include <Nirvana/filesystem.h>
-#include <gtest/gtest.h>
 
 using namespace CORBA;
 using namespace CosNaming;

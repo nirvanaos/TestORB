@@ -25,20 +25,21 @@
 */
 #include "pch.h"
 #include <Nirvana/Domains.h>
+#include <Nirvana/platform.h>
 
 using namespace Nirvana;
 
-namespace TestESIOP {
+namespace TestDomains {
 
-// Test ESIOP interaction between different protection domains on the same system.
-class TestESIOP :
+// Test for the Nirvana system functionality.
+class TestDomains :
 	public ::testing::Test
 {
 protected:
-	TestESIOP ()
+	TestDomains ()
 	{}
 
-	virtual ~TestESIOP ()
+	virtual ~TestDomains ()
 	{}
 
 	// If the constructor and destructor are not enough for setting up
@@ -57,20 +58,15 @@ protected:
 	}
 };
 
-TEST_F (TestESIOP, Performance)
+TEST_F (TestDomains, CreateDomain)
 {
-	SysDomain::_ref_type sd = SysDomain::_narrow (CORBA::g_ORB->resolve_initial_references ("SysDomain"));
-	ASSERT_TRUE (sd);
-	for (int i = 0; i < 100; ++i) {
-		sd->version ();
+	SysDomain::_ref_type sys_domain = SysDomain::_narrow (CORBA::g_ORB->resolve_initial_references ("SysDomain"));
+	IDL::Sequence <uint16_t> platforms = sys_domain->supported_platforms ();
+	for (auto pl : platforms) {
+		ProtDomain::_ref_type prot_domain = sys_domain->create_prot_domain (pl);
+		prot_domain->user ();
+		prot_domain->shutdown (0);
 	}
-}
-
-TEST_F (TestESIOP, Platforms)
-{
-	SysDomain::_ref_type sd = SysDomain::_narrow (CORBA::g_ORB->resolve_initial_references ("SysDomain"));
-	auto platforms = sd->supported_platforms ();
-	ASSERT_GE (platforms.size (), 1u);
 }
 
 }

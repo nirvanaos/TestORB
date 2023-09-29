@@ -23,10 +23,9 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <Nirvana/Nirvana.h>
+#include "pch.h"
 #include <Nirvana/System.h>
 #include <Nirvana/Legacy/Legacy.h>
-#include <gtest/gtest.h>
 
 // Tests for the Nirvana::Legacy POSIX subsystem
 
