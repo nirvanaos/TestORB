@@ -31,9 +31,13 @@ using namespace Nirvana;
 
 int main (int argc, char* argv [])
 {
+	// Get console service
 	File::_ref_type console = File::_narrow (CORBA::g_ORB->resolve_initial_references ("Console"));
+
+	// Open console access
 	AccessChar::_ref_type access = AccessChar::_narrow (console->open (O_RDWR | O_TEXT, 0)->_to_object ());
 
+	// Connect to the console input event
 	auto supplier = access->for_consumers ()->obtain_typed_pull_supplier (_tc_PullCharFileSink->id ());
 	auto input = PullCharFileSink::_narrow (supplier->get_typed_supplier ());
 	supplier->connect_pull_consumer (nullptr);

@@ -18,6 +18,10 @@ Unit tests for fixed point calculations.
 
 Unit tests for the system functionality.
 
+### Console
+
+Test for the console input/output.
+
 ## How to build
 
 This repository does not contain any project files.
