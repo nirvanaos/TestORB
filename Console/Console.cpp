@@ -26,35 +26,42 @@
 #include <Nirvana/Nirvana.h>
 #include <Nirvana/File.h>
 #include <fnctl.h>
+#include <unistd.h>
 
 using namespace Nirvana;
 
 int main (int argc, char* argv [])
 {
-	// Get console service
-	File::_ref_type console = File::_narrow (CORBA::g_ORB->resolve_initial_references ("Console"));
+	{
+		// Get console service
+		File::_ref_type console = File::_narrow (CORBA::g_ORB->resolve_initial_references ("Console"));
 
-	// Open console access
-	AccessChar::_ref_type access = AccessChar::_narrow (console->open (O_RDWR | O_TEXT, 0)->_to_object ());
+		// Open console access
+		AccessChar::_ref_type access = AccessChar::_narrow (console->open (O_RDWR | O_TEXT, 0)->_to_object ());
 
-	// Connect to the console input event
-	auto supplier = access->for_consumers ()->obtain_typed_pull_supplier (_tc_PullCharFileSink->id ());
-	auto input = PullCharFileSink::_narrow (supplier->get_typed_supplier ());
-	supplier->connect_pull_consumer (nullptr);
+		// Connect to the console input event
+		auto supplier = access->for_consumers ()->obtain_typed_pull_supplier (_tc_PullCharFileSink->id ());
+		auto input = PullCharFileSink::_narrow (supplier->get_typed_supplier ());
+		supplier->connect_pull_consumer (nullptr);
 
-	access->write ("Press Enter to continue\n");
+		access->write ("Press Enter to continue\n");
 
-	for (;;) {
-		CharFileEvent evt;
-		input->received (evt);
-		if (evt.error ()) {
-			access->write ("Input error " + std::to_string (evt.error ()) + '\n');
-			break;
-		} else {
-			access->write (evt.data ());
-			if (evt.data ().find ('\n') != std::string::npos)
+		for (;;) {
+			CharFileEvent evt;
+			input->received (evt);
+			if (evt.error ()) {
+				access->write ("Input error " + std::to_string (evt.error ()) + '\n');
 				break;
+			} else {
+				access->write (evt.data ());
+				if (evt.data ().find ('\n') != std::string::npos)
+					break;
+			}
 		}
 	}
+
+	static const char test [] = "Test console write()\n";
+	write (1, test, sizeof (test) - 1);
+
 	return 0;
 }
