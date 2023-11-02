@@ -346,7 +346,7 @@ void clear_directory (Dir::_ptr_type dir)
 TEST_F (TestFile, Directory)
 {
 	// Make temporary directory
-	Name tmp_dir_name = naming_service_->to_name ("/tmp/test");
+	Name tmp_dir_name = g_system->to_name ("/tmp/test");
 	Dir::_ref_type tmp_dir;
 	try {
 		tmp_dir = Dir::_narrow (naming_service_->bind_new_context (tmp_dir_name));
@@ -374,7 +374,7 @@ TEST_F (TestFile, Directory)
 	EXPECT_TRUE (thrown);
 
 	// Delete file
-	Name tmp_file_name = naming_service_->to_name (tmp_file);
+	Name tmp_file_name = g_system->to_name (tmp_file);
 
 	try {
 		tmp_dir->unbind (tmp_file_name);

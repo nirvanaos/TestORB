@@ -108,4 +108,17 @@ TEST_F (TestNamingService, Orphans)
 	EXPECT_NO_THROW (service_->unbind (name_a));
 }
 
+TEST_F (TestNamingService, Stringify)
+{
+	std::string str ("dir/name.name.ext");
+	Name name = service_->to_name (str);
+	ASSERT_EQ (name.size (), 2);
+	EXPECT_EQ (name [0].id (), "dir");
+	EXPECT_TRUE (name [0].kind ().empty ());
+	EXPECT_EQ (name [1].id (), "name.name");
+	EXPECT_EQ (name [1].kind (), "ext");
+	std::string str1 = service_->to_string (name);
+	EXPECT_EQ (str, str1);
+}
+
 }
