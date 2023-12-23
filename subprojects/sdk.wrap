@@ -1,0 +1,10 @@
+[wrap-file]
+directory = sdk-1.0
+source_url = file://C:\0work\Nirvana\Work\sdk\sdk.tar.xz
+source_filename = sdk.tar.xz
+source_hash = f4bc04922b126d938bf66762b225e444103605499ab86b13253e2531e424b18c
+patch_directory = sdk
+
+[provide]
+dependency_names = sdk
+program_names = nidl2cpp
