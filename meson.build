@@ -9,16 +9,6 @@ project('TestORB', 'cpp',
 	]
 )
 
-sdk_dep = dependency ('sdk')
+sdk = subproject ('sdk')
 
-idl_full = generator (nidl2cpp,
-	output: [ '@BASENAME@.h', '@BASENAME@_s.h', '@BASENAME@.cpp', '@BASENAME@_p.cpp' ],
-	arguments: [ '@INPUT@', '-out', '@BUILD_DIR@' ]
-	)
-
-idl_client = generator (nidl2cpp,
-	output: [ '@BASENAME@.h', '@BASENAME@.cpp' ],
-	arguments: [ '@INPUT@', '-client', '-out', '@BUILD_DIR@' ]
-	)
-
-subdir ('module')
+subdir ('TestORB')
