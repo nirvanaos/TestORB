@@ -22,5 +22,7 @@ mod_files = files (
 
 shared_library ('TestModule',
 	gen_files, mod_files,
-	dependencies: sdk.get_variable ('sdk_deps')['x64']
+	name_suffix: 'olf',
+	dependencies: sdk.get_variable ('sdk_deps')['x64'],
+	include_directories: '../include'
 	)

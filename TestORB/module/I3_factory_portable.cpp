@@ -25,7 +25,7 @@
 */
 #include <CORBA/Server.h>
 #include "I3_factory_portable.h"
-#include <IDL/Test_I3_factory_s.h>
+#include "Test_I3_factory_s.h"
 #include "PortableI3.h"
 
 using namespace CORBA;

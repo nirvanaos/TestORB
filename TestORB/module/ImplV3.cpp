@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include <CORBA/Server.h>
-#include <IDL/Test_V3_s.h>
+#include "Test_V3_s.h"
 #include <I2_factory_V3.h>
 #include "ImplI2.h"
 

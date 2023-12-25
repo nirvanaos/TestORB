@@ -29,9 +29,9 @@
 #include "ImplI1.h"
 #include "ImplI2.h"
 #include "ImplI3.h"
-#include <IDL/Test_I1_s.h>
-#include <IDL/Test_I2_s.h>
-#include <IDL/Test_I3_s.h>
+#include "Test_I1_s.h"
+#include "Test_I2_s.h"
+#include "Test_I3_s.h"
 
 using namespace CORBA;
 
