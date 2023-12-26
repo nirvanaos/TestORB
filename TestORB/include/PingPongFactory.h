@@ -28,7 +28,7 @@
 #pragma once
 
 #include <CORBA/CORBA.h>
-#include <IDL/PingPong.h>
+#include "PingPong.h"
 #include <Nirvana/static.h>
 
 NIRVANA_STATIC ((Test, ping_pong_factory), ::Test::PingPongFactory)

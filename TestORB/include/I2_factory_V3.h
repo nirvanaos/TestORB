@@ -28,7 +28,7 @@
 #pragma once
 
 #include <CORBA/CORBA.h>
-#include <IDL/Test_I2.h>
+#include "Test_I2.h"
 #include <Nirvana/static.h>
 
 // Create V3 valuetype and return I2 interface

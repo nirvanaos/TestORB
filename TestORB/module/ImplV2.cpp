@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include <CORBA/Server.h>
-#include <IDL/Test_V2_s.h>
+#include "Test_V2_s.h"
 
 namespace Test {
 

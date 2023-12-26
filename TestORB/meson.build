@@ -1,0 +1,2 @@
+subdir ('idl')
+subdir ('module')

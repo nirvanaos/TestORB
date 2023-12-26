@@ -28,7 +28,7 @@
 #pragma once
 
 #include <CORBA/Server.h>
-#include <IDL/Test_I3.h>
+#include "Test_I3.h"
 
 namespace Test {
 
