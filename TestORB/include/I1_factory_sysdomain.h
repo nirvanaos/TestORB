@@ -28,7 +28,7 @@
 #pragma once
 
 #include <CORBA/CORBA.h>
-#include "Test_I1_factory_s.h"
+#include "Test_I1_factory.h"
 #include <Nirvana/static.h>
 
 NIRVANA_STATIC ((Test, I1_factory_sysdomain), ::Test::I1_factory)

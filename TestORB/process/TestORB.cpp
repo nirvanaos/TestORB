@@ -24,11 +24,11 @@
 *  popov.nirvana@gmail.com
 */
 #include "TestORB.h"
-#include "IDL/Test_I1.h"
-#include "IDL/Test_I3.h"
-#include "IDL/Test_V1.h"
-#include "IDL/Test_V3.h"
-#include "IDL/RecursiveStruct.h"
+#include "Test_I1.h"
+#include "Test_I3.h"
+#include "Test_V1.h"
+#include "Test_V3.h"
+#include "RecursiveStruct.h"
 #include <I2_factory_V3.h>
 #include <I1_static.h>
 
