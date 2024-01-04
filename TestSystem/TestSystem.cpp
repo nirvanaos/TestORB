@@ -173,4 +173,14 @@ TEST_F (TestSystem, CurDir)
 	dir->unbind (subdir);
 }
 
+TEST_F (TestSystem, Sleep)
+{
+	static const TimeBase::TimeT SLEEP_TIME = TimeBase::SECOND * 1;
+	TimeBase::TimeT t0 = g_system->steady_clock ();
+	g_system->sleep (SLEEP_TIME);
+	int64_t delay = g_system->steady_clock () - t0 - SLEEP_TIME;
+	EXPECT_GE (delay, -1 * (int64_t)TimeBase::MILLISECOND) << delay;
+	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;
+}
+
 }

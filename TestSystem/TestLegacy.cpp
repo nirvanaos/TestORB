@@ -26,6 +26,8 @@
 #include "pch.h"
 #include <Nirvana/System.h>
 #include <Nirvana/Legacy/Legacy.h>
+#include <Nirvana/Legacy/Runnable_s.h>
+#include <CORBA/make_pseudo.h>
 
 // Tests for the Nirvana::Legacy POSIX subsystem
 
@@ -70,14 +72,20 @@ TEST_F (TestLegacy, Mutex)
 	EXPECT_THROW (mtx->unlock (), BAD_INV_ORDER);
 }
 
-TEST_F (TestLegacy, Sleep)
+class Runnable :
+	public Internal::Servant <Runnable, Legacy::Runnable>,
+	public Internal::RefCountBase <Runnable>,
+	public Internal::LifeCycleRefCnt <Runnable>
 {
-	static const TimeBase::TimeT SLEEP_TIME = TimeBase::SECOND * 1;
-	TimeBase::TimeT t0 = g_system->steady_clock ();
-	Legacy::g_system->sleep (SLEEP_TIME);
-	int64_t delay = g_system->steady_clock () - t0 - SLEEP_TIME;
-	EXPECT_GE (delay, -1 * (int64_t)TimeBase::MILLISECOND) << delay;
-	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;
+public:
+	void run ()
+	{}
+};
+
+TEST_F (TestLegacy, Thread)
+{
+	Legacy::Thread::_ref_type thr = Legacy::g_system->create_thread (make_pseudo <Runnable> ());
+	thr->join ();
 }
 
 }
