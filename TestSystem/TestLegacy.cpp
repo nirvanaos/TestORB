@@ -78,14 +78,33 @@ class Runnable :
 	public Internal::LifeCycleRefCnt <Runnable>
 {
 public:
-	void run ()
+	Runnable () :
+		executed_ (false)
 	{}
+
+	~Runnable ()
+	{}
+
+	void run ()
+	{
+		executed_ = true;
+	}
+
+	bool executed () const noexcept
+	{
+		return executed_;
+	}
+
+private:
+	bool executed_;
 };
 
 TEST_F (TestLegacy, Thread)
 {
-	Legacy::Thread::_ref_type thr = Legacy::g_system->create_thread (make_pseudo <Runnable> ());
+	servant_reference <Runnable> runnable = make_reference <Runnable> ();
+	Legacy::Thread::_ref_type thr = Legacy::g_system->create_thread (runnable->_get_ptr ());
 	thr->join ();
+	EXPECT_TRUE (runnable->executed ());
 }
 
 }
