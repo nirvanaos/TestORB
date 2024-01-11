@@ -27,7 +27,6 @@
 #include <Nirvana/System.h>
 #include <Nirvana/Legacy/Legacy.h>
 #include <Nirvana/Legacy/Runnable_s.h>
-#include <CORBA/make_pseudo.h>
 
 // Tests for the Nirvana::Legacy POSIX subsystem
 
@@ -73,9 +72,7 @@ TEST_F (TestLegacy, Mutex)
 }
 
 class Runnable :
-	public Internal::Servant <Runnable, Legacy::Runnable>,
-	public Internal::RefCountBase <Runnable>,
-	public Internal::LifeCycleRefCnt <Runnable>
+	public Internal::Servant <Runnable, Legacy::Runnable>
 {
 public:
 	Runnable () :
@@ -102,7 +99,7 @@ private:
 TEST_F (TestLegacy, Thread)
 {
 	servant_reference <Runnable> runnable = make_reference <Runnable> ();
-	Legacy::Thread::_ref_type thr = Legacy::g_system->create_thread (runnable->_get_ptr ());
+	Legacy::Thread::_ref_type thr = Legacy::g_system->create_thread (runnable);
 	thr->join ();
 	EXPECT_TRUE (runnable->executed ());
 }
