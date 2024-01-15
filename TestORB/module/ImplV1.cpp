@@ -28,6 +28,8 @@
 
 namespace Test {
 
+#ifndef LEGACY_CORBA_CPP
+
 class ImplV1 : public CORBA::servant_traits <V1>::Servant <ImplV1>
 {
 public:
@@ -53,6 +55,43 @@ public:
 		return pv->val2 ();
 	}
 };
+
+#else
+
+class ImplV1 :
+	public OBV_V1,
+	public CORBA::DefaultValueRefCountBase
+{
+public:
+	ImplV1 ()
+	{}
+
+	ImplV1 (int16_t v1, std::string v3)
+	{
+		val1 (v1);
+		val3 (std::move (v3));
+	}
+
+	~ImplV1 ()
+	{}
+
+	virtual CORBA::ValueBase_ptr _copy_value () const override
+	{
+		return new ImplV1 (*this);
+	}
+
+	virtual int16_t vop1 () override
+	{
+		return 0;
+	}
+
+	virtual int32_t vop2 (V1::_ptr_type pv) override
+	{
+		return pv->val2 ();
+	}
+};
+
+#endif
 
 }
 

@@ -44,8 +44,7 @@ class PortableI2 :
 public:
 	PortableI2 (int32_t addendum) :
 		addendum_ (addendum)
-	{
-	}
+	{}
 
 	virtual CORBA::Long op2 (CORBA::Long p1)
 	{
@@ -119,7 +118,7 @@ public:
 	virtual void oneway_op (int32_t l)
 	{}
 
-private:
+protected:
 	int32_t addendum_;
 };
 

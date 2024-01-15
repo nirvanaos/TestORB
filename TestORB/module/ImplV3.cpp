@@ -27,10 +27,13 @@
 #include "Test_V3_s.h"
 #include <I2_factory_V3.h>
 #include "ImplI2.h"
+#include "PortableI2.h"
 
 using namespace CORBA;
 
 namespace Test {
+
+#ifndef LEGACY_CORBA_CPP
 
 class ImplV3 : public CORBA::servant_traits <V3>::Servant <ImplV3>,
 	public ImplI2
@@ -70,9 +73,63 @@ public:
 
 	int32_t aop (int32_t x)
 	{
-		return x;
+		return x - addendum ();
 	}
 };
+
+#else
+
+class ImplV3 : public OBV_V3,
+	public PortableI2
+{
+public:
+	ImplV3 () :
+		PortableI2 (0)
+	{}
+
+	ImplV3 (int32_t a) :
+		PortableI2 (a)
+	{
+		addendum (a);
+	}
+
+	~ImplV3 ()
+	{}
+
+	virtual CORBA::ValueBase_ptr _copy_value () const override
+	{
+		return new ImplV3 (*this);
+	}
+
+	virtual int16_t vop1 () override
+	{
+		return 0;
+	}
+
+	virtual int32_t vop2 (V1::_ptr_type pv) override
+	{
+		return pv->val2 ();
+	}
+
+	virtual int32_t op_v2 (int32_t x) override
+	{
+		val_v2 (x);
+		return x;
+	}
+
+	virtual int32_t op2 (int32_t p1) override
+	{
+		return p1 + 2 * addendum ();
+	}
+
+	virtual int32_t aop (int32_t x) override
+	{
+		return x - addendum ();
+	}
+
+};
+
+#endif
 
 class I2_factory_V3 :
 	public servant_traits <I2_factory>::ServantStatic <I2_factory_V3>
