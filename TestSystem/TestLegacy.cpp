@@ -72,7 +72,7 @@ TEST_F (TestLegacy, Mutex)
 }
 
 class Runnable :
-	public Internal::Servant <Runnable, Legacy::Runnable>
+	public IDL::traits <Legacy::Runnable>::Servant <Runnable>
 {
 public:
 	Runnable () :

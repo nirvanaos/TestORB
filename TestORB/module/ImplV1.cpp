@@ -30,7 +30,7 @@ namespace Test {
 
 #ifndef LEGACY_CORBA_CPP
 
-class ImplV1 : public CORBA::servant_traits <V1>::Servant <ImplV1>
+class ImplV1 : public IDL::traits <V1>::Servant <ImplV1>
 {
 public:
 	ImplV1 ()

@@ -30,7 +30,7 @@ namespace Test {
 
 #ifndef LEGACY_CORBA_CPP
 
-class ImplV2 : public CORBA::servant_traits <V2>::Servant <ImplV2>
+class ImplV2 : public IDL::traits <V2>::Servant <ImplV2>
 {
 public:
 	ImplV2 ()
@@ -63,9 +63,7 @@ public:
 
 #else
 
-class ImplV2 :
-	public OBV_V2,
-	public CORBA::DefaultValueRefCountBase
+class ImplV2 : public IDL::traits <V2>::obv_type
 {
 public:
 	ImplV2 ()
@@ -73,11 +71,6 @@ public:
 
 	~ImplV2 ()
 	{}
-
-	virtual CORBA::ValueBase_ptr _copy_value () const override
-	{
-		return new ImplV2 (*this);
-	}
 
 	virtual int16_t vop1 () override
 	{
