@@ -70,7 +70,7 @@ TEST_F (TestLegacy, Mutex)
 	EXPECT_NO_THROW (mtx->unlock ());
 	EXPECT_THROW (mtx->unlock (), BAD_INV_ORDER);
 }
-/*
+
 class Runnable :
 	public IDL::traits <Legacy::Runnable>::Servant <Runnable>
 {
@@ -103,5 +103,5 @@ TEST_F (TestLegacy, Thread)
 	thr->join ();
 	EXPECT_TRUE (runnable->executed ());
 }
-*/
+
 }
