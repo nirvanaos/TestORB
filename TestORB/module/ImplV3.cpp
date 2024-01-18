@@ -162,5 +162,5 @@ public:
 
 }
 
-NIRVANA_VALUETYPE_IMPL (Test::V3, Test::ImplV3)
+NIRVANA_VALUETYPE_IMPL (_exp_Test_V3, Test::V3, Test::ImplV3)
 NIRVANA_STATIC_EXP (Test, I2_factory_V3)

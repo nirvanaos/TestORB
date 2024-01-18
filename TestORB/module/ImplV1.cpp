@@ -95,4 +95,4 @@ public:
 
 }
 
-NIRVANA_VALUETYPE_IMPL (Test::V1, Test::ImplV1)
+NIRVANA_VALUETYPE_IMPL (_exp_Test_V1, Test::V1, Test::ImplV1)
