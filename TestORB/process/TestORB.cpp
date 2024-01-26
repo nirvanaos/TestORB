@@ -31,6 +31,7 @@
 #include "RecursiveStruct.h"
 #include <I2_factory_V3.h>
 #include <I1_static.h>
+#include "Test_AVT.h"
 
 using namespace CORBA;
 using namespace Test;
@@ -488,5 +489,11 @@ TEST_F (TestORB, Swap)
 }
 
 #endif
+
+TEST_F (TestORB, AbstractValueStatic)
+{
+	long result = abstract_value_type->sum (1, 2);
+	EXPECT_EQ (result, 3);
+}
 
 }

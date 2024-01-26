@@ -173,7 +173,7 @@ public:
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
-		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
+		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <ping_pong_factory>::id));
 		return factory->create_ping ();
 	}
 };
@@ -186,7 +186,7 @@ public:
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
-		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (StaticId <ping_pong_factory>::static_id_));
+		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <ping_pong_factory>::id));
 		return factory->create_pong (count);
 	}
 

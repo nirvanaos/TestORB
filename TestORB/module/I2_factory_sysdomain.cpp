@@ -44,7 +44,7 @@ public:
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
-		I2_factory::_ref_type factory = I2_factory::_narrow (prot_domain->bind (StaticId <I2_factory_dynamic>::static_id_));
+		I2_factory::_ref_type factory = I2_factory::_narrow (prot_domain->bind (Internal::StaticId <I2_factory_dynamic>::id));
 		return factory->create (addendum);
 	}
 #else
@@ -53,7 +53,7 @@ public:
 		Object_var osd = g_ORB->resolve_initial_references ("SysDomain");
 		SysDomain_var sys_domain = SysDomain::_narrow (osd);
 		ProtDomain_var prot_domain = sys_domain->prot_domain ();
-		Object_var of = prot_domain->bind (StaticId <I2_factory_dynamic>::static_id_);
+		Object_var of = prot_domain->bind (Internal::StaticId <I2_factory_dynamic>::id);
 		I2_factory_var factory = I2_factory::_narrow (of);
 		return factory->create (addendum);
 	}
