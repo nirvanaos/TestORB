@@ -25,7 +25,6 @@
 */
 #include <CORBA/Server.h>
 #include "I1_static.h"
-#include "I3_static.h"
 #include "ImplI1.h"
 #include "ImplI2.h"
 #include "ImplI3.h"
@@ -38,8 +37,8 @@ using namespace CORBA;
 namespace Test {
 
 // Static implementation of local interface I3
-class I3_static :
-	public servant_traits <I3>::ServantStatic <I3_static>,
+class Static_I3_static :
+	public servant_traits <I3>::ServantStatic <Static_I3_static>,
 	public ImplI1,
 	public ImplI2,
 	public ImplI3
@@ -78,4 +77,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I3_static)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I3_static, Test::Static_I3_static)

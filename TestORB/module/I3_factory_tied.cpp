@@ -24,7 +24,6 @@
 *  popov.nirvana@gmail.com
 */
 #include <CORBA/Server.h>
-#include "I3_factory_tied.h"
 #include "ImplI1.h"
 #include "ImplI2.h"
 #include "ImplI3.h"
@@ -82,8 +81,8 @@ private:
 	int32_t addendum_;
 };
 
-class I3_factory_tied :
-	public servant_traits <I3_factory>::ServantStatic <I3_factory_tied>
+class Static_I3_factory_tied :
+	public servant_traits <I3_factory>::ServantStatic <Static_I3_factory_tied>
 {
 public:
 #ifdef LEGACY_CORBA_CPP
@@ -159,8 +158,8 @@ public:
 
 #endif
 
-class I3_tied_derived :
-	public servant_traits <I3_factory>::ServantStatic <I3_tied_derived>
+class Static_I3_tied_derived :
+	public servant_traits <I3_factory>::ServantStatic <Static_I3_tied_derived>
 {
 public:
 #ifdef LEGACY_CORBA_CPP
@@ -210,5 +209,5 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I3_factory_tied)
-NIRVANA_STATIC_EXP (Test, I3_tied_derived)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I3_factory_tied, Test::Static_I3_factory_tied)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I3_tied_derived, Test::Static_I3_tied_derived)

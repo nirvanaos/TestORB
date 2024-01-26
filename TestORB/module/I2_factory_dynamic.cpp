@@ -25,7 +25,6 @@
 */
 #include <CORBA/Server.h>
 #include "Test_I2_s.h"
-#include <I2_factory_dynamic.h>
 #include "DynamicI2.h"
 
 using namespace CORBA;
@@ -33,8 +32,8 @@ using namespace PortableServer;
 
 namespace Test {
 
-class I2_factory_dynamic :
-	public servant_traits <I2_factory>::ServantStatic <I2_factory_dynamic>
+class Static_I2_factory_dynamic :
+	public servant_traits <I2_factory>::ServantStatic <Static_I2_factory_dynamic>
 {
 public:
 #ifdef LEGACY_CORBA_CPP
@@ -68,4 +67,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I2_factory_dynamic)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I2_factory_dynamic, Test::Static_I2_factory_dynamic)

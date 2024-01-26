@@ -33,8 +33,8 @@ using namespace CORBA;
 namespace Test {
 
 // Static implementation of interface I1
-class I1_static :
-	public servant_traits <I1>::ServantStatic <I1_static>,
+class Static_I1_static :
+	public servant_traits <I1>::ServantStatic <Static_I1_static>,
 	public ImplI1
 {
 public:
@@ -56,4 +56,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I1_static)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I1_static, Test::Static_I1_static)

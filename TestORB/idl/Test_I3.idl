@@ -41,4 +41,6 @@ interface Empty
 interface EmptyWithBase : I2
 {};
 
+const I3 I3_static;
+
 };

@@ -25,7 +25,6 @@
 */
 #include <CORBA/Server.h>
 #include "Test_V3_s.h"
-#include <I2_factory_V3.h>
 #include "ImplI2.h"
 #include "PortableI2.h"
 
@@ -126,8 +125,8 @@ public:
 
 #endif
 
-class I2_factory_V3 :
-	public servant_traits <I2_factory>::ServantStatic <I2_factory_V3>
+class Static_I2_factory_V3 :
+	public servant_traits <I2_factory>::ServantStatic <Static_I2_factory_V3>
 {
 public:
 	static
@@ -163,4 +162,4 @@ public:
 }
 
 NIRVANA_VALUETYPE_IMPL (_exp_Test_V3, Test::V3, Test::ImplV3)
-NIRVANA_STATIC_EXP (Test, I2_factory_V3)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I2_factory_V3, Test::Static_I2_factory_V3)

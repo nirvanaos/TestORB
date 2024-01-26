@@ -29,8 +29,6 @@
 #include "Test_I2.h"
 #include "Test_V3.h"
 #include "RecursiveStruct.h"
-#include <I2_factory_dynamic.h>
-#include <I2_factory_sysdomain.h>
 #include <signal.h>
 
 using namespace CORBA;
@@ -48,13 +46,8 @@ typedef I2::_ref_type I2_ref;
 
 // The fixture for testing complex interface.
 
-typedef ::testing::Types <Nirvana::Static <I2_factory_dynamic> // 0
-	, Nirvana::Static <I2_factory_sysdomain> // 1
-> ServantTypesI2;
-
-template <class Factory>
 class TestORB_I2 :
-	public ::testing::Test
+	public ::testing::TestWithParam <I2_ref>
 {
 protected:
 	TestORB_I2 ()
@@ -62,33 +55,18 @@ protected:
 
 	virtual ~TestORB_I2 ()
 	{}
-
-	static I2_ref incarnate (I2_factory::_ptr_type factory)
-	{
-		return factory->create (MAGIC_CONST);
-	}
-
-	static I2_ref incarnate (I2::_ptr_type obj)
-	{
-#ifdef LEGACY_CORBA_CPP
-		return I2::_duplicate (obj);
-#else
-		return obj;
-#endif
-	}
-
-	static I2_ref incarnate ()
-	{
-		return incarnate (Factory::ptr ());
-	}
-
 };
 
-TYPED_TEST_SUITE (TestORB_I2, ServantTypesI2);
+INSTANTIATE_TEST_SUITE_P (ServantTypesI2, TestORB_I2, testing::Values (
+	I2_factory_dynamic->create (MAGIC_CONST),
+	I2_static,
+	I2_factory_sysdomain->create (MAGIC_CONST),
+	I2_factory_V3->create (MAGIC_CONST)
+));
 
-TYPED_TEST (TestORB_I2, Signal)
+TEST_P (TestORB_I2, Signal)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 
 	EXPECT_EQ (p->divide (6, 2), 3);
 
@@ -104,9 +82,9 @@ TYPED_TEST (TestORB_I2, Signal)
 	EXPECT_TRUE (ok);
 }
 
-TYPED_TEST (TestORB_I2, Abstract)
+TEST_P (TestORB_I2, Abstract)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 
 #ifdef LEGACY_CORBA_CPP
 	A1_var out, inout (A1::_duplicate (p));
@@ -131,9 +109,9 @@ TYPED_TEST (TestORB_I2, Abstract)
 	EXPECT_TRUE (p->_is_equivalent (obj));
 }
 
-TYPED_TEST (TestORB_I2, ValueType)
+TEST_P (TestORB_I2, ValueType)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 #ifdef LEGACY_CORBA_CPP
 	V2_var v = V2::_factory->create ();
 
@@ -214,9 +192,9 @@ TYPED_TEST (TestORB_I2, ValueType)
 #endif
 }
 
-TYPED_TEST (TestORB_I2, ValueBox)
+TEST_P (TestORB_I2, ValueBox)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 #ifdef LEGACY_CORBA_CPP
 	StringValue_var out = new StringValue ("this text will be lost"),
 		inout = new StringValue ("inout string");
@@ -236,9 +214,9 @@ TYPED_TEST (TestORB_I2, ValueBox)
 #endif
 }
 
-TYPED_TEST (TestORB_I2, Union)
+TEST_P (TestORB_I2, Union)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 
 	U in, out, inout;
 	out.z ("this text will be lost");
@@ -283,9 +261,9 @@ void test_type_code (I2::_ptr_type p, TypeCode::_ptr_type tc)
 	EXPECT_TRUE (inout->equal (tc));
 }
 
-TYPED_TEST (TestORB_I2, TypeCode)
+TEST_P (TestORB_I2, TypeCode)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 
 	// Primitive
 	test_type_code (p, _tc_long);
@@ -311,9 +289,9 @@ TYPED_TEST (TestORB_I2, TypeCode)
 	test_type_code (p, _tc_RecursiveStruct1);
 }
 
-TYPED_TEST (TestORB_I2, Stringify)
+TEST_P (TestORB_I2, Stringify)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 
 #ifdef LEGACY_CORBA_CPP
 	ORB_var
@@ -344,15 +322,15 @@ TYPED_TEST (TestORB_I2, Stringify)
 	EXPECT_TRUE (p->_is_equivalent (p1));
 }
 
-TYPED_TEST (TestORB_I2, Oneway)
+TEST_P (TestORB_I2, Oneway)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 	p->oneway_op (1);
 }
 
-TYPED_TEST (TestORB_I2, AMI)
+TEST_P (TestORB_I2, AMI)
 {
-	I2_ref p = TestORB_I2 <TypeParam>::incarnate ();
+	I2_ref p = GetParam ();
 #ifdef LEGACY_CORBA_CPP
 	typedef AMI_I2Poller_var
 #else

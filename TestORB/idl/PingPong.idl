@@ -62,6 +62,10 @@ interface PingPongFactory
 	Ping create_ping ();
 };
 
+const PingPongFactory ping_pong_factory;
+const PingPongFactory ping_pong_factory_ping_sysdomain;
+const PingPongFactory ping_pong_factory_pong_sysdomain;
+
 };
 
 #endif

@@ -26,7 +26,6 @@
 #include <CORBA/Server.h>
 #include "PingPong_s.h"
 #include <CORBA/CosEventChannelAdmin.h>
-#include <PingPongFactory.h>
 #include <Nirvana/Domains.h>
 
 using namespace CORBA;
@@ -145,8 +144,8 @@ private:
 	bool cancelled_;
 };
 
-class ping_pong_factory :
-	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory>
+class Static_ping_pong_factory :
+	public servant_traits <PingPongFactory>::ServantStatic <Static_ping_pong_factory>
 {
 public:
 	static Pong::_ref_type create_pong (uint32_t count)
@@ -160,8 +159,8 @@ public:
 	}
 };
 
-class ping_pong_factory_ping_sysdomain :
-	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory_ping_sysdomain>
+class Static_ping_pong_factory_ping_sysdomain :
+	public servant_traits <PingPongFactory>::ServantStatic <Static_ping_pong_factory_ping_sysdomain>
 {
 public:
 	static Pong::_ref_type create_pong (uint32_t count)
@@ -173,20 +172,20 @@ public:
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
-		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <ping_pong_factory>::id));
+		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <Static_ping_pong_factory>::id));
 		return factory->create_ping ();
 	}
 };
 
-class ping_pong_factory_pong_sysdomain :
-	public servant_traits <PingPongFactory>::ServantStatic <ping_pong_factory_pong_sysdomain>
+class Static_ping_pong_factory_pong_sysdomain :
+	public servant_traits <PingPongFactory>::ServantStatic <Static_ping_pong_factory_pong_sysdomain>
 {
 public:
 	static Pong::_ref_type create_pong (uint32_t count)
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
-		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <ping_pong_factory>::id));
+		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <Static_ping_pong_factory>::id));
 		return factory->create_pong (count);
 	}
 
@@ -198,6 +197,6 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, ping_pong_factory)
-NIRVANA_STATIC_EXP (Test, ping_pong_factory_ping_sysdomain)
-NIRVANA_STATIC_EXP (Test, ping_pong_factory_pong_sysdomain)
+NIRVANA_EXPORT_OBJECT (_exp_Test_ping_pong_factory, Test::Static_ping_pong_factory)
+NIRVANA_EXPORT_OBJECT (_exp_Test_ping_pong_factory_ping_sysdomain, Test::Static_ping_pong_factory_ping_sysdomain)
+NIRVANA_EXPORT_OBJECT (_exp_Test_ping_pong_factory_pong_sysdomain, Test::Static_ping_pong_factory_pong_sysdomain)

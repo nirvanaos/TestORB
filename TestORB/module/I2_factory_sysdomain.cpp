@@ -27,16 +27,14 @@
 #include <Nirvana/Domains.h>
 #include <CORBA/Server.h>
 #include "Test_I2_s.h"
-#include "I2_factory_sysdomain.h"
-#include "I2_factory_dynamic.h"
 
 using namespace Nirvana;
 using namespace CORBA;
 
 namespace Test {
 
-class I2_factory_sysdomain :
-	public servant_traits <I2_factory>::ServantStatic <I2_factory_sysdomain>
+class Static_I2_factory_sysdomain :
+	public servant_traits <I2_factory>::ServantStatic <Static_I2_factory_sysdomain>
 {
 public:
 #ifndef LEGACY_CORBA_CPP
@@ -44,7 +42,7 @@ public:
 	{
 		SysDomain::_ref_type sys_domain = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
-		I2_factory::_ref_type factory = I2_factory::_narrow (prot_domain->bind (Internal::StaticId <I2_factory_dynamic>::id));
+		I2_factory::_ref_type factory = I2_factory::_narrow (prot_domain->bind (Internal::StaticId <Static_I2_factory_dynamic>::id));
 		return factory->create (addendum);
 	}
 #else
@@ -53,7 +51,7 @@ public:
 		Object_var osd = g_ORB->resolve_initial_references ("SysDomain");
 		SysDomain_var sys_domain = SysDomain::_narrow (osd);
 		ProtDomain_var prot_domain = sys_domain->prot_domain ();
-		Object_var of = prot_domain->bind (Internal::StaticId <I2_factory_dynamic>::id);
+		Object_var of = prot_domain->bind (Internal::StaticId <Static_I2_factory_dynamic>::id);
 		I2_factory_var factory = I2_factory::_narrow (of);
 		return factory->create (addendum);
 	}
@@ -62,4 +60,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I2_factory_sysdomain)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I2_factory_sysdomain, Test::Static_I2_factory_sysdomain)

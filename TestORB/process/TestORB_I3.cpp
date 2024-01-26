@@ -25,10 +25,7 @@
 */
 #include "TestORB_I1.h"
 #include <I1_static.h>
-#include <I3_static.h>
-#include <I3_factory_dynamic.h>
-#include <I3_factory_portable.h>
-#include <I3_factory_tied.h>
+#include "Test_I3_factory.h"
 #include <gtest/gtest.h>
 #include <signal.h>
 
@@ -44,16 +41,8 @@ typedef I3_var I3_ref;
 typedef I3::_ref_type I3_ref;
 #endif
 
-typedef ::testing::Types < ::Nirvana::Static <I3_factory_dynamic>
-	, ::Nirvana::Static <I3_factory_portable>
-	, ::Nirvana::Static <I3_static>
-	, ::Nirvana::Static <I3_factory_tied>
-	, ::Nirvana::Static <I3_tied_derived>
-> ServantTypesI3;
-
-template <class Factory>
 class TestORB_I3 :
-	public ::testing::Test
+	public ::testing::TestWithParam <I3_ref>
 {
 protected:
 	TestORB_I3 ()
@@ -62,44 +51,31 @@ protected:
 	virtual ~TestORB_I3 ()
 	{}
 
-	static I3_ref incarnate (I3_factory::_ptr_type factory)
-	{
-		return factory->create (MAGIC_CONST);
-	}
-
-	static I3_ref incarnate (I3::_ptr_type obj)
-	{
-#ifdef LEGACY_CORBA_CPP
-		return I3::_duplicate (obj);
-#else
-		return obj;
-#endif
-	}
-
-	static I3_ref incarnate ()
-	{
-		return incarnate (Factory::ptr ());
-	}
-
 };
 
-TYPED_TEST_SUITE (TestORB_I3, ServantTypesI3);
+INSTANTIATE_TEST_SUITE_P (ServantTypesI3, TestORB_I3, testing::Values (
+	I3_factory_dynamic->create (MAGIC_CONST),
+	I3_factory_portable->create (MAGIC_CONST),
+	I3_static,
+	I3_factory_tied->create (MAGIC_CONST),
+	I3_tied_derived->create (MAGIC_CONST)
+));
 
-TYPED_TEST (TestORB_I3, Interface)
+TEST_P (TestORB_I3, Interface)
 {
-	I3_ref p = TestORB_I3 <TypeParam>::incarnate ();
+	I3_ref p = GetParam ();
 	test_interface (p);
 }
 
-TYPED_TEST (TestORB_I3, Performance)
+TEST_P (TestORB_I3, Performance)
 {
-	I3_ref p = TestORB_I3 <TypeParam>::incarnate ();
+	I3_ref p = GetParam ();
 	test_performance (p);
 }
 
-TYPED_TEST (TestORB_I3, MultiInherit)
+TEST_P (TestORB_I3, MultiInherit)
 {
-	I3_ref p = TestORB_I3 <TypeParam>::incarnate ();
+	I3_ref p = GetParam ();
 
 	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);

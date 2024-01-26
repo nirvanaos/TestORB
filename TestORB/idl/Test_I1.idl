@@ -95,6 +95,8 @@ interface I1
 	FixStructArray fix_struct_array_op (in FixStructArray in_ar, out FixStructArray out_ar, inout FixStructArray inout_ar);
 };
 
+const I1 I1_static;
+
 };
 
 #endif

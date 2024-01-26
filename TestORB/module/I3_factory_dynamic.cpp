@@ -24,7 +24,6 @@
 *  popov.nirvana@gmail.com
 */
 #include <CORBA/Server.h>
-#include "I3_factory_dynamic.h"
 #include "Test_I3_factory_s.h"
 #include "DynamicI3.h"
 
@@ -33,8 +32,8 @@ using namespace PortableServer;
 
 namespace Test {
 
-class I3_factory_dynamic :
-	public servant_traits <I3_factory>::ServantStatic <I3_factory_dynamic>
+class Static_I3_factory_dynamic :
+	public servant_traits <I3_factory>::ServantStatic <Static_I3_factory_dynamic>
 {
 public:
 #ifdef LEGACY_CORBA_CPP
@@ -84,4 +83,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I3_factory_dynamic)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I3_factory_dynamic, Test::Static_I3_factory_dynamic)

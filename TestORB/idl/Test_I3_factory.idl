@@ -32,4 +32,9 @@ interface I3_factory
 	I3 create (in long addendum);
 };
 
+const I3_factory I3_factory_dynamic;
+const I3_factory I3_factory_portable;
+const I3_factory I3_factory_tied;
+const I3_factory I3_tied_derived;
+
 };

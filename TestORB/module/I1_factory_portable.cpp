@@ -25,7 +25,6 @@
 */
 #include <CORBA/Server.h>
 #include "Test_I1_factory_s.h"
-#include "I1_factory_portable.h"
 #include "PortableI1.h"
 
 using namespace PortableServer;
@@ -33,8 +32,8 @@ using namespace CORBA;
 
 namespace Test {
 
-class I1_factory_portable :
-	public CORBA::servant_traits <I1_factory>::ServantStatic <I1_factory_portable>
+class Static_I1_factory_portable :
+	public CORBA::servant_traits <I1_factory>::ServantStatic <Static_I1_factory_portable>
 {
 public:
 #ifdef LEGACY_CORBA_CPP
@@ -69,4 +68,4 @@ public:
 
 }
 
-NIRVANA_STATIC_EXP (Test, I1_factory_portable)
+NIRVANA_EXPORT_OBJECT (_exp_Test_I1_factory_portable, Test::Static_I1_factory_portable)

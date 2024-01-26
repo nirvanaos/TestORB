@@ -25,16 +25,15 @@
 */
 #include <CORBA/CORBA.h>
 #include <gtest/gtest.h>
-#include <PingPongFactory.h>
+#include "PingPong.h"
 
 using namespace CORBA;
 using namespace Test;
 
 namespace TestORB {
 
-template <class Factory>
 class TestPingPong :
-	public ::testing::Test
+	public ::testing::TestWithParam <PingPongFactory::_ref_type>
 {
 protected:
 	TestPingPong ()
@@ -45,22 +44,21 @@ protected:
 
 	static PingPongFactory::_ptr_type factory ()
 	{
-		return Factory::ptr ();
+		return GetParam ();
 	}
 };
 
-typedef ::testing::Types <Nirvana::Static <ping_pong_factory> // 0
-	, Nirvana::Static <ping_pong_factory_ping_sysdomain> // 1
-	, Nirvana::Static <ping_pong_factory_pong_sysdomain> // 2
-> ServantTypesPingPong;
+INSTANTIATE_TEST_SUITE_P (ServantTypesPingPong, TestPingPong, testing::Values (
+	ping_pong_factory,
+	ping_pong_factory_ping_sysdomain,
+	ping_pong_factory_pong_sysdomain
+));
 
-TYPED_TEST_SUITE (TestPingPong, ServantTypesPingPong);
-
-TYPED_TEST (TestPingPong, PingPong)
+TEST_P (TestPingPong, PingPong)
 {
 	static const uint32_t COUNT = 100;
 
-	PingPongFactory::_ptr_type factory = TestPingPong <TypeParam>::factory ();
+	PingPongFactory::_ptr_type factory = TestPingPong::factory ();
 	Pong::_ref_type pong = factory->create_pong (COUNT);
 	Ping::_ref_type ping = factory->create_ping ();
 

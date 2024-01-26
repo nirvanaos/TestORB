@@ -29,7 +29,6 @@
 #include "Test_V1.h"
 #include "Test_V3.h"
 #include "RecursiveStruct.h"
-#include <I2_factory_V3.h>
 #include <I1_static.h>
 #include "Test_AVT.h"
 
@@ -370,7 +369,7 @@ TEST_F (TestORB, V3)
 #else
 		_ref_type
 #endif
-		p = Nirvana::Static <I2_factory_V3>::ptr ()->create (MAGIC_CONST);
+		p = I2_factory_V3->create (MAGIC_CONST);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
 
 	// Legacy process can not create value with concrete interface support

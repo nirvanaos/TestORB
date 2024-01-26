@@ -32,4 +32,10 @@ interface I1_factory
 	I1 create (in long addendum);
 };
 
+const I1_factory I1_factory_dynamic;
+const I1_factory I1_factory_portable;
+const I1_factory I1_factory_tied;
+const I1_factory I1_tied_derived;
+const I1_factory I1_factory_sysdomain;
+
 };
