@@ -272,6 +272,22 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (cont->kind (), TCKind::tk_fixed);
 	EXPECT_EQ (cont->fixed_digits (), 4);
 	EXPECT_EQ (cont->fixed_scale (), 3);
+
+	{
+		TC compact = _tc_I1->get_compact_typecode ();
+		EXPECT_TRUE (compact->equivalent (_tc_I1));
+		EXPECT_TRUE (_tc_I1->equivalent (compact));
+		EXPECT_FALSE (compact->equal (_tc_I1));
+		EXPECT_FALSE (_tc_I1->equal (compact));
+	}
+
+	{
+		TC compact = _tc_AVT->get_compact_typecode ();
+		EXPECT_TRUE (compact->equivalent (_tc_AVT));
+		EXPECT_TRUE (_tc_AVT->equivalent (compact));
+		EXPECT_FALSE (compact->equal (_tc_AVT));
+		EXPECT_FALSE (_tc_AVT->equal (compact));
+	}
 }
 
 TEST_F (TestORB, TypeCodeRecursive)
