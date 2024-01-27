@@ -59,7 +59,6 @@ protected:
 
 INSTANTIATE_TEST_SUITE_P (ServantTypesI2, TestORB_I2, testing::Values (
 	I2_factory_dynamic->create (MAGIC_CONST),
-	I2_static,
 	I2_factory_sysdomain->create (MAGIC_CONST),
 	I2_factory_V3->create (MAGIC_CONST)
 ));

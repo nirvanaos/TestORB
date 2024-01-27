@@ -72,8 +72,6 @@ interface I2 : A1
 	oneway void oneway_op (in long l);
 };
 
-const I2 I2_static;
-
 interface I2_factory
 {
 	I2 create (in long addendum);
