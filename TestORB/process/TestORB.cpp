@@ -388,7 +388,7 @@ TEST_F (TestORB, V3)
 		p = I2_factory_V3->create (MAGIC_CONST);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
 
-	// Legacy process can not create value with concrete interface support
+	// Process can not create value with concrete interface support
 	EXPECT_THROW (V3::_factory->create (MAGIC_CONST), NO_PERMISSION);
 }
 
