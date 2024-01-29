@@ -183,4 +183,9 @@ TEST_F (TestSystem, Sleep)
 	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;
 }
 
+TEST_F (TestSystem, ContextType)
+{
+	EXPECT_EQ (g_system->context_type (), System::ContextType::PROCESS);
+}
+
 }
