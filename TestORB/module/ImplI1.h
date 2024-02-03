@@ -62,6 +62,9 @@ public:
 	static StructFixLen fix_struct_op (const StructFixLen& in_s, StructFixLen& out_s, StructFixLen& inout_s);
 	static LongArray long_array_op (const LongArray& in_ar, LongArray& out_ar, LongArray& inout_ar);
 	static FixStructArray fix_struct_array_op (const FixStructArray& in_ar, FixStructArray& out_ar, FixStructArray& inout_ar);
+	static float float_op (float in_f, float& out_f, float& inout_f);
+	static CORBA::Double double_op (CORBA::Double in_f, CORBA::Double& out_f, CORBA::Double& inout_f);
+	static CORBA::LongDouble long_double_op (const CORBA::LongDouble& in_f, CORBA::LongDouble& out_f, CORBA::LongDouble& inout_f);
 };
 
 }

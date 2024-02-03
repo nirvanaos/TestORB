@@ -173,4 +173,28 @@ FixStructArray ImplI1::fix_struct_array_op (const FixStructArray& in_ar, FixStru
 	return tmp;
 }
 
+float ImplI1::float_op (float in_f, float& out_f, float& inout_f)
+{
+	float tmp = inout_f;
+	out_f = in_f;
+	inout_f = in_f;
+	return tmp;
+}
+
+Double ImplI1::double_op (const Double in_f, Double& out_f, Double& inout_f)
+{
+	Double tmp = inout_f;
+	out_f = in_f;
+	inout_f = in_f;
+	return tmp;
+}
+
+LongDouble ImplI1::long_double_op (const LongDouble& in_f, LongDouble& out_f, LongDouble& inout_f)
+{
+	LongDouble tmp = inout_f;
+	out_f = in_f;
+	inout_f = in_f;
+	return tmp;
+}
+
 }

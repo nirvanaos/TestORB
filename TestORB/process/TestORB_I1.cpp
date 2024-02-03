@@ -191,6 +191,30 @@ void test_interface (I1::_ptr_type p)
 		FixStructArray out, inout;
 		FixStructArray ret = p->fix_struct_array_op (FixStructArray (), out, inout);
 	}
+
+	{ // float
+		float out = 1.5, inout = 3.5;
+		float ret = p->float_op (123, out, inout);
+		EXPECT_EQ (ret, 3.5);
+		EXPECT_EQ (out, 123);
+		EXPECT_EQ (inout, 123);
+	}
+
+	{ // double
+		Double out (1.5), inout (3.5);
+		double ret = p->double_op (Double (123), out, inout);
+		EXPECT_EQ (ret, 3.5);
+		EXPECT_EQ (123., out);
+		EXPECT_EQ (123., inout);
+	}
+
+	{ // long double
+		LongDouble out (1.5L), inout (3.5L);
+		long double ret = p->long_double_op (LongDouble (123), out, inout);
+		EXPECT_EQ (ret, 3.5L);
+		EXPECT_EQ (123.L, out);
+		EXPECT_EQ (123.L, inout);
+	}
 }
 
 void test_performance (I1::_ptr_type p)
@@ -214,12 +238,12 @@ protected:
 };
 
 INSTANTIATE_TEST_SUITE_P (ServantTypesI1, TestORB_I1, testing::Values (
-	I1_factory_dynamic->create (MAGIC_CONST),
-	I1_factory_portable->create (MAGIC_CONST),
-	I1_static,
-	I1_factory_tied->create (MAGIC_CONST),
-	I1_tied_derived->create (MAGIC_CONST),
-	I1_factory_sysdomain->create (MAGIC_CONST)
+	I1_factory_dynamic->create (MAGIC_CONST),  // 0
+	I1_factory_portable->create (MAGIC_CONST), // 1
+	I1_static,                                 // 2 
+	I1_factory_tied->create (MAGIC_CONST),     // 3
+	I1_tied_derived->create (MAGIC_CONST),     // 4
+	I1_factory_sysdomain->create (MAGIC_CONST) // 5
 ));
 
 TEST_P (TestORB_I1, Interface)

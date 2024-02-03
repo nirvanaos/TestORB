@@ -31,6 +31,7 @@
 #include "RecursiveStruct.h"
 #include <I1_static.h>
 #include "Test_AVT.h"
+#include <fenv.h>
 
 using namespace CORBA;
 using namespace Test;
@@ -509,6 +510,29 @@ TEST_F (TestORB, AbstractValueStatic)
 {
 	long result = abstract_value_type->sum (1, 2);
 	EXPECT_EQ (result, 3);
+}
+
+TEST_F (TestORB, LongDouble)
+{
+	feclearexcept (FE_ALL_EXCEPT);
+	LongDouble ld = 1.5e10;
+	int32_t i32 = ld;
+	EXPECT_TRUE (fetestexcept (FE_INVALID));
+	feclearexcept (FE_ALL_EXCEPT);
+	int64_t i64 = ld;
+	EXPECT_FALSE (fetestexcept (FE_ALL_EXCEPT));
+
+	ld = 123;
+	LongDouble ld1 = 456;
+	LongDouble ld2 = ld + ld1;
+	EXPECT_EQ (579.L, ld2);
+	EXPECT_NE (ld2, 578.L);
+	ld2 = ld + 456.L;
+	EXPECT_EQ (579.L, ld2);
+
+	ld = 3.5L;
+	long double ldn = ld;
+	EXPECT_EQ (3.5L, ldn);
 }
 
 }

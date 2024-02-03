@@ -160,6 +160,21 @@ public:
 		return ImplI1::fix_struct_array_op (in_ar, out_ar, inout_ar);
 	}
 
+	virtual float float_op (float in_f, float& out_f, float& inout_f)
+	{
+		return ImplI1::float_op (in_f, out_f, inout_f);
+	}
+
+	virtual CORBA::Double double_op (CORBA::Double in_f, CORBA::Double& out_f, CORBA::Double& inout_f)
+	{
+		return ImplI1::double_op (in_f, out_f, inout_f);
+	}
+
+	virtual CORBA::LongDouble long_double_op (CORBA::LongDouble in_f, CORBA::LongDouble& out_f, CORBA::LongDouble& inout_f)
+	{
+		return ImplI1::long_double_op (in_f, out_f, inout_f);
+	}
+
 private:
 	int32_t addendum_;
 };

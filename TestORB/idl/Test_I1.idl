@@ -93,6 +93,9 @@ interface I1
 	StructFixLen fix_struct_op (in StructFixLen in_s, out StructFixLen out_s, inout StructFixLen inout_s);
 	LongArray long_array_op (in LongArray in_ar, out LongArray out_ar, inout LongArray inout_ar);
 	FixStructArray fix_struct_array_op (in FixStructArray in_ar, out FixStructArray out_ar, inout FixStructArray inout_ar);
+	float float_op (in float in_f, out float out_f, inout float inout_f);
+	double double_op (in double in_f, out double out_f, inout double inout_f);
+	long double long_double_op (in long double in_f, out long double out_f, inout long double inout_f);
 };
 
 const I1 I1_static;
