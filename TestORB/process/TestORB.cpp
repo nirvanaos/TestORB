@@ -32,6 +32,7 @@
 #include <I1_static.h>
 #include "Test_AVT.h"
 #include <fenv.h>
+#include <math.h>
 
 using namespace CORBA;
 using namespace Test;
@@ -537,6 +538,13 @@ TEST_F (TestORB, LongDouble)
 
 	ld = 0;
 	EXPECT_TRUE (!ld);
+
+	ld = 123;
+	ld1 = -765;
+	ld2 = std::copysign (ld, ld1);
+	EXPECT_EQ (ld2, -123.L);
+	EXPECT_TRUE (std::signbit (ld1));
+	EXPECT_EQ (std::abs (ld1), 765.L);
 }
 
 }
