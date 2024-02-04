@@ -533,6 +533,10 @@ TEST_F (TestORB, LongDouble)
 	ld = 3.5L;
 	long double ldn = ld;
 	EXPECT_EQ (3.5L, ldn);
+	EXPECT_EQ (-3.5L, -ld);
+
+	ld = 0;
+	EXPECT_TRUE (!ld);
 }
 
 }
