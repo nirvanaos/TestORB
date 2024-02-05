@@ -174,4 +174,27 @@ TEST_P (TestORB_I3, MultiInherit)
 	}
 }
 
+TEST_P (TestORB_I3, ObjectOperations)
+{
+	I3_ref p = GetParam ();
+	bool thrown = false;
+	try {
+		DomainManagersList dml = p->_get_domain_managers ();
+	} catch (const NO_IMPLEMENT& ex) {
+		thrown = ex.minor () == MAKE_OMG_MINOR (8); // Operation not implemented in local object.
+	}
+	EXPECT_TRUE (thrown);
+	
+	thrown = false;
+	try {
+		p->_get_policy (0);
+	} catch (const NO_IMPLEMENT& ex) {
+		thrown = ex.minor () == MAKE_OMG_MINOR (8); // Operation not implemented in local object.
+	}
+	EXPECT_TRUE (thrown);
+
+	IDL::String rep_id = p->_repository_id ();
+	EXPECT_EQ (rep_id, "IDL:Test/I3:1.0");
+}
+
 }

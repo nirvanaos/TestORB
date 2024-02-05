@@ -27,6 +27,7 @@
 #include <I1_static.h>
 #include "Test_I1_factory.h"
 #include <gtest/gtest.h>
+#include <CORBA/NirvanaDGC.h>
 
 using namespace CORBA;
 using namespace Test;
@@ -215,6 +216,14 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (123.L, out);
 		EXPECT_EQ (123.L, inout);
 	}
+
+#ifdef LEGACY_CORBA_CPP
+	Object_var comp = p->_get_component ();
+#else
+	Object::_ref_type comp = p->_get_component ();
+#endif
+
+	EXPECT_TRUE (!comp);
 }
 
 void test_performance (I1::_ptr_type p)
@@ -376,6 +385,37 @@ TEST_P (TestORB_I1, BoundedSeq)
 #endif
 	inout = std::move (large);
 	EXPECT_THROW (ret = p->short_seq_op (small, out, inout), BAD_PARAM);
+}
+
+TEST_P (TestORB_I1, ObjectOperations)
+{
+	I1_ref p = GetParam ();
+
+#ifdef LEGACY_CORBA_CPP
+	Policy_var
+#else
+	Policy::_ref_type
+#endif
+		pol = p->_get_policy (Nirvana::DGC_POLICY_TYPE);
+
+	EXPECT_TRUE (pol);
+
+#ifdef LEGACY_CORBA_CPP
+	Nirvana::DGC_Policy_var
+#else
+	Nirvana::DGC_Policy::_ref_type
+#endif
+		dgc (Nirvana::DGC_Policy::_narrow (pol));
+
+	EXPECT_TRUE (dgc);
+	EXPECT_TRUE (dgc->enabled ());
+
+	DomainManagersList dml = p->_get_domain_managers ();
+	// Currently dml is unimplemented and empty
+
+	IDL::String rep_id = p->_repository_id ();
+	EXPECT_EQ (rep_id, "IDL:Test/I1:1.0");
+
 }
 
 }
