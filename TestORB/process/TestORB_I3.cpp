@@ -33,7 +33,8 @@ using namespace CORBA;
 using namespace Test;
 
 namespace TestORB {
-// The fixture for testing complex interface.
+
+// The fixture for testing complex local interface.
 
 #ifdef LEGACY_CORBA_CPP
 typedef I3_var I3_ref;
@@ -41,8 +42,10 @@ typedef I3_var I3_ref;
 typedef I3::_ref_type I3_ref;
 #endif
 
+typedef I3_ref (*I3_Factory) ();
+
 class TestORB_I3 :
-	public ::testing::TestWithParam <I3_ref>
+	public ::testing::TestWithParam <I3_Factory>
 {
 protected:
 	TestORB_I3 ()
@@ -51,31 +54,60 @@ protected:
 	virtual ~TestORB_I3 ()
 	{}
 
+	I3_ref instantiate ()
+	{
+		return (GetParam ()) ();
+	}
 };
 
+I3_ref I3_get_dynamic ()
+{
+	return I3_factory_dynamic->create (MAGIC_CONST);
+}
+
+I3_ref I3_get_portable ()
+{
+	return I3_factory_portable->create (MAGIC_CONST);
+}
+
+I3_ref I3_get_static ()
+{
+	return I3::_ptr_type (I3_static);
+}
+
+I3_ref I3_get_tied ()
+{
+	return I3_factory_tied->create (MAGIC_CONST);
+}
+
+I3_ref I3_get_tied_derived ()
+{
+	return I3_tied_derived->create (MAGIC_CONST);
+}
+
 INSTANTIATE_TEST_SUITE_P (ServantTypesI3, TestORB_I3, testing::Values (
-	I3_factory_dynamic->create (MAGIC_CONST),
-	I3_factory_portable->create (MAGIC_CONST),
-	I3_static,
-	I3_factory_tied->create (MAGIC_CONST),
-	I3_tied_derived->create (MAGIC_CONST)
+	I3_get_dynamic,      // 0
+	I3_get_portable,     // 1
+	I3_get_static,       // 2
+	I3_get_tied,         // 3
+	I3_get_tied_derived  // 4
 ));
 
 TEST_P (TestORB_I3, Interface)
 {
-	I3_ref p = GetParam ();
+	I3_ref p = instantiate ();
 	test_interface (p);
 }
 
 TEST_P (TestORB_I3, Performance)
 {
-	I3_ref p = GetParam ();
+	I3_ref p = instantiate ();
 	test_performance (p);
 }
 
 TEST_P (TestORB_I3, MultiInherit)
 {
-	I3_ref p = GetParam ();
+	I3_ref p = instantiate ();
 
 	EXPECT_EQ (p->op1 (1), MAGIC_CONST + 1);
 	EXPECT_EQ (p->op2 (1), 2 * MAGIC_CONST + 1);
@@ -176,7 +208,7 @@ TEST_P (TestORB_I3, MultiInherit)
 
 TEST_P (TestORB_I3, ObjectOperations)
 {
-	I3_ref p = GetParam ();
+	I3_ref p = instantiate ();
 	bool thrown = false;
 	try {
 		DomainManagersList dml = p->_get_domain_managers ();

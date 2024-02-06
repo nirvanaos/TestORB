@@ -46,8 +46,10 @@ typedef I2::_ref_type I2_ref;
 
 // The fixture for testing complex interface.
 
+typedef I2_ref (*I2_Factory) ();
+
 class TestORB_I2 :
-	public ::testing::TestWithParam <I2_ref>
+	public ::testing::TestWithParam <I2_Factory>
 {
 protected:
 	TestORB_I2 ()
@@ -55,17 +57,37 @@ protected:
 
 	virtual ~TestORB_I2 ()
 	{}
+
+	I2_ref instantiate ()
+	{
+		return (GetParam ()) ();
+	}
 };
 
+I2_ref I2_get_dynamic ()
+{
+	return I2_factory_dynamic->create (MAGIC_CONST);
+}
+
+I2_ref I2_get_sysdomain ()
+{
+	return I2_factory_sysdomain->create (MAGIC_CONST);
+}
+
+I2_ref I2_get_V3 ()
+{
+	return I2_factory_V3->create (MAGIC_CONST);
+}
+
 INSTANTIATE_TEST_SUITE_P (ServantTypesI2, TestORB_I2, testing::Values (
-	I2_factory_dynamic->create (MAGIC_CONST),
-	I2_factory_sysdomain->create (MAGIC_CONST),
-	I2_factory_V3->create (MAGIC_CONST)
+	I2_get_dynamic,   // 0
+	I2_get_sysdomain, // 1
+	I2_get_V3         // 2
 ));
 
 TEST_P (TestORB_I2, Signal)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 
 	EXPECT_EQ (p->divide (6, 2), 3);
 
@@ -83,7 +105,7 @@ TEST_P (TestORB_I2, Signal)
 
 TEST_P (TestORB_I2, Abstract)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 
 #ifdef LEGACY_CORBA_CPP
 	A1_var out, inout (A1::_duplicate (p));
@@ -110,7 +132,7 @@ TEST_P (TestORB_I2, Abstract)
 
 TEST_P (TestORB_I2, ValueType)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 #ifdef LEGACY_CORBA_CPP
 	V2_var v = V2::_factory->create ();
 
@@ -193,7 +215,7 @@ TEST_P (TestORB_I2, ValueType)
 
 TEST_P (TestORB_I2, ValueBox)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 #ifdef LEGACY_CORBA_CPP
 	StringValue_var out = new StringValue ("this text will be lost"),
 		inout = new StringValue ("inout string");
@@ -215,7 +237,7 @@ TEST_P (TestORB_I2, ValueBox)
 
 TEST_P (TestORB_I2, Union)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 
 	U in, out, inout;
 	out.z ("this text will be lost");
@@ -262,7 +284,7 @@ void test_type_code (I2::_ptr_type p, TypeCode::_ptr_type tc)
 
 TEST_P (TestORB_I2, TypeCode)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 
 	// Primitive
 	test_type_code (p, _tc_long);
@@ -290,7 +312,7 @@ TEST_P (TestORB_I2, TypeCode)
 
 TEST_P (TestORB_I2, Stringify)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 
 #ifdef LEGACY_CORBA_CPP
 	ORB_var
@@ -323,13 +345,13 @@ TEST_P (TestORB_I2, Stringify)
 
 TEST_P (TestORB_I2, Oneway)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 	p->oneway_op (1);
 }
 
 TEST_P (TestORB_I2, AMI)
 {
-	I2_ref p = GetParam ();
+	I2_ref p = instantiate ();
 #ifdef LEGACY_CORBA_CPP
 	typedef AMI_I2Poller_var
 #else

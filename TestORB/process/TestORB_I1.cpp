@@ -232,10 +232,12 @@ void test_performance (I1::_ptr_type p)
 		p->op1 (2);
 }
 
+typedef I1_ref (*I1_Factory) ();
+
 // The fixture for testing simple interface.
 
 class TestORB_I1 :
-	public ::testing::TestWithParam <I1_ref>
+	public ::testing::TestWithParam <I1_Factory>
 {
 protected:
 	TestORB_I1 ()
@@ -244,20 +246,55 @@ protected:
 	virtual ~TestORB_I1 ()
 	{}
 
+	I1_ref instantiate ()
+	{
+		return (GetParam ()) ();
+	}
 };
 
+I1_ref I1_get_dynamic ()
+{
+	return I1_factory_dynamic->create (MAGIC_CONST);
+}
+
+I1_ref I1_get_portable ()
+{
+	return I1_factory_portable->create (MAGIC_CONST);
+}
+
+I1_ref I1_get_static ()
+{
+	return I1::_ptr_type (I1_static);
+}
+
+I1_ref I1_get_tied ()
+{
+	return I1_factory_tied->create (MAGIC_CONST);
+}
+
+I1_ref I1_get_tied_derived ()
+{
+	return I1_tied_derived->create (MAGIC_CONST);
+}
+
+I1_ref I1_get_sysdomain ()
+{
+	return I1_factory_sysdomain->create (MAGIC_CONST);
+}
+
 INSTANTIATE_TEST_SUITE_P (ServantTypesI1, TestORB_I1, testing::Values (
-	I1_factory_dynamic->create (MAGIC_CONST),  // 0
-	I1_factory_portable->create (MAGIC_CONST), // 1
-	I1_static,                                 // 2 
-	I1_factory_tied->create (MAGIC_CONST),     // 3
-	I1_tied_derived->create (MAGIC_CONST),     // 4
-	I1_factory_sysdomain->create (MAGIC_CONST) // 5
+	I1_get_dynamic,      // 0
+	I1_get_portable,     // 1
+	I1_get_static,       // 2 
+	I1_get_tied,         // 3
+	I1_get_tied_derived, // 4
+	I1_get_sysdomain     // 5
 ));
 
 TEST_P (TestORB_I1, Interface)
 {
-	test_interface (GetParam ());
+	I1_ref p = instantiate ();
+	test_interface (p);
 }
 
 TEST_P (TestORB_I1, LargeSeq)
@@ -265,7 +302,7 @@ TEST_P (TestORB_I1, LargeSeq)
 	// Large sequence
 	size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 	if (sa) {
-		I1_ref p = GetParam ();
+		I1_ref p = instantiate ();
 
 		Long size = (Long)(sa * 2 / sizeof (Long));
 		std::vector <Long> out, inout, in;
@@ -294,7 +331,7 @@ TEST_P (TestORB_I1, LargeString)
 	// Large string
 	size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 	if (sa) {
-		I1_ref p = GetParam ();
+		I1_ref p = instantiate ();
 
 		size_t size = sa * 2;
 		std::string out, inout, in;
@@ -311,19 +348,19 @@ TEST_P (TestORB_I1, LargeString)
 
 TEST_P (TestORB_I1, Performance)
 {
-	I1_ref p = GetParam ();
+	I1_ref p = instantiate ();
 	test_performance (p);
 }
 
 TEST_P (TestORB_I1, SystemException)
 {
-	I1_ref p = GetParam ();
+	I1_ref p = instantiate ();
 	EXPECT_THROW (p->throw_no_implement (), NO_IMPLEMENT);
 }
 
 TEST_P (TestORB_I1, UserException)
 {
-	I1_ref p = GetParam ();
+	I1_ref p = instantiate ();
 	bool thrown = false;
 	try {
 		p->throw_user ();
@@ -343,7 +380,7 @@ TEST_P (TestORB_I1, UserException)
 TEST_P (TestORB_I1, BoundedString)
 {
 	// Bounded string violation
-	I1_ref p = GetParam ();
+	I1_ref p = instantiate ();
 #ifdef LEGACY_CORBA_CPP
 	String_var out, inout;
 	String_var ret;
@@ -367,7 +404,7 @@ TEST_P (TestORB_I1, BoundedString)
 
 TEST_P (TestORB_I1, BoundedSeq)
 { // Bounded sequence violation
-	I1_ref p = GetParam ();
+	I1_ref p = instantiate ();
 #ifdef LEGACY_CORBA_CPP
 	SeqLong_var out, inout;
 	ShortSeqLong_var ret;
@@ -389,7 +426,7 @@ TEST_P (TestORB_I1, BoundedSeq)
 
 TEST_P (TestORB_I1, ObjectOperations)
 {
-	I1_ref p = GetParam ();
+	I1_ref p = instantiate ();
 
 #ifdef LEGACY_CORBA_CPP
 	Policy_var
