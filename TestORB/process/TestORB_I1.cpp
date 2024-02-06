@@ -282,13 +282,19 @@ I1_ref I1_get_sysdomain ()
 	return I1_factory_sysdomain->create (MAGIC_CONST);
 }
 
+I1_ref I1_get_stateless ()
+{
+	return I1_factory_stateless->create (MAGIC_CONST);
+}
+
 INSTANTIATE_TEST_SUITE_P (ServantTypesI1, TestORB_I1, testing::Values (
-	I1_get_dynamic,      // 0
-	I1_get_portable,     // 1
-	I1_get_static,       // 2 
-	I1_get_tied,         // 3
-	I1_get_tied_derived, // 4
-	I1_get_sysdomain     // 5
+	I1_get_dynamic,           // 0
+	I1_get_portable,          // 1
+	I1_get_static,            // 2 
+	I1_get_tied,              // 3
+	I1_get_tied_derived,      // 4
+	I1_get_sysdomain,         // 5
+	I1_get_stateless          // 6
 ));
 
 TEST_P (TestORB_I1, Interface)

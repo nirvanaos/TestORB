@@ -23,20 +23,32 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "Test_I1.idl"
+#include <CORBA/Server.h>
+#include "Test_I1_factory_s.h"
+#include "DynamicI1.h"
 
-module Test {
+using namespace PortableServer;
+using namespace CORBA;
 
-interface I1_factory
+namespace Test {
+
+class Static_I1_factory_stateless :
+	public CORBA::servant_traits <I1_factory>::ServantStatic <Static_I1_factory_stateless>
 {
-	I1 create (in long addendum);
+public:
+	static I1::_ref_type create (Long addendum)
+	{
+		servant_reference <DynamicI1> serv = make_stateless <DynamicI1> (addendum);
+
+		// Direct conversion to ServantBase must be available
+		Servant s = serv;
+		assert (s);
+
+		// Return I1 proxy.
+		return serv->_this ();
+	}
 };
 
-const I1_factory I1_factory_dynamic;
-const I1_factory I1_factory_portable;
-const I1_factory I1_factory_tied;
-const I1_factory I1_tied_derived;
-const I1_factory I1_factory_sysdomain;
-const I1_factory I1_factory_stateless;
+}
 
-};
+NIRVANA_EXPORT_OBJECT (_exp_Test_I1_factory_stateless, Test::Static_I1_factory_stateless)
