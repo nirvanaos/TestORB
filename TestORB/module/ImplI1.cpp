@@ -40,28 +40,6 @@ void ImplI1::throw_user ()
 	throw MyException ("test", true);
 }
 
-#ifdef LEGACY_CORBA_CPP
-
-I1::_ptr_type ImplI1::object_op (I1::_ptr_type in_obj, I1::_var_type& out_obj, I1::_var_type& inout_obj)
-{
-	I1::_var_type tmp (std::move (inout_obj));
-	out_obj = I1::_duplicate (in_obj);
-	inout_obj = I1::_duplicate (in_obj);
-	return tmp._retn ();
-}
-
-#else
-
-I1::_ref_type ImplI1::object_op (I1::_ptr_type in_obj, I1::_ref_type& out_obj, I1::_ref_type& inout_obj)
-{
-	I1::_ref_type tmp (std::move (inout_obj));
-	out_obj = in_obj;
-	inout_obj = in_obj;
-	return tmp;
-}
-
-#endif
-
 std::string ImplI1::string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
 {
 	std::string tmp (std::move (inout_s));
