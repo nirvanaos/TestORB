@@ -26,6 +26,7 @@
 #include "pch.h"
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
+#include <Nirvana/Domains.h>
 #include <fnctl.h>
 
 using namespace Nirvana;
@@ -386,6 +387,44 @@ TEST_F (TestFile, Directory)
 	EXPECT_NO_THROW (naming_service_->unbind (tmp_dir_name));
 
 	EXPECT_TRUE (tmp_dir->_non_existent ());
+}
+
+TEST_F (TestFile, FSLocator)
+{
+	// Obtain temporary directory object
+	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
+	ASSERT_TRUE (obj);
+	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
+	ASSERT_TRUE (tmp_dir);
+
+	// Create temporary file
+	const char PATTERN [] = "XXXXXX.tmp";
+	std::string file_name = PATTERN;
+	AccessDirect::_ref_type fa = AccessDirect::_narrow (
+		tmp_dir->mkostemps (file_name, 4, O_DIRECT)->_to_object ());
+	ASSERT_TRUE (fa);
+
+	File::_ref_type f = fa->file ();
+	ASSERT_TRUE (f);
+
+	DirItemId id = f->id ();
+
+	SysDomain::_ref_type sd = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
+	ASSERT_TRUE (sd);
+
+	FSLocator::_ref_type locator = sd->provide_fs_locator ();
+	ASSERT_TRUE (locator);
+
+	DirItem::_ref_type di = locator->get_item (id);
+	ASSERT_TRUE (di);
+
+	File::_ref_type f1 = File::_narrow (di);
+	ASSERT_TRUE (f1);
+
+	EXPECT_TRUE (f->_is_equivalent (f1));
+
+	fa = nullptr;
+	f1->remove ();
 }
 
 }
