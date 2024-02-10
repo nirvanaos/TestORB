@@ -210,14 +210,6 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (123.L, out);
 		EXPECT_EQ (123.L, inout);
 	}
-
-#ifdef LEGACY_CORBA_CPP
-	Object_var comp = p->_get_component ();
-#else
-	Object::_ref_type comp = p->_get_component ();
-#endif
-
-	EXPECT_TRUE (!comp);
 }
 
 void test_performance (I1::_ptr_type p)

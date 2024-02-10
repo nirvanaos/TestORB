@@ -34,8 +34,10 @@ namespace TestORB {
 
 #ifdef LEGACY_CORBA_CPP
 typedef Test::I1_var I1_ref;
+typedef CORBA::Object_var Object_ref;
 #else
 typedef Test::I1::_ref_type I1_ref;
+typedef CORBA::Object::_ref_type Object_ref;
 #endif
 
 void test_interface (Test::I1::_ptr_type p);
