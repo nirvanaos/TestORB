@@ -34,12 +34,6 @@ using namespace Test;
 
 namespace TestORB {
 
-#ifdef LEGACY_CORBA_CPP
-typedef I1_var I1_ref;
-#else
-typedef I1::_ref_type I1_ref;
-#endif
-
 void test_interface (I1::_ptr_type p)
 {
 	ASSERT_FALSE (is_nil (p));

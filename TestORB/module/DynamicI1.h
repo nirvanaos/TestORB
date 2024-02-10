@@ -37,8 +37,10 @@ class DynamicI1 :
 	public CORBA::servant_traits <I1>::Servant <DynamicI1>,
 	public ImplI1
 {
+	typedef CORBA::servant_traits <I1>::Servant <DynamicI1> Servant;
 public:
-	DynamicI1 (int32_t addendum) :
+	DynamicI1 (int32_t addendum, CORBA::Object::_ptr_type comp = nullptr) :
+		Servant (comp),
 		addendum_ (addendum)
 	{}
 

@@ -23,24 +23,35 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_TESTORB_I1_H_
-#define NIRVANA_TESTORB_TESTORB_I1_H_
-#pragma once
-
 #include <CORBA/CORBA.h>
-#include "Test_I1.h"
+#include "ImplComp.h"
 
-namespace TestORB {
+using namespace CORBA;
 
+namespace Test {
+
+class Static_comp_factory_dynamic :
+	public servant_traits <Comp_factory>::ServantStatic <Static_comp_factory_dynamic>
+{
+public:
 #ifdef LEGACY_CORBA_CPP
-typedef I1_var I1_ref;
-#else
-typedef I1::_ref_type I1_ref;
-#endif
 
-void test_interface (Test::I1::_ptr_type p);
-void test_performance (Test::I1::_ptr_type p);
+	static Comp_ptr create (Long addendum)
+	{
+		return PortableServer::Servant_var <ImplComp> (new ImplComp (addendum))->_this ();
+	}
+
+#else
+
+	static Comp::_ref_type create (Long addendum)
+	{
+		return make_reference <ImplComp> (addendum)->_this ();
+	}
+
+#endif
+};
 
 }
 
-#endif
+NIRVANA_EXPORT_OBJECT (_exp_Test_comp_factory_dynamic, Test::Static_comp_factory_dynamic)
+

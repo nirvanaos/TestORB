@@ -1,0 +1,80 @@
+/*
+* Nirvana test suite.
+*
+* This is a part of the Nirvana project.
+*
+* Author: Igor Popov
+*
+* Copyright (c) 2021 Igor Popov.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU Lesser General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+*
+* Send comments and/or bug reports to:
+*  popov.nirvana@gmail.com
+*/
+#ifndef TESTORB_TEST_COMP_IDL_
+#define TESTORB_TEST_COMP_IDL_
+
+#include <CORBA/Components.idl>
+
+module Test {
+
+interface I1;
+
+/// CORBA component test
+interface Comp : Components::CCMObject
+{
+	I1 provide_facet1 ();
+
+	void connect_single (in I1 conxn) raises (
+		Components::AlreadyConnected,
+		Components::InvalidConnection
+	);
+
+	I1 disconnect_single () raises (Components::NoConnection);
+
+	I1 get_connection_single ();
+
+	struct multiConnection
+	{
+		I1 objref;
+		Components::Cookie ck;
+	};
+
+	typedef sequence <multiConnection> multiConnections;
+
+	Components::Cookie connect_multi (in I1 connection) raises (
+		Components::ExceededConnectionLimit,
+		Components::InvalidConnection
+	);
+
+	I1 disconnect_multi (in Components::Cookie ck) raises (Components::InvalidConnection);
+
+	multiConnections get_connections_multi ();
+
+	typedef sequence <I1> SeqI1;
+
+	SeqI1 get_all_connections ();
+};
+
+interface Comp_factory
+{
+	Comp create (in long addendum);
+};
+
+const Comp_factory comp_factory_dynamic;
+
+};
+
+#endif

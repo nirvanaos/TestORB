@@ -23,24 +23,56 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#ifndef NIRVANA_TESTORB_TESTORB_I1_H_
-#define NIRVANA_TESTORB_TESTORB_I1_H_
-#pragma once
+#include "TestORB_I1.h"
+#include <I1_static.h>
+#include "Test_Comp.h"
+#include <gtest/gtest.h>
 
-#include <CORBA/CORBA.h>
-#include "Test_I1.h"
+using namespace CORBA;
+using namespace Test;
 
 namespace TestORB {
 
+// The fixture for testing component interface.
+
 #ifdef LEGACY_CORBA_CPP
-typedef I1_var I1_ref;
+typedef Comp_var Comp_ref;
 #else
-typedef I1::_ref_type I1_ref;
+typedef Comp::_ref_type Comp_ref;
 #endif
 
-void test_interface (Test::I1::_ptr_type p);
-void test_performance (Test::I1::_ptr_type p);
+typedef Comp_ref (*Comp_Factory) ();
 
+class TestORB_Comp :
+	public ::testing::TestWithParam <Comp_Factory>
+{
+protected:
+	TestORB_Comp ()
+	{}
+
+	virtual ~TestORB_Comp ()
+	{}
+
+	Comp_ref instantiate ()
+	{
+		return (GetParam ()) ();
+	}
+};
+
+Comp_ref Comp_get_dynamic ()
+{
+	return comp_factory_dynamic->create (MAGIC_CONST);
 }
 
-#endif
+INSTANTIATE_TEST_SUITE_P (ServantTypesComp, TestORB_Comp, testing::Values (
+	Comp_get_dynamic      // 0
+));
+
+TEST_P (TestORB_Comp, Interface)
+{
+	Comp_ref p = instantiate ();
+	I1_ref facet = p->provide_facet1 ();
+	test_interface (facet);
+}
+
+}
