@@ -36,14 +36,22 @@ namespace Test {
 class ImplComp : public CORBA::servant_traits <Test::Comp>::Servant <ImplComp>
 {
 public:
-	ImplComp (uint32_t addendum)
+#ifndef LEGACY_CORBA_CPP
+	ImplComp (uint32_t addendum, Comp::_ref_type& comp)
 	{
-#ifdef LEGACY_CORBA_CPP
-		facet1_ = PortableServer::Servant_var <DynamicI1> (new DynamicI1 (addendum, _this ()))->_this ();
-#else
-		facet1_ = CORBA::make_reference <DynamicI1> (addendum, _this ())->_this ();
-#endif
+		comp = _this ();
+		facet1_ = CORBA::make_reference <DynamicI1> (addendum, comp)->_this ();
 	}
+
+#else
+
+	ImplComp (uint32_t addendum, Comp_var& comp)
+	{
+		comp = _this ();
+		facet1_ = PortableServer::Servant_var <DynamicI1> (new DynamicI1 (addendum, comp))->_this ();
+	}
+
+#endif
 
 #ifdef LEGACY_CORBA_CPP
 	I1_ptr provide_facet1 () const
