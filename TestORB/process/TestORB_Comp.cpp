@@ -67,8 +67,14 @@ Comp_ref Comp_get_dynamic ()
 	return comp_factory_dynamic->create (MAGIC_CONST);
 }
 
+Comp_ref Comp_get_portable ()
+{
+	return comp_factory_portable->create (MAGIC_CONST);
+}
+
 INSTANTIATE_TEST_SUITE_P (ServantTypesComp, TestORB_Comp, testing::Values (
-	Comp_get_dynamic      // 0
+	Comp_get_dynamic,   // 0
+	Comp_get_portable   // 1
 ));
 
 TEST_P (TestORB_Comp, Facet)

@@ -41,8 +41,11 @@ class PortableI1 :
 #endif
 	public ImplI1
 {
+	typedef CORBA::servant_traits <I1>::base_type Servant;
+
 public:
-	PortableI1 (int32_t addendum) :
+	PortableI1 (int32_t addendum, CORBA::Object::_ptr_type comp = nullptr) :
+		Servant (comp),
 		addendum_ (addendum)
 	{}
 

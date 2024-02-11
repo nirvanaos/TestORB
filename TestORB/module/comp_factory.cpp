@@ -55,7 +55,33 @@ public:
 #endif
 };
 
+class Static_comp_factory_portable :
+	public servant_traits <Comp_factory>::ServantStatic <Static_comp_factory_portable>
+{
+public:
+#ifdef LEGACY_CORBA_CPP
+
+	static Comp_ptr create (Long addendum)
+	{
+		Comp_var comp;
+		PortableServer::Servant_var <ImplCompPOA> (new ImplCompPOA (addendum, comp));
+		return comp._retn ();
+	}
+
+#else
+
+	static Comp::_ref_type create (Long addendum)
+	{
+		Comp::_ref_type comp;
+		make_reference <ImplCompPOA> (addendum, std::ref (comp));
+		return comp;
+	}
+
+#endif
+};
+
 }
 
 NIRVANA_EXPORT_OBJECT (_exp_Test_comp_factory_dynamic, Test::Static_comp_factory_dynamic)
+NIRVANA_EXPORT_OBJECT (_exp_Test_comp_factory_portable, Test::Static_comp_factory_portable)
 
