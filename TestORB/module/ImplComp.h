@@ -103,7 +103,7 @@ public:
 	ImplCompPOA (uint32_t addendum, Comp_var& comp)
 	{
 		comp = _this ();
-		facet1_ = PortableServer::Servant_var <DynamicI1> (new PortableI1 (addendum, comp))->_this ();
+		facet1_ = PortableServer::Servant_var <PortableI1> (new PortableI1 (addendum, comp))->_this ();
 	}
 
 #endif
