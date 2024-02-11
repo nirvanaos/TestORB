@@ -28,7 +28,7 @@
 #pragma once
 
 #include "ImplI2.h"
-#include "Test_I2_s.h"
+#include "IDL/Test_I2_s.h"
 
 namespace Test {
 

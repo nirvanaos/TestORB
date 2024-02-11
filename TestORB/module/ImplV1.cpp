@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/Server.h>
-#include "Test_V1_s.h"
+#include "pch.h"
+#include "IDL/Test_V1_s.h"
 
 namespace Test {
 

@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/CORBA.h>
-#include "Test_AVT_s.h"
+#include "pch.h"
+#include "IDL/Test_AVT_s.h"
 
 namespace Test {
 

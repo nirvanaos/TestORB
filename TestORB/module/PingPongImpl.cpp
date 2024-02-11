@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/Server.h>
-#include "PingPong_s.h"
+#include "pch.h"
+#include "IDL/PingPong_s.h"
 #include <CORBA/CosEventChannelAdmin.h>
 #include <Nirvana/Domains.h>
 

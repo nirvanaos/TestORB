@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/Server.h>
-#include "Test_I1_factory_s.h"
+#include "pch.h"
+#include "IDL/Test_I1_factory_s.h"
 #include "PortableI1.h"
 
 using namespace PortableServer;

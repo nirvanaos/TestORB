@@ -23,10 +23,10 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/Server.h>
+#include "pch.h"
 #include "ImplI1.h"
-#include "Test_I1_s.h"
-#include "Test_I1_factory_s.h"
+#include "IDL/Test_I1_s.h"
+#include "IDL/Test_I1_factory_s.h"
 
 using namespace CORBA;
 using namespace PortableServer;
