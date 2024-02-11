@@ -23,14 +23,15 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
+#include "pch.h"
 #include "TestORB.h"
-#include "Test_I1.h"
-#include "Test_I3.h"
-#include "Test_V1.h"
-#include "Test_V3.h"
-#include "RecursiveStruct.h"
+#include "IDL/Test_I1.h"
+#include "IDL/Test_I3.h"
+#include "IDL/Test_V1.h"
+#include "IDL/Test_V3.h"
+#include "IDL/RecursiveStruct.h"
 #include <I1_static.h>
-#include "Test_AVT.h"
+#include "IDL/Test_AVT.h"
 #include <fenv.h>
 #include <math.h>
 

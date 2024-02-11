@@ -23,12 +23,13 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
+#include "pch.h"
 #include "TestORB.h"
 
 // Union.idl contains only declaration for interface Test::I1.
 // This file must be successfully compiled without include "Test_I1.h"
 
-#include "Union.h"
+#include "IDL/Union.h"
 
 using namespace CORBA;
 using namespace Test;

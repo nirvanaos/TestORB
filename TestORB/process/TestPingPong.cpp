@@ -23,9 +23,9 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <CORBA/CORBA.h>
+#include "pch.h"
 #include <gtest/gtest.h>
-#include "PingPong.h"
+#include "IDL/PingPong.h"
 
 using namespace CORBA;
 using namespace Test;
