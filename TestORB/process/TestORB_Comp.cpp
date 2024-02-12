@@ -81,9 +81,16 @@ INSTANTIATE_TEST_SUITE_P (ServantTypesComp, TestORB_Comp, testing::Values (
 TEST_P (TestORB_Comp, Facet)
 {
 	Comp_ref p = instantiate ();
+	Object_ref comp = p->_get_component ();
+	EXPECT_FALSE (comp);
+
 	I1_ref facet = p->provide_facet1 ();
 	ASSERT_TRUE (facet);
 	test_interface (facet);
+
+	comp = facet->_get_component ();
+	EXPECT_TRUE (comp);
+	EXPECT_TRUE (comp->_is_equivalent (p));
 }
 
 TEST_P (TestORB_Comp, Receptacles)
@@ -114,25 +121,31 @@ TEST_P (TestORB_Comp, Receptacles)
 TEST_P (TestORB_Comp, Navigation)
 {
 	Comp_ref p = instantiate ();
-	Object_ref comp = p->_get_component ();
-	EXPECT_TRUE (!comp);
 
-	I1_ref facet = I1::_narrow (p->provide_facet ("facet1"));
-	ASSERT_TRUE (facet);
+	{
+		Object_ref comp = p->_get_component ();
+		EXPECT_FALSE (comp);
 
-	comp = facet->_get_component ();
-	EXPECT_TRUE (comp);
-	EXPECT_TRUE (comp->_is_equivalent (p));
+		Object_ref of = p->provide_facet ("facet1");
+		I1_ref facet = I1::_narrow (of);
+		ASSERT_TRUE (facet);
+
+		comp = facet->_get_component ();
+		EXPECT_TRUE (comp);
+		EXPECT_TRUE (comp->_is_equivalent (p));
+	}
 
 	I1_ref obj1 = I1_factory_dynamic->create (MAGIC_CONST);
 	Cookie_ref ck = p->connect ("single", obj1);
 	EXPECT_FALSE (ck);
+
 	I1_ref obj2 = I1_factory_dynamic->create (MAGIC_CONST);
 	ck = p->connect ("multi", obj2);
 	EXPECT_TRUE (ck);
 
 	auto conns = p->get_all_connections ();
 	EXPECT_EQ (conns.size (), 2);
+
 	Object_ref obj2_1 = p->disconnect ("multi", ck);
 	EXPECT_TRUE (obj2_1);
 	EXPECT_TRUE (obj2->_is_equivalent (obj2_1));
