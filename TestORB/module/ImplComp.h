@@ -71,35 +71,21 @@ public:
 
 #endif
 
-#ifdef LEGACY_CORBA_CPP
-
 	SeqI1 get_all_connections () const
 	{
 		SeqI1 ret;
 		if (receptacle_single ())
+#ifdef LEGACY_CORBA_CPP
 			ret.push_back (I1::_duplicate (receptacle_single ()));
+#else
+			ret.push_back (receptacle_single ());
+#endif
 		for (const auto& c : receptacle_multi ()) {
 			if (c)
 				ret.push_back (c);
 		}
 		return ret;
 	}
-
-#else
-
-	SeqI1 get_all_connections () const
-	{
-		SeqI1 ret;
-		if (receptacle_single ())
-			ret.push_back (receptacle_single ());
-		for (const auto& c : receptacle_multi ()) {
-			if (c)
-				ret.push_back (c);
-		}
-		return ret;
-}
-
-#endif
 
 private:
 #ifdef LEGACY_CORBA_CPP
@@ -146,7 +132,11 @@ public:
 	{
 		SeqI1 ret;
 		if (receptacle_single ())
+#ifdef LEGACY_CORBA_CPP
+			ret.push_back (I1::_duplicate (receptacle_single ()));
+#else
 			ret.push_back (receptacle_single ());
+#endif
 		for (const auto& c : receptacle_multi ()) {
 			if (c)
 				ret.push_back (c);
