@@ -131,14 +131,14 @@ class Static_I2_factory_V3 :
 public:
 	static
 #ifdef LEGACY_CORBA_CPP
-		I2::_var_type
+		I2_var
 #else
 		I2::_ref_type
 #endif
 		create (int32_t addendum)
 	{
 #ifdef LEGACY_CORBA_CPP
-		V3::_var_type
+		V3_var
 #else
 		V3::_ref_type
 #endif

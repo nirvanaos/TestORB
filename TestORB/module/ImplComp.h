@@ -56,16 +56,36 @@ public:
 #endif
 
 #ifdef LEGACY_CORBA_CPP
+
 	I1_ptr provide_facet1 () const
 	{
 		return I1::_duplicate (facet1_);
 	}
+
 #else
+
 	I1::_ref_type provide_facet1 () const
 	{
 		return facet1_;
 	}
+
 #endif
+
+#ifdef LEGACY_CORBA_CPP
+
+	SeqI1 get_all_connections () const
+	{
+		SeqI1 ret;
+		if (receptacle_single ())
+			ret.push_back (I1::_duplicate (receptacle_single ()));
+		for (const auto& c : receptacle_multi ()) {
+			if (c)
+				ret.push_back (c);
+		}
+		return ret;
+	}
+
+#else
 
 	SeqI1 get_all_connections () const
 	{
@@ -77,7 +97,9 @@ public:
 				ret.push_back (c);
 		}
 		return ret;
-	}
+}
+
+#endif
 
 private:
 #ifdef LEGACY_CORBA_CPP

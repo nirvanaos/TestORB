@@ -73,7 +73,11 @@ I3_ref I3_get_portable ()
 
 I3_ref I3_get_static ()
 {
+#ifdef LEGACY_CORBA_CPP
+	return I3::_duplicate (I3_static);
+#else
 	return I3::_ptr_type (I3_static);
+#endif
 }
 
 I3_ref I3_get_tied ()

@@ -237,6 +237,7 @@ protected:
 	{
 		return (GetParam ()) ();
 	}
+
 };
 
 I1_ref I1_get_dynamic ()
@@ -251,7 +252,15 @@ I1_ref I1_get_portable ()
 
 I1_ref I1_get_static ()
 {
+#ifdef LEGACY_CORBA_CPP
+
+	return I1::_duplicate (I1_static);
+
+#else
+
 	return I1::_ptr_type (I1_static);
+
+#endif
 }
 
 I1_ref I1_get_tied ()

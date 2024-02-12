@@ -33,7 +33,7 @@ using namespace Test;
 namespace TestORB {
 
 class TestPingPong :
-	public ::testing::TestWithParam <PingPongFactory::_ref_type>
+	public ::testing::TestWithParam <NIRVANA_STATIC_IMPORT Nirvana::ImportInterfaceT <PingPongFactory>* >
 {
 protected:
 	TestPingPong ()
@@ -44,14 +44,14 @@ protected:
 
 	static PingPongFactory::_ptr_type factory ()
 	{
-		return GetParam ();
+		return *GetParam ();
 	}
 };
 
 INSTANTIATE_TEST_SUITE_P (ServantTypesPingPong, TestPingPong, testing::Values (
-	ping_pong_factory,
-	ping_pong_factory_ping_sysdomain,
-	ping_pong_factory_pong_sysdomain
+	&ping_pong_factory,
+	&ping_pong_factory_ping_sysdomain,
+	&ping_pong_factory_pong_sysdomain
 ));
 
 TEST_P (TestPingPong, PingPong)
