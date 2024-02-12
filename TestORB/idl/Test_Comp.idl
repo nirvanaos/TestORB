@@ -27,9 +27,10 @@
 #define TESTORB_TEST_COMP_IDL_
 
 #include <CORBA/Components.idl>
-#include "Test_I1.idl"
 
-module Test {
+module Test{
+
+interface I1;
 
 /// CORBA component test
 interface Comp : Components::CCMObject

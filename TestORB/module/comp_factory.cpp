@@ -38,18 +38,14 @@ public:
 
 	static Comp_ptr create (Long addendum)
 	{
-		Comp_var comp;
-		PortableServer::Servant_var <ImplComp> (new ImplComp (addendum, comp));
-		return comp._retn ();
+		return PortableServer::Servant_var <ImplComp> (new ImplComp (addendum))->_this ();
 	}
 
 #else
 
 	static Comp::_ref_type create (Long addendum)
 	{
-		Comp::_ref_type comp;
-		make_reference <ImplComp> (addendum, std::ref (comp));
-		return comp;
+		return make_reference <ImplComp> (addendum)->_this ();
 	}
 
 #endif
