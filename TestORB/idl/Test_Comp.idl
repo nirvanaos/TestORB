@@ -75,6 +75,7 @@ interface Comp_factory
 
 const Comp_factory comp_factory_dynamic;
 const Comp_factory comp_factory_portable;
+const Comp_factory comp_factory_facet;
 
 };
 
