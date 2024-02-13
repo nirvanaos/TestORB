@@ -42,15 +42,14 @@ public:
 
 	ImplComp (uint32_t addendum)
 	{
-		facet1_ = CORBA::make_reference <DynamicI1> (addendum, _this ())->_this ();
+		facet1_ = CORBA::make_reference <DynamicI1> (addendum, _object ())->_this ();
 	}
 
 #else
 
 	ImplComp (uint32_t addendum)
 	{
-		CORBA::Object_var comp (_this ());
-		facet1_ = PortableServer::Servant_var <DynamicI1> (new DynamicI1 (addendum, comp))->_this ();
+		facet1_ = PortableServer::Servant_var <DynamicI1> (new DynamicI1 (addendum, _object ()))->_this ();
 	}
 
 #endif
@@ -105,15 +104,14 @@ public:
 
 	ImplCompPOA (uint32_t addendum)
 	{
-		facet1_ = CORBA::make_reference <PortableI1> (addendum, _this ())->_this ();
+		facet1_ = CORBA::make_reference <PortableI1> (addendum, _object ())->_this ();
 	}
 
 #else
 
 	ImplCompPOA (uint32_t addendum)
 	{
-		CORBA::Object_var comp (_this ());
-		facet1_ = PortableServer::Servant_var <PortableI1> (new PortableI1 (addendum, comp))->_this ();
+		facet1_ = PortableServer::Servant_var <PortableI1> (new PortableI1 (addendum, _object ()))->_this ();
 	}
 
 #endif
