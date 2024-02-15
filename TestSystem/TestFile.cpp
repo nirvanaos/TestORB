@@ -26,7 +26,6 @@
 #include "pch.h"
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
-#include <Nirvana/Domains.h>
 #include <fnctl.h>
 
 using namespace Nirvana;
@@ -389,7 +388,7 @@ TEST_F (TestFile, Directory)
 	EXPECT_TRUE (tmp_dir->_non_existent ());
 }
 
-TEST_F (TestFile, FSLocator)
+TEST_F (TestFile, Locator)
 {
 	// Obtain temporary directory object
 	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
@@ -409,13 +408,12 @@ TEST_F (TestFile, FSLocator)
 
 	DirItemId id = f->id ();
 
-	SysDomain::_ref_type sd = SysDomain::_narrow (g_ORB->resolve_initial_references ("SysDomain"));
-	ASSERT_TRUE (sd);
+	obj = naming_service_->resolve (Name (1));
+	ASSERT_TRUE (obj);
+	FileSystem::_ref_type file_system = FileSystem::_narrow (obj);
+	ASSERT_TRUE (file_system);
 
-	FSLocator::_ref_type locator = sd->provide_fs_locator ();
-	ASSERT_TRUE (locator);
-
-	DirItem::_ref_type di = locator->get_item (id);
+	DirItem::_ref_type di = file_system->get_item (id);
 	ASSERT_TRUE (di);
 
 	File::_ref_type f1 = File::_narrow (di);
