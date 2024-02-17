@@ -37,7 +37,14 @@ void ImplI1::throw_no_implement ()
 
 void ImplI1::throw_user ()
 {
-	throw MyException ("test", true);
+	std::exception_ptr ep;
+	try {
+		throw MyException ("test", true);
+	} catch (...) {
+		ep = std::current_exception ();
+	}
+
+	std::rethrow_exception (ep);
 }
 
 std::string ImplI1::string_op (const std::string& in_s, std::string& out_s, std::string& inout_s)
