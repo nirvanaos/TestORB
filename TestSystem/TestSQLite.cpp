@@ -33,6 +33,12 @@ using namespace Nirvana;
 using namespace NDBC;
 using namespace CosNaming;
 
+#define ASSERT_NOSQLEXCEPTION(...) try {\
+	__VA_ARGS__;\
+} catch (const SQLException& ex) {\
+	ADD_FAILURE () << ex.error ().sqlState ();\
+}
+
 namespace TestSQLite {
 
 // Test for the SQLite database driver.
@@ -73,12 +79,16 @@ protected:
 
 	Connection::_ref_type connect () const
 	{
-		return manager->getConnection (url_, "", "");
+		Connection::_ref_type ret;
+		ASSERT_NOSQLEXCEPTION (ret = manager->getConnection (url_, "", ""));
+		return ret;
 	}
 
 	Connection::_ref_type connect_readonly () const
 	{
-		return manager->getConnection (url_ + "?mode=ro", "", "");
+		Connection::_ref_type ret;
+		ASSERT_NOSQLEXCEPTION (ret = manager->getConnection (url_ + "?mode=ro", "", ""));
+		return ret;
 	}
 
 private:
