@@ -61,23 +61,34 @@ protected:
 		const char PATTERN [] = "XXXXXX.tmp";
 		IDL::String file_name = PATTERN;
 		file_ = tmp_dir->mkostemps (file_name, 4, O_DIRECT)->file ();
-		database_ = NDBC::manager->getDataSource ("sqlite:/var/tmp/" + file_name);
+		url_ = "sqlite:/var/tmp/" + file_name;
 	}
 
 	virtual void TearDown ()
 	{
 		// Code here will be called immediately after each test (right
 		// before the destructor).
-		database_ = nullptr;
 		file_->remove ();
 	}
 
+	Connection::_ref_type connect () const
+	{
+		return manager->getConnection (url_, "", "");
+	}
+
+	Connection::_ref_type connect_readonly () const
+	{
+		return manager->getConnection (url_ + "?mode=ro", "", "");
+	}
+
+private:
 	File::_ref_type file_;
-	DataSource::_ref_type database_;
+	std::string url_;
 };
 
-TEST_F (TestSQLite, Create)
+TEST_F (TestSQLite, Connect)
 {
+	connect ();
 }
 
 }
