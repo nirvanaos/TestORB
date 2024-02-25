@@ -36,7 +36,7 @@ using namespace CosNaming;
 #define ASSERT_NOSQLEXCEPTION(...) try {\
 	__VA_ARGS__;\
 } catch (const SQLException& ex) {\
-	ADD_FAILURE () << ex.error ().sqlState ();\
+	GTEST_FAIL () << ex.error ().sqlState ();\
 }
 
 namespace TestSQLite {
@@ -77,18 +77,17 @@ protected:
 		file_->remove ();
 	}
 
-	Connection::_ref_type connect () const
+	void connect (const char* params, Connection::_ref_type& conn) const
 	{
-		Connection::_ref_type ret;
-		ASSERT_NOSQLEXCEPTION (ret = manager->getConnection (url_, "", ""));
-		return ret;
+		ASSERT_NOSQLEXCEPTION (conn = manager->getConnection (url_ + params, "", ""));
 	}
 
-	Connection::_ref_type connect_readonly () const
+	void create_test_table (Connection::_ref_type& conn) const
 	{
-		Connection::_ref_type ret;
-		ASSERT_NOSQLEXCEPTION (ret = manager->getConnection (url_ + "?mode=ro", "", ""));
-		return ret;
+		ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
+		Statement::_ref_type stmt;
+		ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::RSType::TYPE_FORWARD_ONLY));
+		ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE IF NOT EXISTS test_table (id INT, str TEXT)"));
 	}
 
 private:
@@ -98,7 +97,14 @@ private:
 
 TEST_F (TestSQLite, Connect)
 {
-	connect ();
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
+}
+
+TEST_F (TestSQLite, CreateTable)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
 }
 
 }
