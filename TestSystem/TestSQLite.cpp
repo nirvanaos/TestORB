@@ -27,6 +27,7 @@
 #include <Nirvana/File.h>
 #include <Nirvana/NDBC.h>
 #include <fnctl.h>
+#include <random>
 
 using namespace CORBA;
 using namespace Nirvana;
@@ -82,18 +83,53 @@ protected:
 		ASSERT_NOSQLEXCEPTION (conn = manager->getConnection (url_ + params, "", ""));
 	}
 
-	void create_test_table (Connection::_ref_type& conn) const
-	{
-		ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
-		Statement::_ref_type stmt;
-		ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::RSType::TYPE_FORWARD_ONLY));
-		ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE IF NOT EXISTS test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT)"));
-	}
+	void create_test_table (Connection::_ref_type& conn) const;
+
+	std::string random_string ();
+
+	void prepare_insert (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt);
+	void prepare_select (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt);
 
 private:
 	File::_ref_type file_;
 	std::string url_;
+	std::mt19937 rndgen_;
 };
+
+void TestSQLite::create_test_table (Connection::_ref_type& conn) const
+{
+	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
+	Statement::_ref_type stmt;
+	ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::RSType::TYPE_FORWARD_ONLY));
+	ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT)"));
+}
+
+std::string TestSQLite::random_string ()
+{
+	size_t len = std::uniform_int_distribution <size_t> (0, 1024) (rndgen_);
+	std::string s;
+	s.reserve (len);
+	for (; len; --len) {
+		s.push_back ((char)std::uniform_int_distribution <int> (' ', '~') (rndgen_));
+	}
+	return s;
+}
+
+void TestSQLite::prepare_insert (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt)
+{
+	ASSERT_NOSQLEXCEPTION (stmt = conn->prepareStatement (
+		"INSERT INTO test_table (str) VALUES (?) RETURNING id",
+		ResultSet::RSType::TYPE_FORWARD_ONLY,
+		PreparedStatement::PREPARE_PERSISTENT));
+}
+
+void TestSQLite::prepare_select (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt)
+{
+	ASSERT_NOSQLEXCEPTION (stmt = conn->prepareStatement (
+		"SELECT str FROM test_table WHERE id=?",
+		ResultSet::RSType::TYPE_FORWARD_ONLY,
+		PreparedStatement::PREPARE_PERSISTENT));
+}
 
 TEST_F (TestSQLite, Connect)
 {
@@ -105,6 +141,56 @@ TEST_F (TestSQLite, CreateTable)
 {
 	Connection::_ref_type conn;
 	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+}
+
+struct TestTableRow
+{
+	int32_t id;
+	std::string str;
+};
+
+typedef std::vector <TestTableRow> TestTableRows;
+
+TEST_F (TestSQLite, Prepared)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+
+	TestTableRows rows;
+
+	{
+		PreparedStatement::_ref_type insert;
+		ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+
+		const unsigned ROW_CNT = 100;
+
+		for (unsigned i = 0; i < ROW_CNT; ++i) {
+			TestTableRow row;
+			row.str = random_string ();
+			ASSERT_NOSQLEXCEPTION (insert->setString (1, row.str));
+			ResultSet::_ref_type rs;
+			ASSERT_NOSQLEXCEPTION (rs = insert->executeQuery ());
+			ASSERT_TRUE (rs->next ());
+			ASSERT_NOSQLEXCEPTION (row.id = rs->getInt (1));
+			rows.push_back (std::move (row));
+		}
+
+		insert->close ();
+	}
+	/*
+	PreparedStatement::_ref_type select;
+	ASSERT_NO_FATAL_FAILURE (prepare_select (conn, select));
+
+	for (const auto& row : rows) {
+		ASSERT_NOSQLEXCEPTION (select->setInt (1, row.id));
+		ResultSet::_ref_type rs;
+		ASSERT_NOSQLEXCEPTION (rs = select->executeQuery ());
+		ASSERT_TRUE (rs->next ());
+		std::string str;
+		ASSERT_NOSQLEXCEPTION (str = rs->getString (1));
+		EXPECT_EQ (row.str, str);
+	}
+	*/
 }
 
 }
