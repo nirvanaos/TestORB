@@ -27,6 +27,7 @@
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
 #include <fnctl.h>
+#include <random>
 
 using namespace Nirvana;
 using namespace CORBA;
@@ -62,9 +63,69 @@ protected:
 		// before the destructor).
 	}
 
+	void create_temp_file (unsigned flags, Access::_ref_type& access) const;
+	void create_temp_file (AccessDirect::_ref_type& access) const;
+	void create_temp_file (AccessBuf::_ref_type& access) const;
+
+	static void test_write (AccessDirect::_ptr_type file, size_t& file_size, size_t offset, size_t block_size);
+	static void test_read (AccessDirect::_ptr_type file, size_t offset, size_t block_size);
+	static void test_write (AccessDirect::_ptr_type file);
+	static void test_read (AccessDirect::_ptr_type file);
+
+	static void random_write (AccessDirect::_ptr_type file, size_t& file_size, std::mt19937& rndgen,
+		size_t max_file_size, size_t max_block_size);
+	static void random_read (AccessDirect::_ptr_type file, size_t file_size, std::mt19937& rndgen,
+		size_t max_block_size);
+
+	static size_t test_file_size ()
+	{
+		return 0x1000000;
+	}
+
+	static size_t decide_max_block_size (AccessDirect::_ptr_type file)
+	{
+		return std::max (file->block_size (), (uint32_t)4096);
+	}
+
 protected:
 	NamingContextExt::_ref_type naming_service_;
 };
+
+void TestFile::create_temp_file (unsigned flags, Access::_ref_type& access) const
+{
+	// Obtain temporary directory object
+	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
+	ASSERT_TRUE (obj);
+	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
+	ASSERT_TRUE (tmp_dir);
+
+	// Create temporary file
+	const char PATTERN [] = "XXXXXX.tmp";
+	std::string file_name = PATTERN;
+	access = tmp_dir->mkostemps (file_name, 4, flags);
+	ASSERT_TRUE (access);
+
+	EXPECT_NE (file_name, PATTERN);
+	EXPECT_EQ (access->file ()->size (), 0);
+}
+
+void TestFile::create_temp_file (AccessDirect::_ref_type& access) const
+{
+	Access::_ref_type a;
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (O_DIRECT, a));
+	access = AccessDirect::_narrow (a->_to_object ());
+	ASSERT_TRUE (access);
+	EXPECT_EQ (access->size (), 0);
+}
+
+void TestFile::create_temp_file (AccessBuf::_ref_type& access) const
+{
+	Access::_ref_type a;
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (0, a));
+	access = AccessBuf::_downcast (a->_to_value ());
+	ASSERT_TRUE (access);
+	EXPECT_EQ (access->size (), 0);
+}
 
 TEST_F (TestFile, Var)
 {
@@ -160,19 +221,9 @@ TEST_F (TestFile, Mnt)
 
 TEST_F (TestFile, Direct)
 {
-	// Obtain temporary directory object
-	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
-	ASSERT_TRUE (obj);
-	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
-	ASSERT_TRUE (tmp_dir);
-
-	// Create temporary file
-	const char PATTERN [] = "XXXXXX.tmp";
-	std::string file_name = PATTERN;
-	AccessDirect::_ref_type fa = AccessDirect::_narrow (
-		tmp_dir->mkostemps (file_name, 4, O_DIRECT)->_to_object ());
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
 	ASSERT_TRUE (fa);
-	EXPECT_NE (file_name, PATTERN);
 
 	EXPECT_EQ (fa->size (), 0);
 
@@ -229,21 +280,9 @@ TEST_F (TestFile, Direct)
 
 TEST_F (TestFile, Buf)
 {
-	// Obtain temporary directory object
-	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
-	ASSERT_TRUE (obj);
-	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
-	ASSERT_TRUE (tmp_dir);
-
-	// Create temporary file
-	const char PATTERN [] = "XXXXXX.tmp";
-	std::string file_name = PATTERN;
-	AccessBuf::_ref_type fa = AccessBuf::_downcast (
-		tmp_dir->mkostemps (file_name, 4, 0)->_to_value ());
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
 	ASSERT_TRUE (fa);
-	EXPECT_NE (file_name, PATTERN);
-
-	EXPECT_EQ (fa->size (), 0);
 
 	uint8_t wbuf [16];
 	wbuf [0] = 1;
@@ -275,21 +314,9 @@ TEST_F (TestFile, Buf)
 
 TEST_F (TestFile, Size)
 {
-	// Obtain temporary directory object
-	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
-	ASSERT_TRUE (obj);
-	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
-	ASSERT_TRUE (tmp_dir);
-
-	// Create temporary file
-	const char PATTERN [] = "XXXXXX.tmp";
-	std::string file_name = PATTERN;
-	AccessDirect::_ref_type fa = AccessDirect::_narrow (
-		tmp_dir->mkostemps (file_name, 4, O_DIRECT)->_to_object ());
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
 	ASSERT_TRUE (fa);
-	EXPECT_NE (file_name, PATTERN);
-
-	EXPECT_EQ (fa->size (), 0);
 
 	const uint64_t FILE_SIZE = 0x100000;
 	const uint32_t BLOCK_SIZE = 0x400;
@@ -390,17 +417,8 @@ TEST_F (TestFile, Directory)
 
 TEST_F (TestFile, Locator)
 {
-	// Obtain temporary directory object
-	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
-	ASSERT_TRUE (obj);
-	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
-	ASSERT_TRUE (tmp_dir);
-
-	// Create temporary file
-	const char PATTERN [] = "XXXXXX.tmp";
-	std::string file_name = PATTERN;
-	AccessDirect::_ref_type fa = AccessDirect::_narrow (
-		tmp_dir->mkostemps (file_name, 4, O_DIRECT)->_to_object ());
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
 	ASSERT_TRUE (fa);
 
 	File::_ref_type f = fa->file ();
@@ -408,7 +426,7 @@ TEST_F (TestFile, Locator)
 
 	DirItemId id = f->id ();
 
-	obj = naming_service_->resolve (Name (1));
+	Object::_ref_type obj = naming_service_->resolve (Name (1));
 	ASSERT_TRUE (obj);
 	FileSystem::_ref_type file_system = FileSystem::_narrow (obj);
 	ASSERT_TRUE (file_system);
@@ -423,6 +441,167 @@ TEST_F (TestFile, Locator)
 
 	fa = nullptr;
 	f1->remove ();
+}
+
+void TestFile::test_write (AccessDirect::_ptr_type file, size_t& file_size, size_t offset, size_t block_size)
+{
+	Bytes buffer (block_size);
+
+	size_t init = offset;
+	for (size_t* p = (size_t*)buffer.data (), *end = p + block_size / sizeof (size_t); p != end; ++p) {
+		*p = init;
+		init += sizeof (size_t);
+	}
+	file->write (offset, buffer, FileLock (), false);
+	size_t write_end = offset + block_size;
+	if (file_size < write_end)
+		file_size = write_end;
+	ASSERT_EQ (file->size (), (FileSize)file_size);
+}
+
+void TestFile::test_read (AccessDirect::_ptr_type file, size_t offset, size_t block_size)
+{
+	Bytes buffer;
+	file->read (FileLock (), offset, (uint32_t)block_size, LockType::LOCK_NONE, false, buffer);
+	ASSERT_EQ (buffer.size (), block_size);
+	size_t init = offset;
+	for (const size_t* p = (size_t*)buffer.data (), *end = p + buffer.size () / sizeof (size_t); p != end; ++p) {
+		ASSERT_EQ (*p, init);
+		init += sizeof (size_t);
+	}
+}
+
+void TestFile::random_write (AccessDirect::_ptr_type file, size_t& file_size, std::mt19937& rndgen,
+	size_t max_file_size, size_t max_block_size)
+{
+	size_t block_size = std::uniform_int_distribution <size_t> (1, max_block_size / sizeof (size_t)) (rndgen);
+	size_t max_offset = std::min (max_file_size / sizeof (size_t) - block_size, file_size / sizeof (size_t));
+	size_t offset = std::uniform_int_distribution <size_t> (0, max_offset) (rndgen);
+	test_write (file, file_size, offset * sizeof (size_t), block_size * sizeof (size_t));
+}
+
+void TestFile::random_read (AccessDirect::_ptr_type file, size_t file_size, std::mt19937& rndgen,
+	size_t max_block_size)
+{
+	size_t block_size = std::uniform_int_distribution <size_t> (1, max_block_size / sizeof (size_t)) (rndgen);
+	size_t max_offset = file_size / sizeof (size_t);
+	size_t offset = std::uniform_int_distribution <size_t> (0, max_offset) (rndgen);
+	test_read (file, offset * sizeof (size_t), block_size * sizeof (size_t));
+}
+
+void TestFile::test_write (AccessDirect::_ptr_type file)
+{
+	const size_t max_file_size = test_file_size ();
+	size_t block_size = file->block_size ();
+	size_t file_size = 0;
+	while (file_size < max_file_size) {
+		size_t cb = max_file_size - file_size;
+		if (cb > block_size)
+			cb = block_size;
+		size_t pos = file_size;
+		ASSERT_NO_FATAL_FAILURE (test_write (file, file_size, pos, cb)) << "Position: " << pos;
+	}
+}
+
+void TestFile::test_read (AccessDirect::_ptr_type file)
+{
+	const size_t file_size = (size_t)file->size ();
+	size_t block_size = file->block_size ();
+	for (size_t pos = 0; pos < file_size;) {
+		size_t cb = file_size - pos;
+		if (cb > block_size)
+			cb = block_size;
+		ASSERT_NO_FATAL_FAILURE (test_read (file, pos, cb)) << "Position: " << pos;
+		pos += cb;
+	}
+}
+
+TEST_F (TestFile, Sequential)
+{
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa));
+	ASSERT_NO_FATAL_FAILURE (test_read (fa));
+
+	File::_ref_type file = fa->file ();
+	fa = nullptr;
+	file->remove ();
+}
+
+TEST_F (TestFile, RandomRead)
+{
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa));
+
+	std::mt19937 rndgen;
+	size_t file_size = (size_t)fa->size ();
+	const unsigned iterations = 0x10000;
+	const size_t max_block_size = decide_max_block_size (fa);
+
+	for (unsigned i = 0; i < iterations; ++i) {
+		ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
+	}
+
+	File::_ref_type file = fa->file ();
+	fa = nullptr;
+	file->remove ();
+}
+
+TEST_F (TestFile, RandomWrite)
+{
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	const size_t max_block_size = decide_max_block_size (fa);
+	const size_t max_file_size = test_file_size ();
+	const unsigned iterations = 0x10000;
+
+	std::mt19937 rndgen;
+	size_t file_size = 0;
+
+	for (unsigned i = 0; i < iterations; ++i) {
+		ASSERT_NO_FATAL_FAILURE (random_write (fa, file_size, rndgen, max_file_size, max_block_size)) << "Iteration: " << i;
+	}
+
+	test_read (fa);
+
+	File::_ref_type file = fa->file ();
+	fa = nullptr;
+	file->remove ();
+}
+
+TEST_F (TestFile, Random)
+{
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	const size_t max_block_size = decide_max_block_size (fa);
+	const size_t max_file_size = test_file_size ();
+	const unsigned iterations = 0x10000;
+	
+	std::mt19937 rndgen;
+	size_t file_size = 0;
+
+	for (unsigned i = 0; i < iterations; ++i) {
+		if (!std::bernoulli_distribution (((double)file_size / (double)max_file_size) * 0.5) (rndgen)) {
+			// Write
+			ASSERT_NO_FATAL_FAILURE (random_write (fa, file_size, rndgen, max_file_size, max_block_size)) << "Iteration: " << i;
+		} else {
+			// Read
+			ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
+		}
+	}
+
+	File::_ref_type f = fa->file ();
+	fa = nullptr;
+	f->remove ();
 }
 
 }
