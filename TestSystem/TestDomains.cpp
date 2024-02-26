@@ -64,9 +64,13 @@ TEST_F (TestDomains, CreateDomain)
 	IDL::Sequence <uint16_t> platforms = sys_domain->supported_platforms ();
 	SysManager::_ref_type sys_manager = sys_domain->provide_manager ();
 	for (auto pl : platforms) {
-		ProtDomain::_ref_type prot_domain = sys_manager->create_prot_domain (pl);
-		prot_domain->user ();
-		prot_domain->shutdown (0);
+		try {
+			ProtDomain::_ref_type prot_domain = sys_manager->create_prot_domain (pl);
+			prot_domain->user ();
+			prot_domain->shutdown (0);
+		} catch (const std::exception& ex) {
+			ADD_FAILURE () << ex.what ();
+		}
 	}
 }
 

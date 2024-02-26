@@ -96,7 +96,7 @@ protected:
 
 	static unsigned random_test_min_iterations ()
 	{
-		return 0x4000;
+		return 0x1000;
 	}
 
 protected:

@@ -87,7 +87,7 @@ protected:
 		ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
 		Statement::_ref_type stmt;
 		ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::RSType::TYPE_FORWARD_ONLY));
-		ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE IF NOT EXISTS test_table (id INT, str TEXT)"));
+		ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE IF NOT EXISTS test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT)"));
 	}
 
 private:
