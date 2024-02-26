@@ -61,11 +61,13 @@ protected:
 	{
 		// Code here will be called immediately after each test (right
 		// before the destructor).
+		if (temp_file_)
+			temp_file_->remove ();
 	}
 
-	void create_temp_file (unsigned flags, Access::_ref_type& access) const;
-	void create_temp_file (AccessDirect::_ref_type& access) const;
-	void create_temp_file (AccessBuf::_ref_type& access) const;
+	void create_temp_file (unsigned flags, Access::_ref_type& access);
+	void create_temp_file (AccessDirect::_ref_type& access);
+	void create_temp_file (AccessBuf::_ref_type& access);
 
 	static void test_write (AccessDirect::_ptr_type file, size_t& file_size, size_t offset, size_t block_size);
 	static void test_read (AccessDirect::_ptr_type file, size_t offset, size_t block_size);
@@ -87,11 +89,22 @@ protected:
 		return std::max (file->block_size (), (uint32_t)4096);
 	}
 
+	static TimeBase::TimeT random_test_max_duration ()
+	{
+		return 5 * TimeBase::SECOND;
+	}
+
+	static unsigned random_test_min_iterations ()
+	{
+		return 0x4000;
+	}
+
 protected:
 	NamingContextExt::_ref_type naming_service_;
+	File::_ref_type temp_file_;
 };
 
-void TestFile::create_temp_file (unsigned flags, Access::_ref_type& access) const
+void TestFile::create_temp_file (unsigned flags, Access::_ref_type& access)
 {
 	// Obtain temporary directory object
 	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
@@ -106,10 +119,11 @@ void TestFile::create_temp_file (unsigned flags, Access::_ref_type& access) cons
 	ASSERT_TRUE (access);
 
 	EXPECT_NE (file_name, PATTERN);
-	EXPECT_EQ (access->file ()->size (), 0);
+	temp_file_ = access->file ();
+	EXPECT_EQ (temp_file_->size (), 0);
 }
 
-void TestFile::create_temp_file (AccessDirect::_ref_type& access) const
+void TestFile::create_temp_file (AccessDirect::_ref_type& access)
 {
 	Access::_ref_type a;
 	ASSERT_NO_FATAL_FAILURE (create_temp_file (O_DIRECT, a));
@@ -118,7 +132,7 @@ void TestFile::create_temp_file (AccessDirect::_ref_type& access) const
 	EXPECT_EQ (access->size (), 0);
 }
 
-void TestFile::create_temp_file (AccessBuf::_ref_type& access) const
+void TestFile::create_temp_file (AccessBuf::_ref_type& access)
 {
 	Access::_ref_type a;
 	ASSERT_NO_FATAL_FAILURE (create_temp_file (0, a));
@@ -272,10 +286,6 @@ TEST_F (TestFile, Direct)
 	// Close
 	fb->close ();
 	fb = nullptr;
-
-	// Remove file
-	file->remove ();
-	EXPECT_TRUE (file->_non_existent ());
 }
 
 TEST_F (TestFile, Buf)
@@ -306,10 +316,6 @@ TEST_F (TestFile, Buf)
 	EXPECT_EQ (rbuf [0], wbuf [0]);
 	fa->close ();
 	fa = nullptr;
-
-	// Remove file
-	file->remove ();
-	EXPECT_TRUE (file->_non_existent ());
 }
 
 TEST_F (TestFile, Size)
@@ -338,10 +344,6 @@ TEST_F (TestFile, Size)
 	// Close file access
 	fa->close ();
 	fa = nullptr;
-
-	// Remove file
-	file->remove ();
-	EXPECT_TRUE (file->_non_existent ());
 }
 
 TEST_F (TestFile, DirectoryIterator)
@@ -438,9 +440,6 @@ TEST_F (TestFile, Locator)
 	ASSERT_TRUE (f1);
 
 	EXPECT_TRUE (f->_is_equivalent (f1));
-
-	fa = nullptr;
-	f1->remove ();
 }
 
 void TestFile::test_write (AccessDirect::_ptr_type file, size_t& file_size, size_t offset, size_t block_size)
@@ -483,9 +482,18 @@ void TestFile::random_write (AccessDirect::_ptr_type file, size_t& file_size, st
 void TestFile::random_read (AccessDirect::_ptr_type file, size_t file_size, std::mt19937& rndgen,
 	size_t max_block_size)
 {
+	ASSERT_NE (file_size, 0);
+
 	size_t block_size = std::uniform_int_distribution <size_t> (1, max_block_size / sizeof (size_t)) (rndgen);
 	size_t max_offset = file_size / sizeof (size_t);
-	size_t offset = std::uniform_int_distribution <size_t> (0, max_offset) (rndgen);
+	
+	size_t offset;
+	if (max_offset <= block_size) {
+		offset = 0;
+		block_size = max_offset;
+	} else
+		offset = std::uniform_int_distribution <size_t> (0, max_offset - block_size) (rndgen);
+
 	test_read (file, offset * sizeof (size_t), block_size * sizeof (size_t));
 }
 
@@ -524,10 +532,6 @@ TEST_F (TestFile, Sequential)
 
 	ASSERT_NO_FATAL_FAILURE (test_write (fa));
 	ASSERT_NO_FATAL_FAILURE (test_read (fa));
-
-	File::_ref_type file = fa->file ();
-	fa = nullptr;
-	file->remove ();
 }
 
 TEST_F (TestFile, RandomRead)
@@ -540,16 +544,23 @@ TEST_F (TestFile, RandomRead)
 
 	std::mt19937 rndgen;
 	size_t file_size = (size_t)fa->size ();
-	const unsigned iterations = 0x10000;
 	const size_t max_block_size = decide_max_block_size (fa);
 
-	for (unsigned i = 0; i < iterations; ++i) {
+	TimeBase::TimeT start_time = g_system->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations ();
+	unsigned i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
 		ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
+		if (i >= iterations) {
+			end_time = g_system->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
 	}
-
-	File::_ref_type file = fa->file ();
-	fa = nullptr;
-	file->remove ();
+	duration = end_time - start_time;
+	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " reads per second\n";
 }
 
 TEST_F (TestFile, RandomWrite)
@@ -560,20 +571,28 @@ TEST_F (TestFile, RandomWrite)
 
 	const size_t max_block_size = decide_max_block_size (fa);
 	const size_t max_file_size = test_file_size ();
-	const unsigned iterations = 0x10000;
 
 	std::mt19937 rndgen;
 	size_t file_size = 0;
 
-	for (unsigned i = 0; i < iterations; ++i) {
+	TimeBase::TimeT start_time = g_system->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations ();
+	unsigned i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
 		ASSERT_NO_FATAL_FAILURE (random_write (fa, file_size, rndgen, max_file_size, max_block_size)) << "Iteration: " << i;
+		if (i >= iterations) {
+			end_time = g_system->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
 	}
+	duration = end_time - start_time;
 
 	test_read (fa);
 
-	File::_ref_type file = fa->file ();
-	fa = nullptr;
-	file->remove ();
+	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " writes per second\n";
 }
 
 TEST_F (TestFile, Random)
@@ -584,12 +603,16 @@ TEST_F (TestFile, Random)
 
 	const size_t max_block_size = decide_max_block_size (fa);
 	const size_t max_file_size = test_file_size ();
-	const unsigned iterations = 0x10000;
-	
+
 	std::mt19937 rndgen;
 	size_t file_size = 0;
 
-	for (unsigned i = 0; i < iterations; ++i) {
+	TimeBase::TimeT start_time = g_system->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations ();
+	unsigned i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
 		if (!std::bernoulli_distribution (((double)file_size / (double)max_file_size) * 0.5) (rndgen)) {
 			// Write
 			ASSERT_NO_FATAL_FAILURE (random_write (fa, file_size, rndgen, max_file_size, max_block_size)) << "Iteration: " << i;
@@ -597,11 +620,14 @@ TEST_F (TestFile, Random)
 			// Read
 			ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
 		}
+		if (i >= iterations) {
+			end_time = g_system->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
 	}
-
-	File::_ref_type f = fa->file ();
-	fa = nullptr;
-	f->remove ();
+	duration = end_time - start_time;
+	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " reads/writes per second\n";
 }
 
 }
