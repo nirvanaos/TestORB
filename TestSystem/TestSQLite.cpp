@@ -65,9 +65,9 @@ protected:
 		Dir::_ref_type tmp_dir = Dir::_narrow (ns->resolve_str ("/var/tmp"));
 		
 		// Create temporary file
-		const char PATTERN [] = "XXXXXX.tmp";
+		const char PATTERN [] = "testXXXXXX.db";
 		IDL::String file_name = PATTERN;
-		file_ = tmp_dir->mkostemps (file_name, 4, O_DIRECT)->file ();
+		file_ = tmp_dir->mkostemps (file_name, 3, O_DIRECT)->file ();
 		url_ = "sqlite:/var/tmp/" + file_name;
 	}
 
@@ -75,7 +75,8 @@ protected:
 	{
 		// Code here will be called immediately after each test (right
 		// before the destructor).
-		file_->remove ();
+		
+		//file_->remove ();
 	}
 
 	void connect (const char* params, Connection::_ref_type& conn) const
@@ -177,7 +178,7 @@ TEST_F (TestSQLite, Prepared)
 
 		insert->close ();
 	}
-	/*
+
 	PreparedStatement::_ref_type select;
 	ASSERT_NO_FATAL_FAILURE (prepare_select (conn, select));
 
@@ -190,7 +191,6 @@ TEST_F (TestSQLite, Prepared)
 		ASSERT_NOSQLEXCEPTION (str = rs->getString (1));
 		EXPECT_EQ (row.str, str);
 	}
-	*/
 }
 
 }
