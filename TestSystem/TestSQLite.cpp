@@ -76,7 +76,7 @@ protected:
 		// Code here will be called immediately after each test (right
 		// before the destructor).
 		
-		//file_->remove ();
+		file_->remove ();
 	}
 
 	void connect (const char* params, Connection::_ref_type& conn) const
@@ -191,6 +191,26 @@ TEST_F (TestSQLite, Prepared)
 		ASSERT_NOSQLEXCEPTION (str = rs->getString (1));
 		EXPECT_EQ (row.str, str);
 	}
+}
+
+TEST_F (TestSQLite, GetParent)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+
+	PreparedStatement::_ref_type insert;
+	ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+	ASSERT_NOSQLEXCEPTION (insert->setString (1, random_string ()));
+	ResultSet::_ref_type rs;
+	ASSERT_NOSQLEXCEPTION (rs = insert->executeQuery ());
+
+	StatementBase::_ref_type stmt = rs->getStatement ();
+	ASSERT_TRUE (stmt);
+	EXPECT_TRUE (stmt->_is_equivalent (insert));
+
+	Connection::_ref_type conn1 = stmt->getConnection ();
+	ASSERT_TRUE (conn1);
+	EXPECT_TRUE (conn1->_is_equivalent (conn));
 }
 
 }
