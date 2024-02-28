@@ -27,7 +27,7 @@
 
 module Test {
 
-interface I3_factory
+local interface I3_factory
 {
 	I3 create (in long addendum);
 };

@@ -291,6 +291,24 @@ TEST_F (TestORB, TypeCode)
 		EXPECT_FALSE (compact->equal (_tc_AVT));
 		EXPECT_FALSE (_tc_AVT->equal (compact));
 	}
+
+	EXPECT_EQ (_tc_CompletionStatus->name (), "CompletionStatus");
+	EXPECT_EQ (_tc_CompletionStatus->member_count (), 3);
+	EXPECT_EQ (_tc_CompletionStatus->member_name (0), "COMPLETED_YES");
+	EXPECT_EQ (_tc_CompletionStatus->member_name (1), "COMPLETED_NO");
+	EXPECT_EQ (_tc_CompletionStatus->member_name (2), "COMPLETED_MAYBE");
+
+	EXPECT_EQ (_tc_UNKNOWN->name (), "UNKNOWN");
+	EXPECT_EQ (_tc_UNKNOWN->member_count (), 2);
+	EXPECT_EQ (_tc_UNKNOWN->member_name (0), "minor");
+	EXPECT_EQ (_tc_UNKNOWN->member_name (1), "completed");
+
+	{
+		TC tc = _tc_UNKNOWN->member_type (0);
+		EXPECT_TRUE (tc->equal (_tc_ulong));
+		tc = _tc_UNKNOWN->member_type (1);
+		EXPECT_TRUE (tc->equal (_tc_CompletionStatus));
+	}
 }
 
 TEST_F (TestORB, TypeCodeRecursive)
