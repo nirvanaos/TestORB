@@ -74,7 +74,7 @@ TEST_F (TestORB, Environment)
 	CORBA::Internal::Environment ne2 (std::move (nex));
 	ex = ne2.exception ();
 	ASSERT_TRUE (ex);
-	EXPECT_STREQ (ex->_name (), ::Test::MyException::__name ());
+	EXPECT_STREQ (ex->_name (), "MyException");
 }
 
 TEST_F (TestORB, TypeCode)
