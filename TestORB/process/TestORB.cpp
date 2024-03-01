@@ -449,7 +449,7 @@ TEST_F (TestORB, ValueBox)
 
 	CORBA::Internal::Interface::_ptr_type pi (p);
 
-	CORBA::Internal::Type <StringValue>::Var var;
+	IDL::Type <StringValue>::Var var;
 }
 
 TEST_F (TestORB, FactoryBase)

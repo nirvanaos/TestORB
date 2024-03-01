@@ -101,7 +101,7 @@ void TestSQLite::create_test_table (Connection::_ref_type& conn) const
 {
 	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
 	Statement::_ref_type stmt;
-	ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::RSType::TYPE_FORWARD_ONLY));
+	ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY));
 	ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT)"));
 }
 
@@ -120,7 +120,7 @@ void TestSQLite::prepare_insert (Connection::_ptr_type conn, PreparedStatement::
 {
 	ASSERT_NOSQLEXCEPTION (stmt = conn->prepareStatement (
 		"INSERT INTO test_table (str) VALUES (?) RETURNING id",
-		ResultSet::RSType::TYPE_FORWARD_ONLY,
+		ResultSet::Type::TYPE_FORWARD_ONLY,
 		PreparedStatement::PREPARE_PERSISTENT));
 }
 
@@ -128,7 +128,7 @@ void TestSQLite::prepare_select (Connection::_ptr_type conn, PreparedStatement::
 {
 	ASSERT_NOSQLEXCEPTION (stmt = conn->prepareStatement (
 		"SELECT str FROM test_table WHERE id=?",
-		ResultSet::RSType::TYPE_FORWARD_ONLY,
+		ResultSet::Type::TYPE_FORWARD_ONLY,
 		PreparedStatement::PREPARE_PERSISTENT));
 }
 
