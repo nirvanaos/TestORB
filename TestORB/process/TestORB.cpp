@@ -101,25 +101,28 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_FALSE (_tc_I1->equal (_tc_I3));
 	EXPECT_FALSE (_tc_I1->equivalent (_tc_I3));
 
-	EXPECT_EQ (_tc_MyException->kind (), TCKind::tk_except);
-	EXPECT_EQ (_tc_MyException->id (), "IDL:Test/MyException:1.0");
-	EXPECT_EQ (_tc_MyException->name (), "MyException");
-	EXPECT_EQ (_tc_MyException->member_count (), 2);
-	EXPECT_EQ (_tc_MyException->member_name (0), "param");
-	EXPECT_EQ (_tc_MyException->member_name (1), "bparam");
-	EXPECT_EQ (_tc_MyException->member_type (0)->kind (), TCKind::tk_string);
-	EXPECT_EQ (_tc_MyException->member_type (1)->kind (), TCKind::tk_boolean);
-
-	EXPECT_EQ (_tc_MyStruct->kind (), TCKind::tk_struct);
-	EXPECT_EQ (_tc_MyStruct->id (), "IDL:Test/MyStruct:1.0");
-	EXPECT_EQ (_tc_MyStruct->name (), "MyStruct");
-	EXPECT_GE (_tc_MyStruct->member_count (), 2u);
-	EXPECT_LE (_tc_MyStruct->member_count (), 3u);
-	EXPECT_EQ (_tc_MyStruct->member_name (0), "ws_member");
-	EXPECT_EQ (_tc_MyStruct->member_name (1), "l_member");
-#ifdef LEGACY_CORBA_CPP
 	{
-		TypeCode::_var_type mt = _tc_MyStruct->member_type (0);
+		EXPECT_EQ (_tc_MyException->kind (), TCKind::tk_except);
+		EXPECT_EQ (_tc_MyException->id (), "IDL:Test/MyException:1.0");
+		EXPECT_EQ (_tc_MyException->name (), "MyException");
+		EXPECT_EQ (_tc_MyException->member_count (), 2);
+		EXPECT_EQ (_tc_MyException->member_name (0), "param");
+		EXPECT_EQ (_tc_MyException->member_name (1), "bparam");
+		TC mt = _tc_MyException->member_type (0);
+		EXPECT_EQ (mt->kind (), TCKind::tk_string);
+		mt = _tc_MyException->member_type (1);
+		EXPECT_EQ (mt->kind (), TCKind::tk_boolean);
+	}
+
+	{
+		EXPECT_EQ (_tc_MyStruct->kind (), TCKind::tk_struct);
+		EXPECT_EQ (_tc_MyStruct->id (), "IDL:Test/MyStruct:1.0");
+		EXPECT_EQ (_tc_MyStruct->name (), "MyStruct");
+		EXPECT_GE (_tc_MyStruct->member_count (), 2u);
+		EXPECT_LE (_tc_MyStruct->member_count (), 3u);
+		EXPECT_EQ (_tc_MyStruct->member_name (0), "ws_member");
+		EXPECT_EQ (_tc_MyStruct->member_name (1), "l_member");
+		TC mt = _tc_MyStruct->member_type (0);
 		EXPECT_EQ (mt->kind (), TCKind::tk_wstring);
 		mt = _tc_MyStruct->member_type (1);
 		EXPECT_EQ (mt->kind (), TCKind::tk_long);
@@ -128,12 +131,6 @@ TEST_F (TestORB, TypeCode)
 			EXPECT_EQ (mt->kind (), TCKind::tk_objref);
 		}
 	}
-#else
-	EXPECT_EQ (_tc_MyStruct->member_type (0)->kind (), TCKind::tk_wstring);
-	EXPECT_EQ (_tc_MyStruct->member_type (1)->kind (), TCKind::tk_long);
-	if (_tc_MyStruct->member_count () > 2)
-		EXPECT_EQ (_tc_MyStruct->member_type (2)->kind (), TCKind::tk_objref);
-#endif
 
 	EXPECT_EQ (_tc_MyEnum->kind (), TCKind::tk_enum);
 	EXPECT_EQ (_tc_MyEnum->id (), "IDL:Test/MyEnum:1.0");
@@ -143,39 +140,44 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_MyEnum->member_name (1), "b");
 	EXPECT_EQ (_tc_MyEnum->member_name (2), "c");
 
-	TC compact = _tc_MyEnum->get_compact_typecode ();
-	EXPECT_TRUE (_tc_MyEnum->equivalent (compact));
-	EXPECT_EQ (compact->name (), "");
-	EXPECT_EQ (compact->member_name (0), "");
-	EXPECT_EQ (compact->member_name (1), "");
-	EXPECT_EQ (compact->member_name (2), "");
-	compact = TypeCode::_nil ();
+	{
+		TC compact = _tc_MyEnum->get_compact_typecode ();
+		EXPECT_TRUE (_tc_MyEnum->equivalent (compact));
+		EXPECT_EQ (compact->name (), "");
+		EXPECT_EQ (compact->member_name (0), "");
+		EXPECT_EQ (compact->member_name (1), "");
+		EXPECT_EQ (compact->member_name (2), "");
+	}
 
 	EXPECT_EQ (_tc_SeqLong->kind (), TCKind::tk_alias);
 	EXPECT_EQ (_tc_SeqLong->id (), "IDL:Test/SeqLong:1.0");
 	EXPECT_EQ (_tc_SeqLong->name (), "SeqLong");
 
-	TC cont = _tc_SeqLong->content_type ();
+	{
+		TC cont = _tc_SeqLong->content_type ();
 
-	EXPECT_EQ (cont->kind (), TCKind::tk_sequence);
-	EXPECT_EQ (cont->length (), 0);
+		EXPECT_EQ (cont->kind (), TCKind::tk_sequence);
+		EXPECT_EQ (cont->length (), 0);
 
-	EXPECT_FALSE (_tc_SeqLong->equal (cont));
-	EXPECT_TRUE (_tc_SeqLong->equivalent (cont));
-	EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
-	EXPECT_TRUE (_tc_SeqLong->equivalent (_tc_SeqLong));
+		EXPECT_FALSE (_tc_SeqLong->equal (cont));
+		EXPECT_TRUE (_tc_SeqLong->equivalent (cont));
+		EXPECT_TRUE (_tc_SeqLong->equal (_tc_SeqLong));
+		EXPECT_TRUE (_tc_SeqLong->equivalent (_tc_SeqLong));
 
-	cont = cont->content_type ();
-	EXPECT_EQ (cont->kind (), TCKind::tk_long);
+		cont = cont->content_type ();
+		EXPECT_EQ (cont->kind (), TCKind::tk_long);
+	}
 
-	EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
-	EXPECT_EQ (_tc_MyAlias->id (), "IDL:Test/MyAlias:1.0");
-	EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
+	{
+		EXPECT_EQ (_tc_MyAlias->kind (), TCKind::tk_alias);
+		EXPECT_EQ (_tc_MyAlias->id (), "IDL:Test/MyAlias:1.0");
+		EXPECT_EQ (_tc_MyAlias->name (), "MyAlias");
 
-	cont = _tc_MyAlias->content_type ();
-	EXPECT_TRUE (cont->equal (_tc_SeqLong));
+		TC cont = _tc_MyAlias->content_type ();
+		EXPECT_TRUE (cont->equal (_tc_SeqLong));
 
-	EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
+		EXPECT_TRUE (_tc_MyAlias->equivalent (_tc_SeqLong));
+	}
 
 	EXPECT_EQ (_tc_TypeCode->kind (), TCKind::tk_TypeCode);
 	EXPECT_THROW (_tc_TypeCode->id (), TypeCode::BadKind);
@@ -211,70 +213,84 @@ TEST_F (TestORB, TypeCode)
 	EXPECT_EQ (_tc_V1->member_visibility (2), PRIVATE_MEMBER);
 	EXPECT_EQ (_tc_V1->member_name (3), "val4");
 	EXPECT_EQ (_tc_V1->member_visibility (3), PUBLIC_MEMBER);
+	{
+		TC mt = _tc_V1->member_type (0);
+		EXPECT_EQ (mt->kind (), TCKind::tk_short);
+		mt = _tc_V1->member_type (1);
+		EXPECT_EQ (mt->kind (), TCKind::tk_long);
+		mt = _tc_V1->member_type (2);
+		EXPECT_EQ (mt->kind (), TCKind::tk_string);
+		mt = _tc_V1->member_type (3);
+		EXPECT_TRUE (mt->equal (_tc_V1));
+		TC base = _tc_V2->concrete_base_type ();
+		EXPECT_TRUE (base->equal (_tc_V1));
+	}
+
+	{
+		EXPECT_EQ (_tc_LongArray->kind (), TCKind::tk_alias);
+		EXPECT_EQ (_tc_LongArray->id (), "IDL:Test/LongArray:1.0");
+		EXPECT_EQ (_tc_LongArray->name (), "LongArray");
+
+		TC cont = _tc_LongArray->content_type ();
+		EXPECT_EQ (cont->kind (), TCKind::tk_array);
+		EXPECT_EQ (cont->length (), 3);
+		cont = cont->content_type ();
+		EXPECT_EQ (cont->kind (), TCKind::tk_array);
+		EXPECT_EQ (cont->length (), 4);
+		cont = cont->content_type ();
+		EXPECT_EQ (cont->kind (), TCKind::tk_long);
+	}
+
+	{
+		EXPECT_EQ (_tc_StringValue->kind (), TCKind::tk_value_box);
+		EXPECT_EQ (_tc_StringValue->id (), "IDL:Test/StringValue:1.0");
+		EXPECT_EQ (_tc_StringValue->name (), "StringValue");
+		TC cont = _tc_StringValue->content_type ();
+		EXPECT_TRUE (cont->equal (_tc_string));
+	}
+
+	{
+		EXPECT_EQ (_tc_U->kind (), TCKind::tk_union);
+		EXPECT_EQ (_tc_U->id (), "IDL:U:1.0");
+		EXPECT_EQ (_tc_U->name (), "U");
+		EXPECT_EQ (_tc_U->member_count (), 4);
+		TC d = _tc_U->discriminator_type ();
+		EXPECT_TRUE (d->equal (_tc_long));
+		EXPECT_EQ (_tc_U->member_name (0), "x");
+		EXPECT_EQ (_tc_U->member_name (1), "z");
+		EXPECT_EQ (_tc_U->member_name (2), "w");
+		EXPECT_EQ (_tc_U->member_name (3), "obj");
+		EXPECT_EQ (_tc_U->default_index (), 3);
 #ifndef LEGACY_CORBA_CPP
-	EXPECT_EQ (_tc_V1->member_type (0)->kind (), TCKind::tk_short);
-	EXPECT_EQ (_tc_V1->member_type (1)->kind (), TCKind::tk_long);
-	EXPECT_EQ (_tc_V1->member_type (2)->kind (), TCKind::tk_string);
-	EXPECT_TRUE (_tc_V1->member_type (3)->equal (_tc_V1));
-	EXPECT_TRUE (_tc_V2->concrete_base_type ()->equal (_tc_V1));
-#endif
-
-	EXPECT_EQ (_tc_LongArray->kind (), TCKind::tk_alias);
-	EXPECT_EQ (_tc_LongArray->id (), "IDL:Test/LongArray:1.0");
-	EXPECT_EQ (_tc_LongArray->name (), "LongArray");
-
-	cont = _tc_LongArray->content_type ();
-	EXPECT_EQ (cont->kind (), TCKind::tk_array);
-	EXPECT_EQ (cont->length (), 3);
-	cont = cont->content_type ();
-	EXPECT_EQ (cont->kind (), TCKind::tk_array);
-	EXPECT_EQ (cont->length (), 4);
-	cont = cont->content_type ();
-	EXPECT_EQ (cont->kind (), TCKind::tk_long);
-
-	EXPECT_EQ (_tc_StringValue->kind (), TCKind::tk_value_box);
-	EXPECT_EQ (_tc_StringValue->id (), "IDL:Test/StringValue:1.0");
-	EXPECT_EQ (_tc_StringValue->name (), "StringValue");
-	cont = _tc_StringValue->content_type ();
-	EXPECT_TRUE (cont->equal (_tc_string));
-
-	EXPECT_EQ (_tc_U->kind (), TCKind::tk_union);
-	EXPECT_EQ (_tc_U->id (), "IDL:U:1.0");
-	EXPECT_EQ (_tc_U->name (), "U");
-	EXPECT_EQ (_tc_U->member_count (), 4);
-	EXPECT_TRUE (_tc_U->discriminator_type ()->equal (_tc_long));
-	EXPECT_EQ (_tc_U->member_name (0), "x");
-	EXPECT_EQ (_tc_U->member_name (1), "z");
-	EXPECT_EQ (_tc_U->member_name (2), "w");
-	EXPECT_EQ (_tc_U->member_name (3), "obj");
-	EXPECT_EQ (_tc_U->default_index (), 3);
-#ifndef LEGACY_CORBA_CPP
-	Any
+		Any
 #else
-	Any_var
+		Any_var
 #endif
-		a = _tc_U->member_label (0);
-	Long l;
-	EXPECT_TRUE (a >>= l);
-	EXPECT_EQ (l, 1);
-	a = _tc_U->member_label (1);
-	EXPECT_TRUE (a >>= l);
-	EXPECT_EQ (l, 2);
-	a = _tc_U->member_label (2);
-	EXPECT_TRUE (a >>= l);
-	EXPECT_EQ (l, 3);
+			a = _tc_U->member_label (0);
+		Long l;
+		EXPECT_TRUE (a >>= l);
+		EXPECT_EQ (l, 1);
+		a = _tc_U->member_label (1);
+		EXPECT_TRUE (a >>= l);
+		EXPECT_EQ (l, 2);
+		a = _tc_U->member_label (2);
+		EXPECT_TRUE (a >>= l);
+		EXPECT_EQ (l, 3);
 
-	a = _tc_U->member_label (3);
-	EXPECT_FALSE (a >>= l);
-	Octet o;
-	EXPECT_TRUE (a >>= Any::to_octet (o));
-	EXPECT_EQ (o, 0);
+		a = _tc_U->member_label (3);
+		EXPECT_FALSE (a >>= l);
+		Octet o;
+		EXPECT_TRUE (a >>= Any::to_octet (o));
+		EXPECT_EQ (o, 0);
+	}
 
-	EXPECT_EQ (_tc_StructFixLen->member_name (2), "f");
-	cont = _tc_StructFixLen->member_type (2);
-	EXPECT_EQ (cont->kind (), TCKind::tk_fixed);
-	EXPECT_EQ (cont->fixed_digits (), 4);
-	EXPECT_EQ (cont->fixed_scale (), 3);
+	{
+		EXPECT_EQ (_tc_StructFixLen->member_name (2), "f");
+		TC cont = _tc_StructFixLen->member_type (2);
+		EXPECT_EQ (cont->kind (), TCKind::tk_fixed);
+		EXPECT_EQ (cont->fixed_digits (), 4);
+		EXPECT_EQ (cont->fixed_scale (), 3);
+	}
 
 	{
 		TC compact = _tc_I1->get_compact_typecode ();
