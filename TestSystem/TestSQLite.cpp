@@ -81,7 +81,7 @@ protected:
 
 	void connect (const char* params, Connection::_ref_type& conn) const
 	{
-		ASSERT_NOSQLEXCEPTION (conn = manager->getConnection (url_ + params, "", ""));
+		ASSERT_NOSQLEXCEPTION (conn = SQLite::driver->connect (url_ + params, "", ""));
 	}
 
 	void create_test_table (Connection::_ref_type& conn) const;
