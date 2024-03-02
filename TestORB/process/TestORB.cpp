@@ -30,8 +30,9 @@
 #include "IDL/Test_V1.h"
 #include "IDL/Test_V3.h"
 #include "IDL/RecursiveStruct.h"
-#include <I1_static.h>
 #include "IDL/Test_AVT.h"
+#include "IDL/ValueBox.h"
+#include <I1_static.h>
 #include <fenv.h>
 #include <math.h>
 
@@ -580,6 +581,26 @@ TEST_F (TestORB, LongDouble)
 	EXPECT_EQ (ld2, -123.L);
 	EXPECT_TRUE (std::signbit (ld1));
 	EXPECT_EQ (std::abs (ld1), 765.L);
+}
+
+TEST_F (TestORB, Traits)
+{
+	EXPECT_FALSE (IDL::traits <I1>::is_abstract::value);
+	EXPECT_FALSE (IDL::traits <I1>::is_local::value);
+
+	EXPECT_FALSE (IDL::traits <SeqLong>::is_bounded::value);
+	EXPECT_TRUE (IDL::traits <ShortSeqLong>::is_bounded::value);
+
+	EXPECT_TRUE ((std::is_same <IDL::traits <SeqLong>::element_traits::value_type, int32_t>::value));
+
+	EXPECT_TRUE (IDL::traits <ShortString>::is_bounded::value);
+
+	EXPECT_EQ (IDL::traits <LongArray>::dimensions::value, 2);
+	EXPECT_TRUE ((std::is_same <IDL::traits <LongArray>::element_traits::value_type, int32_t>::value));
+
+	EXPECT_TRUE (IDL::traits <AVT>::is_abstract::value);
+
+	EXPECT_TRUE ((std::is_same <IDL::traits <StringValue>::boxed_traits::value_type, IDL::String>::value));
 }
 
 }
