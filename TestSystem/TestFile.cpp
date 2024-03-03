@@ -29,6 +29,12 @@
 #include <fnctl.h>
 #include <random>
 
+// File access flags
+#define F_OK 1
+#define R_OK 2
+#define W_OK 4
+#define X_OK 8
+
 using namespace Nirvana;
 using namespace CORBA;
 using namespace CosNaming;
@@ -180,6 +186,9 @@ TEST_F (TestFile, TmpIterator)
 	Dir::_ref_type dir = Dir::_narrow (obj);
 	ASSERT_TRUE (dir);
 
+	unsigned acc = dir->access ();
+	EXPECT_TRUE (acc & F_OK);
+
 	// Iterate
 	BindingIterator::_ref_type it;
 	BindingList bindings;
@@ -240,6 +249,9 @@ TEST_F (TestFile, Direct)
 	ASSERT_TRUE (fa);
 
 	EXPECT_EQ (fa->size (), 0);
+
+	unsigned acc = fa->file ()->access ();
+	EXPECT_EQ (acc & (F_OK | R_OK | W_OK), F_OK | R_OK | W_OK);
 
 	// Write
 	std::vector <uint8_t> wbuf;
