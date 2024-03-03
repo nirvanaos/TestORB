@@ -63,7 +63,7 @@ protected:
 		NamingContextExt::_ref_type ns = NamingContextExt::_narrow (g_ORB->resolve_initial_references ("NameService"));
 		ASSERT_TRUE (ns);
 		Dir::_ref_type tmp_dir = Dir::_narrow (ns->resolve_str ("/var/tmp"));
-		
+
 		// Create temporary file
 		const char PATTERN [] = "testXXXXXX.db";
 		IDL::String file_name = PATTERN;
@@ -75,7 +75,7 @@ protected:
 	{
 		// Code here will be called immediately after each test (right
 		// before the destructor).
-		
+
 		file_->remove ();
 	}
 
@@ -175,8 +175,6 @@ TEST_F (TestSQLite, Prepared)
 			ASSERT_NOSQLEXCEPTION (row.id = rs->getInt (1));
 			rows.push_back (std::move (row));
 		}
-
-		insert->close ();
 	}
 
 	PreparedStatement::_ref_type select;
@@ -211,6 +209,35 @@ TEST_F (TestSQLite, GetParent)
 	Connection::_ref_type conn1 = stmt->getConnection ();
 	ASSERT_TRUE (conn1);
 	EXPECT_TRUE (conn1->_is_equivalent (conn));
+}
+
+TEST_F (TestSQLite, ColumnNames)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+	PreparedStatement::_ref_type select;
+	ASSERT_NO_FATAL_FAILURE (prepare_select (conn, select));
+	ASSERT_NOSQLEXCEPTION (select->setInt (1, 0));
+	ResultSet::_ref_type rs;
+	ASSERT_NOSQLEXCEPTION (rs = select->executeQuery ());
+	EXPECT_FALSE (rs->next ());
+	const auto& columns = rs->getColumnNames ();
+	ASSERT_EQ (columns.size (), 1);
+	EXPECT_EQ (columns.front (), "str");
+}
+
+TEST_F (TestSQLite, FindColumn)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+
+	Statement::_ref_type select = conn->createStatement (NDBC::ResultSet::Type::TYPE_FORWARD_ONLY);
+	ResultSet::_ref_type rs;
+	ASSERT_NOSQLEXCEPTION (rs = select->executeQuery ("SELECT * FROM test_table WHERE id = 0"));
+	EXPECT_FALSE (rs->next ());
+	EXPECT_EQ (rs->findColumn ("id"), 1);
+	EXPECT_EQ (rs->findColumn ("str"), 2);
+	EXPECT_THROW (rs->findColumn ("blabla"), NDBC::SQLException);
 }
 
 }
