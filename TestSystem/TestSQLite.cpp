@@ -68,7 +68,7 @@ protected:
 		const char PATTERN [] = "testXXXXXX.db";
 		IDL::String file_name = PATTERN;
 		file_ = tmp_dir->mkostemps (file_name, 3, O_DIRECT)->file ();
-		url_ = "sqlite:/var/tmp/" + file_name;
+		url_ = "file:/var/tmp/" + file_name;
 	}
 
 	virtual void TearDown ()
