@@ -642,4 +642,17 @@ TEST_F (TestFile, Random)
 	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " reads/writes per second\n";
 }
 
+TEST_F (TestFile, Stat)
+{
+	AccessDirect::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+	File::_ref_type file = fa->file ();
+	ASSERT_TRUE (file);
+	FileStat stat;
+	file->stat (stat);
+	unsigned mode = stat.mode ();
+	EXPECT_EQ (mode & S_IFMT, S_IFREG);
+}
+
 }
