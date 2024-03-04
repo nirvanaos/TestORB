@@ -27,6 +27,7 @@
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
 #include <fnctl.h>
+#include <sys/stat.h>
 #include <random>
 
 // File access flags
@@ -121,7 +122,7 @@ void TestFile::create_temp_file (unsigned flags, Access::_ref_type& access)
 	// Create temporary file
 	const char PATTERN [] = "XXXXXX.tmp";
 	std::string file_name = PATTERN;
-	access = tmp_dir->mkostemps (file_name, 4, flags);
+	access = tmp_dir->mkostemps (file_name, 4, flags, 0);
 	ASSERT_TRUE (access);
 
 	EXPECT_NE (file_name, PATTERN);
@@ -378,7 +379,7 @@ void clear_directory (Dir::_ptr_type dir)
 	DirectoryIterator iter (dir);
 	while (const DirEntry* p = iter.readdir ()) {
 		Name name (1, p->name ());
-		if (FileType::directory == (FileType)p->st ().type ())
+		if (S_IFDIR == (p->st ().mode () & S_IFMT))
 			clear_directory (Dir::_narrow (dir->resolve (name)));
 		dir->unbind (name);
 	}
@@ -401,7 +402,7 @@ TEST_F (TestFile, Directory)
 
 	// Create and close temporary file
 	std::string tmp_file = "XXXXXX.tmp";
-	tmp_dir->mkostemps (tmp_file, 4, 0)->close ();
+	tmp_dir->mkostemps (tmp_file, 4, 0, 0)->close ();
 
 	// Try to remove directory that is not empty
 	bool thrown = false;

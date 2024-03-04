@@ -67,7 +67,7 @@ protected:
 		// Create temporary file
 		const char PATTERN [] = "testXXXXXX.db";
 		IDL::String file_name = PATTERN;
-		file_ = tmp_dir->mkostemps (file_name, 3, O_DIRECT)->file ();
+		file_ = tmp_dir->mkostemps (file_name, 3, O_DIRECT, 0)->file ();
 		url_ = "file:/var/tmp/" + file_name;
 	}
 
