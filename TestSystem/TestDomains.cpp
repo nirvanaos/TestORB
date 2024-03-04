@@ -60,7 +60,7 @@ protected:
 
 TEST_F (TestDomains, CreateDomain)
 {
-	SysDomain::_ref_type sys_domain = SysDomain::_narrow (CORBA::g_ORB->resolve_initial_references ("SysDomain"));
+	SysDomain::_ref_type sys_domain = SysDomain::_narrow (CORBA::orb->resolve_initial_references ("SysDomain"));
 	IDL::Sequence <uint16_t> platforms = sys_domain->supported_platforms ();
 	SysManager::_ref_type sys_manager = sys_domain->provide_manager ();
 	for (auto pl : platforms) {

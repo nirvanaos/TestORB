@@ -34,7 +34,7 @@ int main (int argc, char* argv [])
 {
 	{
 		// Get console service
-		File::_ref_type console = File::_narrow (CORBA::g_ORB->resolve_initial_references ("Console"));
+		File::_ref_type console = File::_narrow (CORBA::orb->resolve_initial_references ("Console"));
 
 		// Open console access
 		AccessChar::_ref_type access = AccessChar::_narrow (console->open (O_RDWR | O_TEXT, 0)->_to_object ());

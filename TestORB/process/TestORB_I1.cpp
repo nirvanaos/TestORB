@@ -302,7 +302,7 @@ TEST_P (TestORB_I1, Interface)
 TEST_P (TestORB_I1, LargeSeq)
 {
 	// Large sequence
-	size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
+	size_t sa = (size_t)Nirvana::memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 	if (sa) {
 		I1_ref p = instantiate ();
 
@@ -331,7 +331,7 @@ TEST_P (TestORB_I1, LargeSeq)
 TEST_P (TestORB_I1, LargeString)
 {
 	// Large string
-	size_t sa = (size_t)Nirvana::g_memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
+	size_t sa = (size_t)Nirvana::memory->query (nullptr, Nirvana::Memory::QueryParam::SHARING_ASSOCIATIVITY);
 	if (sa) {
 		I1_ref p = instantiate ();
 

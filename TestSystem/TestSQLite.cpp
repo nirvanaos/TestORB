@@ -60,7 +60,7 @@ protected:
 	{
 		// Code here will be called immediately after the constructor (right
 		// before each test).
-		NamingContextExt::_ref_type ns = NamingContextExt::_narrow (g_ORB->resolve_initial_references ("NameService"));
+		NamingContextExt::_ref_type ns = NamingContextExt::_narrow (orb->resolve_initial_references ("NameService"));
 		ASSERT_TRUE (ns);
 		Dir::_ref_type tmp_dir = Dir::_narrow (ns->resolve_str ("/var/tmp"));
 
