@@ -26,7 +26,7 @@
 #include "pch.h"
 #include <Nirvana/File.h>
 #include <Nirvana/NDBC.h>
-#include <fnctl.h>
+#include <Nirvana/posix.h>
 #include <random>
 
 using namespace CORBA;

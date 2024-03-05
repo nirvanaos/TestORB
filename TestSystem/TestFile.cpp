@@ -26,8 +26,7 @@
 #include "pch.h"
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
-#include <fnctl.h>
-#include <sys/stat.h>
+#include <Nirvana/posix.h>
 #include <random>
 
 // File access flags
