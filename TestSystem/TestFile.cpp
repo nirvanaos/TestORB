@@ -361,7 +361,7 @@ TEST_F (TestFile, Size)
 TEST_F (TestFile, DirectoryIterator)
 {
 	// Obtain directory object
-	Object::_ref_type obj = naming_service_->resolve_str ("/home");
+	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
 	ASSERT_TRUE (obj);
 	Dir::_ref_type dir = Dir::_narrow (obj);
 	ASSERT_TRUE (dir);
