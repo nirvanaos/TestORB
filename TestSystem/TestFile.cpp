@@ -366,7 +366,7 @@ TEST_F (TestFile, DirectoryIterator)
 	Dir::_ref_type dir = Dir::_narrow (obj);
 	ASSERT_TRUE (dir);
 
-	DirectoryIterator iter (dir);
+	DirectoryIterator iter (dir, Dir::SKIP_PERMISSION_DENIED);
 	while (const DirEntry* p = iter.readdir ()) {
 		EXPECT_FALSE (p->name ().id ().empty () && p->name ().kind ().empty ());
 	}
