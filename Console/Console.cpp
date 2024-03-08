@@ -40,22 +40,21 @@ int main (int argc, char* argv [])
 		AccessChar::_ref_type access = AccessChar::_narrow (console->open (O_RDWR | O_TEXT, 0)->_to_object ());
 
 		// Connect to the console input event
-		auto supplier = access->for_consumers ()->obtain_typed_pull_supplier (_tc_PullCharFileSink->id ());
-		auto input = PullCharFileSink::_narrow (supplier->get_typed_supplier ());
-		supplier->connect_pull_consumer (nullptr);
+		access->connect_pull_consumer (nullptr);
 
 		access->write ("Press Enter to continue\n");
 
 		for (;;) {
-			CharFileEvent evt;
-			input->received (evt);
-			if (evt.error ()) {
-				access->write ("Input error " + std::to_string (evt.error ()) + '\n');
-				break;
-			} else {
-				access->write (evt.data ());
-				if (evt.data ().find ('\n') != std::string::npos)
+			CORBA::Any evt = access->pull ();
+			const std::string* s;
+			if (evt >>= s) {
+				access->write (*s);
+				if (s->find ('\n') != std::string::npos)
 					break;
+			} else {
+				AccessChar::Error err;
+				if (evt >>= err)
+					access->write ("Input error " + std::to_string (err.error ()) + '\n');
 			}
 		}
 	}
