@@ -142,7 +142,7 @@ TEST_F (TestSystem, CurDir)
 
 	// Get reference to NameService
 	CosNaming::NamingContext::_ref_type ns = CosNaming::NamingContext::_narrow (
-		CORBA::orb->resolve_initial_references ("NameService"));
+		CORBA::orb_impl->resolve_initial_references ("NameService"));
 	ASSERT_TRUE (ns);
 
 	// Obtain reference to current directory object

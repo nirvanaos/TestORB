@@ -59,7 +59,7 @@ protected:
 	{
 		// Code here will be called immediately after the constructor (right
 		// before each test).
-		naming_service_ = NamingContextExt::_narrow (orb->resolve_initial_references ("NameService"));
+		naming_service_ = NamingContextExt::_narrow (orb_impl->resolve_initial_references ("NameService"));
 		ASSERT_TRUE (naming_service_);
 	}
 

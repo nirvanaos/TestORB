@@ -38,7 +38,7 @@ class Static_I2_factory_sysdomain :
 public:
 	static I2::_ref_type create (Long addendum)
 	{
-		SysDomain::_ref_type sys_domain = SysDomain::_narrow (orb->resolve_initial_references ("SysDomain"));
+		SysDomain::_ref_type sys_domain = SysDomain::_narrow (orb_impl->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
 		I2_factory::_ref_type factory = I2_factory::_narrow (prot_domain->bind (Internal::StaticId <Static_I2_factory_dynamic>::id));
 		return factory->create (addendum);
