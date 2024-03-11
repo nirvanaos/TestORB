@@ -62,13 +62,13 @@ protected:
 	static void writemem (void* p);
 };
 
-TEST_F (TestSystem, HeapFactory)
+TEST_F (TestSystem, CreateHeap)
 {
 	static const size_t GRANULARITY = 128;
 	static const size_t BLOCK_SIZE = GRANULARITY * 128;
 	static const size_t COUNT = 1024 * 1024 * 4 / 16 * GRANULARITY / BLOCK_SIZE;
 	void* blocks [COUNT];
-	Memory::_ref_type heap = Nirvana::the_system->create_heap (GRANULARITY);
+	Memory::_ref_type heap = Nirvana::the_memory->create_heap (GRANULARITY);
 	EXPECT_EQ (GRANULARITY, heap->query (0, Memory::QueryParam::ALLOCATION_UNIT));
 
 	for (int i = 0; i < COUNT; ++i) {
@@ -86,7 +86,7 @@ TEST_F (TestSystem, HeapFactory)
 
 TEST_F (TestSystem, AccessViolation)
 {
-	Memory::_ref_type heap = Nirvana::the_system->create_heap (0);
+	Memory::_ref_type heap = Nirvana::the_memory->create_heap (0);
 	size_t cb = (size_t)heap->query (nullptr, Memory::QueryParam::PROTECTION_UNIT);
 	if (!cb)
 		return;
