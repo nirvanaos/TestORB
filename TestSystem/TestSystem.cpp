@@ -68,7 +68,7 @@ TEST_F (TestSystem, HeapFactory)
 	static const size_t BLOCK_SIZE = GRANULARITY * 128;
 	static const size_t COUNT = 1024 * 1024 * 4 / 16 * GRANULARITY / BLOCK_SIZE;
 	void* blocks [COUNT];
-	Memory::_ref_type heap = Nirvana::system->create_heap (GRANULARITY);
+	Memory::_ref_type heap = Nirvana::the_system->create_heap (GRANULARITY);
 	EXPECT_EQ (GRANULARITY, heap->query (0, Memory::QueryParam::ALLOCATION_UNIT));
 
 	for (int i = 0; i < COUNT; ++i) {
@@ -86,7 +86,7 @@ TEST_F (TestSystem, HeapFactory)
 
 TEST_F (TestSystem, AccessViolation)
 {
-	Memory::_ref_type heap = Nirvana::system->create_heap (0);
+	Memory::_ref_type heap = Nirvana::the_system->create_heap (0);
 	size_t cb = (size_t)heap->query (nullptr, Memory::QueryParam::PROTECTION_UNIT);
 	if (!cb)
 		return;
@@ -131,18 +131,18 @@ void TestSystem::writemem (void* p)
 
 TEST_F (TestSystem, Yield)
 {
-	EXPECT_FALSE (Nirvana::system->yield ());
+	EXPECT_FALSE (Nirvana::the_system->yield ());
 }
 
 TEST_F (TestSystem, CurDir)
 {
 	// Get current working directory name
-	CosNaming::Name cur_dir = Nirvana::system->get_current_dir_name ();
+	CosNaming::Name cur_dir = Nirvana::the_system->get_current_dir_name ();
 	EXPECT_TRUE (is_absolute (cur_dir));
 
 	// Get reference to NameService
 	CosNaming::NamingContext::_ref_type ns = CosNaming::NamingContext::_narrow (
-		CORBA::orb_impl->resolve_initial_references ("NameService"));
+		CORBA::the_orb->resolve_initial_references ("NameService"));
 	ASSERT_TRUE (ns);
 
 	// Obtain reference to current directory object
@@ -158,15 +158,15 @@ TEST_F (TestSystem, CurDir)
 	{} // Ignore if exists
 
 	// Change current to subdirectory
-	Nirvana::system->chdir ("test.tmp");
+	Nirvana::the_system->chdir ("test.tmp");
 
-	CosNaming::Name cur_dir1 = Nirvana::system->get_current_dir_name ();
+	CosNaming::Name cur_dir1 = Nirvana::the_system->get_current_dir_name ();
 	EXPECT_EQ (cur_dir1.size (), cur_dir.size () + 1);
 
 	// Change current back
-	Nirvana::system->chdir ("..");
+	Nirvana::the_system->chdir ("..");
 
-	cur_dir1 = Nirvana::system->get_current_dir_name ();
+	cur_dir1 = Nirvana::the_system->get_current_dir_name ();
 	EXPECT_EQ (cur_dir1, cur_dir);
 
 	// Remove subdirectory
@@ -176,16 +176,16 @@ TEST_F (TestSystem, CurDir)
 TEST_F (TestSystem, Sleep)
 {
 	static const TimeBase::TimeT SLEEP_TIME = TimeBase::SECOND * 1;
-	TimeBase::TimeT t0 = Nirvana::system->steady_clock ();
-	Nirvana::system->sleep (SLEEP_TIME);
-	int64_t delay = Nirvana::system->steady_clock () - t0 - SLEEP_TIME;
+	TimeBase::TimeT t0 = Nirvana::the_system->steady_clock ();
+	Nirvana::the_system->sleep (SLEEP_TIME);
+	int64_t delay = Nirvana::the_system->steady_clock () - t0 - SLEEP_TIME;
 	EXPECT_GE (delay, -1 * (int64_t)TimeBase::MILLISECOND) << delay;
 	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;
 }
 
 TEST_F (TestSystem, ContextType)
 {
-	EXPECT_EQ (Nirvana::system->context_type (), System::ContextType::PROCESS);
+	EXPECT_EQ (Nirvana::the_system->context_type (), System::ContextType::PROCESS);
 }
 
 }

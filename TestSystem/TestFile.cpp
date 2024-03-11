@@ -59,7 +59,7 @@ protected:
 	{
 		// Code here will be called immediately after the constructor (right
 		// before each test).
-		naming_service_ = NamingContextExt::_narrow (orb_impl->resolve_initial_references ("NameService"));
+		naming_service_ = NamingContextExt::_narrow (the_orb->resolve_initial_references ("NameService"));
 		ASSERT_TRUE (naming_service_);
 	}
 
@@ -387,7 +387,7 @@ void clear_directory (Dir::_ptr_type dir)
 TEST_F (TestFile, Directory)
 {
 	// Make temporary directory
-	Name tmp_dir_name = Nirvana::system->to_name ("/tmp/test");
+	Name tmp_dir_name = Nirvana::the_system->to_name ("/tmp/test");
 	Dir::_ref_type tmp_dir;
 	try {
 		tmp_dir = Dir::_narrow (naming_service_->bind_new_context (tmp_dir_name));
@@ -415,7 +415,7 @@ TEST_F (TestFile, Directory)
 	EXPECT_TRUE (thrown);
 
 	// Delete file
-	Name tmp_file_name = Nirvana::system->to_name (tmp_file);
+	Name tmp_file_name = Nirvana::the_system->to_name (tmp_file);
 
 	try {
 		tmp_dir->unbind (tmp_file_name);
@@ -558,7 +558,7 @@ TEST_F (TestFile, RandomRead)
 	size_t file_size = (size_t)fa->size ();
 	const size_t max_block_size = decide_max_block_size (fa);
 
-	TimeBase::TimeT start_time = Nirvana::system->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	unsigned i = 0;
@@ -566,7 +566,7 @@ TEST_F (TestFile, RandomRead)
 	for (;; ++i) {
 		ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
 		if (i >= iterations) {
-			end_time = Nirvana::system->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -587,7 +587,7 @@ TEST_F (TestFile, RandomWrite)
 	std::mt19937 rndgen;
 	size_t file_size = 0;
 
-	TimeBase::TimeT start_time = Nirvana::system->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	unsigned i = 0;
@@ -595,7 +595,7 @@ TEST_F (TestFile, RandomWrite)
 	for (;; ++i) {
 		ASSERT_NO_FATAL_FAILURE (random_write (fa, file_size, rndgen, max_file_size, max_block_size)) << "Iteration: " << i;
 		if (i >= iterations) {
-			end_time = Nirvana::system->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -619,7 +619,7 @@ TEST_F (TestFile, Random)
 	std::mt19937 rndgen;
 	size_t file_size = 0;
 
-	TimeBase::TimeT start_time = Nirvana::system->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	unsigned i = 0;
@@ -633,7 +633,7 @@ TEST_F (TestFile, Random)
 			ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
 		}
 		if (i >= iterations) {
-			end_time = Nirvana::system->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}

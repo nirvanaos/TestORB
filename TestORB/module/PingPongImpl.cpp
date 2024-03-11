@@ -58,7 +58,7 @@ class PingImpl : public servant_traits <Ping>::Servant <PingImpl>
 public:
 	PingImpl () :
 		count_ (0),
-		event_channel_ (orb_impl->create_typed_channel ()),
+		event_channel_ (the_orb->create_typed_channel ()),
 		cancelled_ (false)
 	{
 		TypedProxyPushConsumer::_ref_type consumer = event_channel_->for_suppliers ()->
@@ -170,7 +170,7 @@ public:
 
 	static Ping::_ref_type create_ping ()
 	{
-		SysDomain::_ref_type sys_domain = SysDomain::_narrow (orb_impl->resolve_initial_references ("SysDomain"));
+		SysDomain::_ref_type sys_domain = SysDomain::_narrow (the_orb->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
 		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <Static_ping_pong_factory>::id));
 		return factory->create_ping ();
@@ -183,7 +183,7 @@ class Static_ping_pong_factory_pong_sysdomain :
 public:
 	static Pong::_ref_type create_pong (uint32_t count)
 	{
-		SysDomain::_ref_type sys_domain = SysDomain::_narrow (orb_impl->resolve_initial_references ("SysDomain"));
+		SysDomain::_ref_type sys_domain = SysDomain::_narrow (the_orb->resolve_initial_references ("SysDomain"));
 		ProtDomain::_ref_type prot_domain = sys_domain->prot_domain ();
 		PingPongFactory::_ref_type factory = PingPongFactory::_narrow (prot_domain->bind (Internal::StaticId <Static_ping_pong_factory>::id));
 		return factory->create_pong (count);

@@ -336,8 +336,8 @@ TEST_F (TestORB, TypeCodeRecursive)
 	{
 		TC tc_struct;
 		{
-			TC tc_rec = orb_impl->create_recursive_tc ("");
-			TC tc_seq = orb_impl->create_sequence_tc (0, tc_rec);
+			TC tc_rec = the_orb->create_recursive_tc ("");
+			TC tc_seq = the_orb->create_sequence_tc (0, tc_rec);
 			StructMemberSeq members;
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
@@ -351,7 +351,7 @@ TEST_F (TestORB, TypeCodeRecursive)
 #else
 			members.back ().type = tc_seq;
 #endif
-			tc_struct = orb_impl->create_struct_tc ("", "", members);
+			tc_struct = the_orb->create_struct_tc ("", "", members);
 		}
 		EXPECT_TRUE (_tc_RecursiveStruct1->equivalent (tc_struct));
 		EXPECT_TRUE (tc_struct->equivalent (_tc_RecursiveStruct1));
@@ -369,7 +369,7 @@ TEST_F (TestORB, TypeCodeRecursive)
 	{
 		TC tc_v1;
 		{
-			TC tc_rec = orb_impl->create_recursive_tc (Internal::RepIdOf <V1>::id);
+			TC tc_rec = the_orb->create_recursive_tc (Internal::RepIdOf <V1>::id);
 			ValueMemberSeq members;
 			members.emplace_back ();
 #ifndef LEGACY_CORBA_CPP
@@ -395,7 +395,7 @@ TEST_F (TestORB, TypeCodeRecursive)
 #else
 			members.back ().type = tc_rec;
 #endif
-			tc_v1 = orb_impl->create_value_tc (Internal::RepIdOf <V1>::id, "", VM_NONE, nullptr, members);
+			tc_v1 = the_orb->create_value_tc (Internal::RepIdOf <V1>::id, "", VM_NONE, nullptr, members);
 		}
 		EXPECT_TRUE (_tc_V1->equivalent (tc_v1));
 		EXPECT_TRUE (tc_v1->equivalent (_tc_V1));
@@ -463,9 +463,9 @@ TEST_F (TestORB, FactoryBase)
 #endif
 		f;
 
-	f = orb_impl->lookup_value_factory ("IDL:Test/V1:1.0");
+	f = the_orb->lookup_value_factory ("IDL:Test/V1:1.0");
 	EXPECT_TRUE (f);
-	f = orb_impl->lookup_value_factory ("IDL:Test/StringValue:1.0");
+	f = the_orb->lookup_value_factory ("IDL:Test/StringValue:1.0");
 	EXPECT_TRUE (f);
 }
 

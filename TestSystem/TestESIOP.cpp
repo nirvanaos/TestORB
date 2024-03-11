@@ -59,7 +59,7 @@ protected:
 
 TEST_F (TestESIOP, Performance)
 {
-	SysDomain::_ref_type sd = SysDomain::_narrow (CORBA::orb_impl->resolve_initial_references ("SysDomain"));
+	SysDomain::_ref_type sd = SysDomain::_narrow (CORBA::the_orb->resolve_initial_references ("SysDomain"));
 	ASSERT_TRUE (sd);
 	for (int i = 0; i < 100; ++i) {
 		sd->version ();
@@ -68,7 +68,7 @@ TEST_F (TestESIOP, Performance)
 
 TEST_F (TestESIOP, Platforms)
 {
-	SysDomain::_ref_type sd = SysDomain::_narrow (CORBA::orb_impl->resolve_initial_references ("SysDomain"));
+	SysDomain::_ref_type sd = SysDomain::_narrow (CORBA::the_orb->resolve_initial_references ("SysDomain"));
 	auto platforms = sd->supported_platforms ();
 	ASSERT_GE (platforms.size (), 1u);
 }
