@@ -139,7 +139,7 @@ void TestFile::create_temp_file (AccessBuf::_ref_type& access)
 	ASSERT_NO_FATAL_FAILURE (create_temp_file (0, a));
 	access = AccessBuf::_downcast (a->_to_value ());
 	ASSERT_TRUE (access);
-	EXPECT_EQ (access->size (), 0);
+	EXPECT_EQ (access->direct ()->size (), 0);
 }
 
 TEST_F (TestFile, Var)
@@ -251,7 +251,7 @@ TEST_F (TestFile, Direct)
 	// Write
 	std::vector <uint8_t> wbuf;
 	wbuf.resize (1, 1);
-	fa->write (0, wbuf, FileLock (), false);
+	fa->write (0, wbuf, false);
 
 	EXPECT_EQ (fa->size (), 1);
 
@@ -260,7 +260,7 @@ TEST_F (TestFile, Direct)
 
 	// Read
 	std::vector <uint8_t> rbuf;
-	fa->read (FileLock (), 0, 1, LockType::LOCK_NONE, true, rbuf);
+	fa->read (0, 1, rbuf);
 	EXPECT_EQ (rbuf, wbuf);
 
 	// Obtain file object
@@ -274,7 +274,7 @@ TEST_F (TestFile, Direct)
 	ASSERT_TRUE (file);
 	fa = AccessDirect::_narrow (file->open (O_RDONLY | O_DIRECT, 0)->_to_object ());
 	ASSERT_TRUE (fa);
-	fa->read (FileLock (), 0, 1, LockType::LOCK_NONE, true, rbuf);
+	fa->read (0, 1, rbuf);
 	EXPECT_EQ (rbuf, wbuf);
 
 	// Close
@@ -318,7 +318,7 @@ TEST_F (TestFile, Buf)
 	ASSERT_TRUE (file);
 	fa = AccessBuf::_downcast (file->open (O_RDONLY, 0)->_to_value ());
 	ASSERT_TRUE (fa);
-	EXPECT_EQ (fa->size (), 1);
+	EXPECT_EQ (fa->direct ()->size (), 1);
 	EXPECT_EQ (fa->read (rbuf, 1), 1);
 	EXPECT_EQ (rbuf [0], wbuf [0]);
 	fa->close ();
@@ -341,7 +341,7 @@ TEST_F (TestFile, Size)
 	// Read
 	for (uint64_t pos = 0; pos < FILE_SIZE; pos += BLOCK_SIZE) {
 		std::vector <uint8_t> rbuf;
-		fa->read (FileLock (), pos, BLOCK_SIZE, LockType::LOCK_NONE, true, rbuf);
+		fa->read (pos, BLOCK_SIZE, rbuf);
 		EXPECT_TRUE (std::all_of (rbuf.begin (), rbuf.end (), [&](uint8_t i) {return i == 0; }));
 	}
 
@@ -458,7 +458,7 @@ void TestFile::test_write (AccessDirect::_ptr_type file, size_t& file_size, size
 		*p = init;
 		init += sizeof (size_t);
 	}
-	file->write (offset, buffer, FileLock (), false);
+	file->write (offset, buffer, false);
 	size_t write_end = offset + block_size;
 	if (file_size < write_end)
 		file_size = write_end;
@@ -468,7 +468,7 @@ void TestFile::test_write (AccessDirect::_ptr_type file, size_t& file_size, size
 void TestFile::test_read (AccessDirect::_ptr_type file, size_t offset, size_t block_size)
 {
 	Bytes buffer;
-	file->read (FileLock (), offset, (uint32_t)block_size, LockType::LOCK_NONE, false, buffer);
+	file->read (offset, (uint32_t)block_size, buffer);
 	ASSERT_EQ (buffer.size (), block_size);
 	size_t init = offset;
 	for (const size_t* p = (size_t*)buffer.data (), *end = p + buffer.size () / sizeof (size_t); p != end; ++p) {
