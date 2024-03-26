@@ -337,6 +337,7 @@ TEST_F (TestFile, BufSeqRead)
 		size_t buf;
 		ASSERT_EQ (fa->read (&buf, sizeof (buf)), sizeof (buf)) << off;
 		ASSERT_EQ (buf, off) << off;
+		ASSERT_EQ (fa->position (), off + sizeof (size_t));
 	}
 }
 
@@ -353,8 +354,76 @@ TEST_F (TestFile, BufSeqGetBufRead)
 		const size_t* p = (const size_t*)fa->get_buffer_read (cb);
 		ASSERT_EQ (cb, sizeof (size_t));
 		ASSERT_EQ (*p, off);
+		ASSERT_EQ (fa->position (), off);
 		fa->release_buffer (sizeof (size_t));
+		ASSERT_EQ (fa->position (), off + sizeof (size_t));
 	}
+}
+
+TEST_F (TestFile, BufRandomRead)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cnt = test_file_size () / sizeof (size_t);
+
+	std::mt19937 rndgen;
+
+	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations ();
+	size_t i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
+		size_t off = std::uniform_int_distribution <size_t> (0, cnt - 1) (rndgen) * sizeof (size_t);
+		fa->position (off);
+		ASSERT_EQ (fa->position (), off);
+		size_t buf;
+		ASSERT_EQ (fa->read (&buf, sizeof (buf)), sizeof (buf)) << off;
+		ASSERT_EQ (buf, off) << off;
+		ASSERT_EQ (fa->position (), off + sizeof (size_t));
+
+		if (i >= iterations) {
+			end_time = Nirvana::the_chrono->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
+	}
+	duration = end_time - start_time;
+	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " reads per second\n";
+}
+
+TEST_F (TestFile, BufSeqWrite)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	size_t cb = test_file_size ();
+	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
+		fa->write (&off, sizeof (size_t));
+		ASSERT_EQ (fa->position (), off + sizeof (size_t));
+	}
+	test_read (fa->direct ());
+}
+
+TEST_F (TestFile, BufSeqGetBufWrite)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	size_t cb = test_file_size ();
+	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
+		size_t* p = (size_t*)fa->get_buffer_write (sizeof (size_t));
+		*p = off;
+		ASSERT_EQ (fa->position (), off);
+		fa->release_buffer (sizeof (size_t));
+		ASSERT_EQ (fa->position (), off + sizeof (size_t));
+	}
+	test_read (fa->direct ());
 }
 
 TEST_F (TestFile, Size)
