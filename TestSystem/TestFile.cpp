@@ -325,6 +325,38 @@ TEST_F (TestFile, Buf)
 	fa = nullptr;
 }
 
+TEST_F (TestFile, BufSeqRead)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cb = test_file_size ();
+	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
+		size_t buf;
+		ASSERT_EQ (fa->read (&buf, sizeof (buf)), sizeof (buf)) << off;
+		ASSERT_EQ (buf, off) << off;
+	}
+}
+
+TEST_F (TestFile, BufSeqGetBufRead)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cb = test_file_size ();
+	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
+		size_t cb = sizeof (size_t);
+		const size_t* p = (const size_t*)fa->get_buffer_read (cb);
+		ASSERT_EQ (cb, sizeof (size_t));
+		ASSERT_EQ (*p, off);
+		fa->release_buffer (sizeof (size_t));
+	}
+}
+
 TEST_F (TestFile, Size)
 {
 	AccessDirect::_ref_type fa;
