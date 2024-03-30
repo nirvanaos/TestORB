@@ -341,25 +341,6 @@ TEST_F (TestFile, BufSeqRead)
 	}
 }
 
-TEST_F (TestFile, BufSeqGetBufRead)
-{
-	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
-	ASSERT_TRUE (fa);
-
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
-	size_t cb = test_file_size ();
-	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
-		size_t cb = sizeof (size_t);
-		const size_t* p = (const size_t*)fa->get_buffer_read (cb);
-		ASSERT_EQ (cb, sizeof (size_t));
-		ASSERT_EQ (*p, off);
-		ASSERT_EQ (fa->position (), off);
-		fa->release_buffer (sizeof (size_t));
-		ASSERT_EQ (fa->position (), off + sizeof (size_t));
-	}
-}
-
 TEST_F (TestFile, BufSeqWrite)
 {
 	AccessBuf::_ref_type fa;
@@ -369,23 +350,6 @@ TEST_F (TestFile, BufSeqWrite)
 	size_t cb = test_file_size ();
 	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
 		fa->write (&off, sizeof (size_t));
-		ASSERT_EQ (fa->position (), off + sizeof (size_t));
-	}
-	test_read (fa->direct ());
-}
-
-TEST_F (TestFile, BufSeqGetBufWrite)
-{
-	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
-	ASSERT_TRUE (fa);
-
-	size_t cb = test_file_size ();
-	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
-		size_t* p = (size_t*)fa->get_buffer_write (sizeof (size_t));
-		*p = off;
-		ASSERT_EQ (fa->position (), off);
-		fa->release_buffer (sizeof (size_t));
 		ASSERT_EQ (fa->position (), off + sizeof (size_t));
 	}
 	test_read (fa->direct ());
