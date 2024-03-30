@@ -100,6 +100,11 @@ protected:
 		return 0x1000;
 	}
 
+	static unsigned random_test_min_iterations_large ()
+	{
+		return random_test_min_iterations () / 8;
+	}
+
 protected:
 	NamingContextExt::_ref_type naming_service_;
 	File::_ref_type temp_file_;
@@ -336,8 +341,32 @@ TEST_F (TestFile, BufSeqRead)
 	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
 		size_t buf;
 		ASSERT_EQ (fa->read (&buf, sizeof (buf)), sizeof (buf)) << off;
-		ASSERT_EQ (buf, off) << off;
 		ASSERT_EQ (fa->position (), off + sizeof (size_t));
+		ASSERT_EQ (buf, off) << off;
+	}
+}
+
+TEST_F (TestFile, BufSeqReadLarge)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cb = test_file_size ();
+	std::mt19937 rndgen;
+	std::vector <size_t> buf;
+	for (size_t off = 0; off < cb; ) {
+		size_t block_size = std::uniform_int_distribution <size_t> (1, (cb - off) / sizeof (size_t)) (rndgen);
+		buf.resize (block_size);
+		size_t cb = block_size * sizeof (size_t);
+		ASSERT_EQ (fa->read (buf.data (), cb), cb) << off;
+		size_t off_end = off + cb;
+		ASSERT_EQ (fa->position (), off_end);
+		for (const size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+			ASSERT_EQ (*p, off) << off;
+		}
+		ASSERT_EQ (off, off_end);
 	}
 }
 
@@ -351,6 +380,30 @@ TEST_F (TestFile, BufSeqWrite)
 	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
 		fa->write (&off, sizeof (size_t));
 		ASSERT_EQ (fa->position (), off + sizeof (size_t));
+	}
+	test_read (fa->direct ());
+}
+
+TEST_F (TestFile, BufSeqWriteLarge)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	size_t cb = test_file_size ();
+	std::mt19937 rndgen;
+	std::vector <size_t> buf;
+	for (size_t off = 0; off < cb; ) {
+		size_t block_size = std::uniform_int_distribution <size_t> (1, (cb - off) / sizeof (size_t)) (rndgen);
+		buf.resize (block_size);
+		size_t cb = block_size * sizeof (size_t);
+		size_t off_end = off + cb;
+		for (size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+			*p = off;
+		}
+		fa->write (buf.data (), cb);
+		ASSERT_EQ (fa->position (), off_end);
+		ASSERT_EQ (off, off_end);
 	}
 	test_read (fa->direct ());
 }
@@ -424,6 +477,143 @@ TEST_F (TestFile, BufRandomWrite)
 
 	duration = end_time - start_time;
 	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " writes per second\n";
+}
+
+TEST_F (TestFile, BufRandomReadLarge)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cnt = test_file_size () / sizeof (size_t);
+
+	std::mt19937 rndgen;
+	std::vector <size_t> buf;
+
+	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations_large ();
+	size_t i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
+		size_t off = std::uniform_int_distribution <size_t> (0, cnt - 1) (rndgen);
+		size_t block_size = std::uniform_int_distribution <size_t> (1, cnt - off) (rndgen);
+		off *= sizeof (size_t);
+		fa->position (off);
+		ASSERT_EQ (fa->position (), off);
+		buf.resize (block_size);
+		size_t cb = block_size * sizeof (size_t);
+		ASSERT_EQ (fa->read (buf.data (), cb), cb) << off;
+		size_t off_end = off + cb;
+		ASSERT_EQ (fa->position (), off_end);
+		for (const size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+			ASSERT_EQ (*p, off) << off;
+		}
+
+		if (i >= iterations) {
+			end_time = Nirvana::the_chrono->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
+	}
+}
+
+TEST_F (TestFile, BufRandomWriteLarge)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cnt = test_file_size () / sizeof (size_t);
+
+	std::mt19937 rndgen;
+	std::vector <size_t> buf;
+
+	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations_large ();
+	size_t i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
+		size_t off = std::uniform_int_distribution <size_t> (0, cnt - 1) (rndgen);
+		size_t block_size = std::uniform_int_distribution <size_t> (1, cnt - off) (rndgen);
+		off *= sizeof (size_t);
+		fa->position (off);
+		ASSERT_EQ (fa->position (), off);
+
+		buf.resize (block_size);
+		size_t cb = block_size * sizeof (size_t);
+		size_t off_end = off + cb;
+		for (size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+			*p = off;
+		}
+		fa->write (buf.data (), cb);
+		ASSERT_EQ (fa->position (), off_end);
+
+		if (i >= iterations) {
+			end_time = Nirvana::the_chrono->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
+	}
+
+	ASSERT_NO_FATAL_FAILURE (test_read (fa->direct ()));
+}
+
+TEST_F (TestFile, BufRandomLarge)
+{
+	AccessBuf::_ref_type fa;
+	create_temp_file (fa);
+	ASSERT_TRUE (fa);
+
+	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
+	size_t cnt = test_file_size () / sizeof (size_t);
+
+	std::mt19937 rndgen;
+	std::vector <size_t> buf;
+
+	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT duration = random_test_max_duration ();
+	unsigned iterations = random_test_min_iterations_large ();
+	size_t i = 0;
+	TimeBase::TimeT end_time;
+	for (;; ++i) {
+		size_t off = std::uniform_int_distribution <size_t> (0, cnt - 1) (rndgen);
+		size_t block_size = std::uniform_int_distribution <size_t> (1, cnt - off) (rndgen);
+		off *= sizeof (size_t);
+		fa->position (off);
+		ASSERT_EQ (fa->position (), off);
+
+		buf.resize (block_size);
+		size_t cb = block_size * sizeof (size_t);
+		size_t off_end = off + cb;
+
+		if (!std::bernoulli_distribution (0.5) (rndgen)) {
+			// Write
+			for (size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+				*p = off;
+			}
+			fa->write (buf.data (), cb);
+		} else {
+			// Read
+			ASSERT_EQ (fa->read (buf.data (), cb), cb) << off;
+			size_t off_end = off + cb;
+			for (const size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+				ASSERT_EQ (*p, off) << off;
+			}
+		}
+		ASSERT_EQ (fa->position (), off_end);
+
+		if (i >= iterations) {
+			end_time = Nirvana::the_chrono->steady_clock ();
+			if (end_time - start_time >= duration)
+				break;
+		}
+	}
+
+	ASSERT_NO_FATAL_FAILURE (test_read (fa->direct ()));
 }
 
 TEST_F (TestFile, Size)
