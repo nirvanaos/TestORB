@@ -25,6 +25,7 @@
 */
 #include "pch.h"
 #include <Nirvana/System.h>
+#include <Nirvana/POSIX.h>
 #include <Nirvana/File.h>
 #include <Nirvana/Chrono.h>
 #include <Nirvana/filesystem.h>
@@ -138,7 +139,7 @@ TEST_F (TestSystem, Yield)
 TEST_F (TestSystem, CurDir)
 {
 	// Get current working directory name
-	CosNaming::Name cur_dir = Nirvana::the_system->get_current_dir_name ();
+	CosNaming::Name cur_dir = Nirvana::the_posix->get_current_dir_name ();
 	EXPECT_TRUE (is_absolute (cur_dir));
 
 	// Get reference to NameService
@@ -159,15 +160,15 @@ TEST_F (TestSystem, CurDir)
 	{} // Ignore if exists
 
 	// Change current to subdirectory
-	Nirvana::the_system->chdir ("test.tmp");
+	Nirvana::the_posix->chdir ("test.tmp");
 
-	CosNaming::Name cur_dir1 = Nirvana::the_system->get_current_dir_name ();
+	CosNaming::Name cur_dir1 = Nirvana::the_posix->get_current_dir_name ();
 	EXPECT_EQ (cur_dir1.size (), cur_dir.size () + 1);
 
 	// Change current back
-	Nirvana::the_system->chdir ("..");
+	Nirvana::the_posix->chdir ("..");
 
-	cur_dir1 = Nirvana::the_system->get_current_dir_name ();
+	cur_dir1 = Nirvana::the_posix->get_current_dir_name ();
 	EXPECT_EQ (cur_dir1, cur_dir);
 
 	// Remove subdirectory
@@ -178,7 +179,7 @@ TEST_F (TestSystem, Sleep)
 {
 	static const TimeBase::TimeT SLEEP_TIME = TimeBase::SECOND * 1;
 	TimeBase::TimeT t0 = Nirvana::the_chrono->steady_clock ();
-	Nirvana::the_chrono->sleep (SLEEP_TIME);
+	Nirvana::the_posix->sleep (SLEEP_TIME);
 	int64_t delay = Nirvana::the_chrono->steady_clock () - t0 - SLEEP_TIME;
 	EXPECT_GE (delay, -1 * (int64_t)TimeBase::MILLISECOND) << delay;
 	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;

@@ -27,7 +27,7 @@
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
 #include <Nirvana/Chrono.h>
-#include <Nirvana/posix.h>
+#include <Nirvana/posix_defs.h>
 #include <random>
 
 using namespace Nirvana;
