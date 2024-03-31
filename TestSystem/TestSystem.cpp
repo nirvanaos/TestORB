@@ -27,7 +27,6 @@
 #include <Nirvana/System.h>
 #include <Nirvana/POSIX.h>
 #include <Nirvana/File.h>
-#include <Nirvana/Chrono.h>
 #include <Nirvana/filesystem.h>
 #include <signal.h>
 
@@ -133,7 +132,7 @@ void TestSystem::writemem (void* p)
 
 TEST_F (TestSystem, Yield)
 {
-	EXPECT_FALSE (Nirvana::the_chrono->yield ());
+	EXPECT_FALSE (Nirvana::the_system->yield ());
 }
 
 TEST_F (TestSystem, CurDir)
@@ -178,9 +177,9 @@ TEST_F (TestSystem, CurDir)
 TEST_F (TestSystem, Sleep)
 {
 	static const TimeBase::TimeT SLEEP_TIME = TimeBase::SECOND * 1;
-	TimeBase::TimeT t0 = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT t0 = Nirvana::the_system->steady_clock ();
 	Nirvana::the_posix->sleep (SLEEP_TIME);
-	int64_t delay = Nirvana::the_chrono->steady_clock () - t0 - SLEEP_TIME;
+	int64_t delay = Nirvana::the_system->steady_clock () - t0 - SLEEP_TIME;
 	EXPECT_GE (delay, -1 * (int64_t)TimeBase::MILLISECOND) << delay;
 	EXPECT_LE (delay, 20 * (int64_t)TimeBase::MILLISECOND) << delay;
 }

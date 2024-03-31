@@ -26,7 +26,6 @@
 #include "pch.h"
 #include <Nirvana/DirectoryIterator.h>
 #include <Nirvana/System.h>
-#include <Nirvana/Chrono.h>
 #include <Nirvana/posix_defs.h>
 #include <random>
 
@@ -419,7 +418,7 @@ TEST_F (TestFile, BufRandomRead)
 
 	std::mt19937 rndgen;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	size_t i = 0;
@@ -434,7 +433,7 @@ TEST_F (TestFile, BufRandomRead)
 		ASSERT_EQ (fa->position (), off + sizeof (size_t));
 
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -454,7 +453,7 @@ TEST_F (TestFile, BufRandomWrite)
 
 	std::mt19937 rndgen;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	size_t i = 0;
@@ -467,7 +466,7 @@ TEST_F (TestFile, BufRandomWrite)
 		ASSERT_EQ (fa->position (), off + sizeof (size_t));
 
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -491,7 +490,7 @@ TEST_F (TestFile, BufRandomReadLarge)
 	std::mt19937 rndgen;
 	std::vector <size_t> buf;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations_large ();
 	size_t i = 0;
@@ -512,7 +511,7 @@ TEST_F (TestFile, BufRandomReadLarge)
 		}
 
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -531,7 +530,7 @@ TEST_F (TestFile, BufRandomWriteLarge)
 	std::mt19937 rndgen;
 	std::vector <size_t> buf;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations_large ();
 	size_t i = 0;
@@ -553,7 +552,7 @@ TEST_F (TestFile, BufRandomWriteLarge)
 		ASSERT_EQ (fa->position (), off_end);
 
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -574,7 +573,7 @@ TEST_F (TestFile, BufRandomLarge)
 	std::mt19937 rndgen;
 	std::vector <size_t> buf;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations_large ();
 	size_t i = 0;
@@ -607,7 +606,7 @@ TEST_F (TestFile, BufRandomLarge)
 		ASSERT_EQ (fa->position (), off_end);
 
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -844,7 +843,7 @@ TEST_F (TestFile, RandomRead)
 	size_t file_size = (size_t)fa->size ();
 	const size_t max_block_size = decide_max_block_size (fa);
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	unsigned i = 0;
@@ -852,7 +851,7 @@ TEST_F (TestFile, RandomRead)
 	for (;; ++i) {
 		ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -873,7 +872,7 @@ TEST_F (TestFile, RandomWrite)
 	std::mt19937 rndgen;
 	size_t file_size = 0;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	unsigned i = 0;
@@ -881,7 +880,7 @@ TEST_F (TestFile, RandomWrite)
 	for (;; ++i) {
 		ASSERT_NO_FATAL_FAILURE (random_write (fa, file_size, rndgen, max_file_size, max_block_size)) << "Iteration: " << i;
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
@@ -905,7 +904,7 @@ TEST_F (TestFile, Random)
 	std::mt19937 rndgen;
 	size_t file_size = 0;
 
-	TimeBase::TimeT start_time = Nirvana::the_chrono->steady_clock ();
+	TimeBase::TimeT start_time = Nirvana::the_system->steady_clock ();
 	TimeBase::TimeT duration = random_test_max_duration ();
 	unsigned iterations = random_test_min_iterations ();
 	unsigned i = 0;
@@ -919,7 +918,7 @@ TEST_F (TestFile, Random)
 			ASSERT_NO_FATAL_FAILURE (random_read (fa, file_size, rndgen, max_block_size)) << "Iteration: " << i;
 		}
 		if (i >= iterations) {
-			end_time = Nirvana::the_chrono->steady_clock ();
+			end_time = Nirvana::the_system->steady_clock ();
 			if (end_time - start_time >= duration)
 				break;
 		}
