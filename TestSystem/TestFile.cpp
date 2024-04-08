@@ -934,4 +934,26 @@ TEST_F (TestFile, Stat)
 	EXPECT_EQ (mode & S_IFMT, S_IFREG);
 }
 
+TEST_F (TestFile, MkDir)
+{
+	Dir::_ref_type tmp_dir = Dir::_narrow (naming_service_->resolve_str ("/var/tmp"));
+
+	Name name (1, NameComponent ("test_dir", ""));
+	tmp_dir->mkdir (name, 0);
+	tmp_dir->unbind (name);
+
+	const uint16_t mode = S_IRWXU | S_IRWXG | S_IRWXO;
+
+	tmp_dir->mkdir (name, mode);
+
+	Dir::_ref_type dir = Dir::_narrow (tmp_dir->resolve (name));
+
+	FileStat stat;
+	dir->stat (stat);
+
+	EXPECT_EQ (stat.mode (), mode);
+
+	tmp_dir->unbind (name);
+}
+
 }
