@@ -951,7 +951,9 @@ TEST_F (TestFile, MkDir)
 	FileStat stat;
 	dir->stat (stat);
 
-	EXPECT_EQ (stat.mode (), mode);
+	EXPECT_EQ (stat.mode () & S_IFMT, S_IFDIR);
+
+	EXPECT_EQ (stat.mode () & ~S_IFMT, mode);
 
 	tmp_dir->unbind (name);
 }
