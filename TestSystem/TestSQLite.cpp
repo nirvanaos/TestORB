@@ -191,6 +191,24 @@ TEST_F (TestSQLite, Prepared)
 	}
 }
 
+TEST_F (TestSQLite, AutoCommit)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+
+	conn->setAutoCommit (false);
+
+	{
+		PreparedStatement::_ref_type insert;
+		ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+		ASSERT_NOSQLEXCEPTION (insert->setString (1, random_string ()));
+		ASSERT_NOSQLEXCEPTION (insert->execute ());
+		insert->close ();
+	}
+
+	conn->commit ();
+}
+
 TEST_F (TestSQLite, GetParent)
 {
 	Connection::_ref_type conn;
