@@ -195,8 +195,13 @@ TEST_F (TestSQLite, AutoCommit)
 {
 	Connection::_ref_type conn;
 	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+	EXPECT_TRUE (conn->getAutoCommit ());
+
+	EXPECT_THROW (conn->commit (), SQLException);
+	EXPECT_THROW (conn->rollback (nullptr), SQLException);
 
 	conn->setAutoCommit (false);
+	EXPECT_FALSE (conn->getAutoCommit ());
 
 	{
 		PreparedStatement::_ref_type insert;
@@ -207,6 +212,23 @@ TEST_F (TestSQLite, AutoCommit)
 	}
 
 	conn->commit ();
+	EXPECT_FALSE (conn->getAutoCommit ());
+
+	{
+		PreparedStatement::_ref_type insert;
+		ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+		ASSERT_NOSQLEXCEPTION (insert->setString (1, random_string ()));
+		ASSERT_NOSQLEXCEPTION (insert->execute ());
+		insert->close ();
+	}
+
+	conn->rollback (nullptr);
+	EXPECT_FALSE (conn->getAutoCommit ());
+
+	ASSERT_NOSQLEXCEPTION (conn->rollback (nullptr));
+
+	conn->setAutoCommit (true);
+	EXPECT_TRUE (conn->getAutoCommit ());
 }
 
 TEST_F (TestSQLite, GetParent)
