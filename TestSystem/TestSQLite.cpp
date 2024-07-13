@@ -231,6 +231,34 @@ TEST_F (TestSQLite, AutoCommit)
 	EXPECT_TRUE (conn->getAutoCommit ());
 }
 
+TEST_F (TestSQLite, MultiStat)
+{
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+	{
+		PreparedStatement::_ref_type insert;
+		ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+		ASSERT_NOSQLEXCEPTION (insert->setString (1, "Test 1"));
+		ASSERT_NOSQLEXCEPTION (insert->execute ());
+		ASSERT_NOSQLEXCEPTION (insert->setString (1, "Test 2"));
+		ASSERT_NOSQLEXCEPTION (insert->execute ());
+	}
+
+	Statement::_ref_type stm = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
+	ResultSet::_ref_type rs;
+	ASSERT_NOSQLEXCEPTION (rs = stm->executeQuery (
+		"SELECT str FROM test_table WHERE id=1;"
+		"SELECT str FROM test_table WHERE id=2"
+	));
+
+	ASSERT_TRUE (rs->next ());
+	EXPECT_EQ (rs->getString (1), "Test 1");
+	ASSERT_TRUE (stm->getMoreResults ());
+	rs = stm->getResultSet ();
+	ASSERT_TRUE (rs->next ());
+	EXPECT_EQ (rs->getString (1), "Test 2");
+}
+
 TEST_F (TestSQLite, GetParent)
 {
 	Connection::_ref_type conn;
