@@ -257,6 +257,8 @@ TEST_F (TestSQLite, MultiStat)
 	rs = stm->getResultSet ();
 	ASSERT_TRUE (rs->next ());
 	EXPECT_EQ (rs->getString (1), "Test 2");
+	ASSERT_FALSE (stm->getMoreResults ());
+	ASSERT_EQ (stm->getUpdateCount (), -1);
 }
 
 TEST_F (TestSQLite, GetParent)
