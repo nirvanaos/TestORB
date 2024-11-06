@@ -175,6 +175,7 @@ TEST_F (TestSQLite, Prepared)
 			ASSERT_NOSQLEXCEPTION (row.id = rs->getInt (1));
 			rows.push_back (std::move (row));
 		}
+		insert->close ();
 	}
 
 	PreparedStatement::_ref_type select;
@@ -189,6 +190,7 @@ TEST_F (TestSQLite, Prepared)
 		ASSERT_NOSQLEXCEPTION (str = rs->getString (1));
 		EXPECT_EQ (row.str, str);
 	}
+	select->close ();
 }
 
 TEST_F (TestSQLite, AutoCommit)
@@ -242,6 +244,7 @@ TEST_F (TestSQLite, MultiStat)
 		ASSERT_NOSQLEXCEPTION (insert->execute ());
 		ASSERT_NOSQLEXCEPTION (insert->setString (1, "Test 2"));
 		ASSERT_NOSQLEXCEPTION (insert->execute ());
+		insert->close ();
 	}
 
 	Statement::_ref_type stm = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
@@ -257,8 +260,10 @@ TEST_F (TestSQLite, MultiStat)
 	rs = stm->getResultSet ();
 	ASSERT_TRUE (rs->next ());
 	EXPECT_EQ (rs->getString (1), "Test 2");
+	rs->close ();
 	ASSERT_FALSE (stm->getMoreResults ());
 	ASSERT_EQ (stm->getUpdateCount (), -1);
+	stm->close ();
 }
 
 TEST_F (TestSQLite, GetParent)
