@@ -138,7 +138,7 @@ TEST_F (TestSystem, Yield)
 TEST_F (TestSystem, CurDir)
 {
 	// Get current working directory name
-	CosNaming::Name cur_dir = Nirvana::the_posix->get_current_dir_name ();
+	CosNaming::Name cur_dir = Nirvana::the_system->get_current_dir ();
 	EXPECT_TRUE (is_absolute (cur_dir));
 
 	// Get reference to NameService
@@ -161,13 +161,13 @@ TEST_F (TestSystem, CurDir)
 	// Change current to subdirectory
 	Nirvana::the_posix->chdir ("test.tmp");
 
-	CosNaming::Name cur_dir1 = Nirvana::the_posix->get_current_dir_name ();
+	CosNaming::Name cur_dir1 = Nirvana::the_system->get_current_dir ();
 	EXPECT_EQ (cur_dir1.size (), cur_dir.size () + 1);
 
 	// Change current back
 	Nirvana::the_posix->chdir ("..");
 
-	cur_dir1 = Nirvana::the_posix->get_current_dir_name ();
+	cur_dir1 = Nirvana::the_system->get_current_dir ();
 	EXPECT_EQ (cur_dir1, cur_dir);
 
 	// Remove subdirectory
