@@ -41,6 +41,8 @@ TEST (TestFixed, Conversion)
 		EXPECT_EQ (f.to_string (), "0");
 		EXPECT_EQ (f.fixed_digits (), 1);
 		EXPECT_EQ (f.fixed_scale (), 0);
+		EXPECT_EQ (static_cast <int64_t> (f), 0);
+		EXPECT_EQ (static_cast <long double> (f), 0);
 	}
 
 	{
@@ -48,6 +50,8 @@ TEST (TestFixed, Conversion)
 		EXPECT_EQ (f.to_string (), "-12345");
 		EXPECT_EQ (f.fixed_digits (), 5);
 		EXPECT_EQ (f.fixed_scale (), 0);
+		EXPECT_EQ (static_cast <int64_t> (f), -12345);
+		EXPECT_EQ (static_cast <long double> (f), -12345);
 	}
 
 	{
@@ -55,6 +59,8 @@ TEST (TestFixed, Conversion)
 		EXPECT_EQ (f.to_string (), "12345");
 		EXPECT_EQ (f.fixed_digits (), 5);
 		EXPECT_EQ (f.fixed_scale (), 0);
+		EXPECT_EQ (static_cast <int64_t> (f), 12345);
+		EXPECT_EQ (static_cast <long double> (f), 12345);
 	}
 
 	{
@@ -62,6 +68,8 @@ TEST (TestFixed, Conversion)
 		EXPECT_EQ (f.to_string (), "-12345");
 		EXPECT_EQ (f.fixed_digits (), 5);
 		EXPECT_EQ (f.fixed_scale (), 0);
+		EXPECT_EQ (static_cast <int64_t> (f), -12345);
+		EXPECT_EQ (static_cast <long double> (f), -12345);
 	}
 
 	{
@@ -69,13 +77,24 @@ TEST (TestFixed, Conversion)
 		EXPECT_EQ (f.to_string (), "12345");
 		EXPECT_EQ (f.fixed_digits (), 5);
 		EXPECT_EQ (f.fixed_scale (), 0);
+		EXPECT_EQ (static_cast <int64_t> (f), 12345);
+		EXPECT_EQ (static_cast <long double> (f), 12345);
 	}
 
 	{
-		Fixed f (1.2345);
+		Fixed f = Fixed (1.2345).round (5);
 		EXPECT_EQ (f.to_string (), "1.2345");
 		EXPECT_EQ (f.fixed_digits (), 5);
 		EXPECT_EQ (f.fixed_scale (), 4);
+		EXPECT_EQ (static_cast <long double> (f), 1.2345);
+	}
+
+	{
+		Fixed f = Fixed (1.2345L).round (5);
+		EXPECT_EQ (f.to_string (), "1.2345");
+		EXPECT_EQ (f.fixed_digits (), 5);
+		EXPECT_EQ (f.fixed_scale (), 4);
+		EXPECT_EQ (static_cast <long double> (f), 1.2345);
 	}
 
 	{
@@ -83,6 +102,7 @@ TEST (TestFixed, Conversion)
 		EXPECT_EQ (f.to_string (), "1.2345");
 		EXPECT_EQ (f.fixed_digits (), 5);
 		EXPECT_EQ (f.fixed_scale (), 4);
+		EXPECT_EQ (static_cast <long double> (f), 1.2345);
 	}
 
 	// Invalid string
@@ -190,7 +210,7 @@ TEST (TestFixed, Compare)
 
 TEST (TestFixed, Any)
 {
-	Fixed f (1.2345);
+	Fixed f ("1.2345");
 	Any any;
 	any <<= Any::from_fixed (f, 5, 4);
 	Fixed f1;

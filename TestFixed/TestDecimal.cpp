@@ -36,12 +36,38 @@ TEST (TestDecimal, Conversion)
 {
 	{
 		Decimal <5, 4> d;
-		EXPECT_EQ (Fixed (d).to_string (), "0.0000");
+		EXPECT_EQ (d.to_string (), "0.0000");
+		EXPECT_EQ (static_cast <long double> (d), 0);
 	}
 
 	{
 		Decimal <5, 4> d ("1.2345");
-		EXPECT_EQ (Fixed (1.2345), d);
+		EXPECT_EQ (d.to_string (), "1.2345");
+		EXPECT_EQ (static_cast <long double> (d), 1.2345);
+	}
+
+	{
+		Decimal <5, 4> d ("1.23451");
+		EXPECT_EQ (d.to_string (), "1.2345");
+		EXPECT_EQ (static_cast <long double> (d), 1.2345);
+	}
+
+	{
+		Decimal <5, 4> d ("1.23455");
+		EXPECT_EQ (d.to_string (), "1.2346");
+		EXPECT_EQ (static_cast <long double> (d), 1.2346);
+	}
+
+	{
+		Decimal <5, 4> d (1.2345);
+		EXPECT_EQ (d.to_string (), "1.2345");
+		EXPECT_EQ (static_cast <long double> (d), 1.2345);
+	}
+
+	{
+		Decimal <5, 4> d (1.2345L);
+		EXPECT_EQ (d.to_string (), "1.2345");
+		EXPECT_EQ (static_cast <long double> (d), 1.2345);
 	}
 
 	{
