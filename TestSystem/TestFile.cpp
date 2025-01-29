@@ -55,6 +55,11 @@ protected:
 		// before each test).
 		naming_service_ = NamingContextExt::_narrow (the_orb->resolve_initial_references ("NameService"));
 		ASSERT_TRUE (naming_service_);
+
+		// Obtain temporary directory object
+		Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
+		ASSERT_TRUE (obj);
+		temp_dir_ = Dir::_narrow (obj);
 	}
 
 	virtual void TearDown ()
@@ -68,11 +73,13 @@ protected:
 	void create_temp_file (unsigned flags, Access::_ref_type& access);
 	void create_temp_file (AccessDirect::_ref_type& access);
 	void create_temp_file (AccessBuf::_ref_type& access);
+	void create_temp_file_and_fill (AccessBuf::_ref_type& access);
 
 	static void test_write (AccessDirect::_ptr_type file, size_t& file_size, size_t offset, size_t block_size);
 	static void test_read (AccessDirect::_ptr_type file, size_t offset, size_t block_size);
 	static void test_write (AccessDirect::_ptr_type file);
 	static void test_read (AccessDirect::_ptr_type file);
+	void test_read () const;
 
 	static void random_write (AccessDirect::_ptr_type file, size_t& file_size, std::mt19937& rndgen,
 		size_t max_file_size, size_t max_block_size);
@@ -106,24 +113,21 @@ protected:
 
 protected:
 	NamingContextExt::_ref_type naming_service_;
+	Dir::_ref_type temp_dir_;
 	File::_ref_type temp_file_;
 };
 
 void TestFile::create_temp_file (unsigned flags, Access::_ref_type& access)
 {
-	// Obtain temporary directory object
-	Object::_ref_type obj = naming_service_->resolve_str ("/var/tmp");
-	ASSERT_TRUE (obj);
-	Dir::_ref_type tmp_dir = Dir::_narrow (obj);
-	ASSERT_TRUE (tmp_dir);
-
 	// Create temporary file
 	const char PATTERN [] = "XXXXXX.tmp";
 	std::string file_name = PATTERN;
-	access = tmp_dir->mkostemps (file_name, 4, flags, 0);
+	access = temp_dir_->mkostemps (file_name, 4, flags, 0);
 	ASSERT_TRUE (access);
 
 	EXPECT_NE (file_name, PATTERN);
+	if (temp_file_)
+		temp_file_->remove ();
 	temp_file_ = access->file ();
 	EXPECT_EQ (temp_file_->size (), 0);
 }
@@ -143,7 +147,16 @@ void TestFile::create_temp_file (AccessBuf::_ref_type& access)
 	ASSERT_NO_FATAL_FAILURE (create_temp_file (0, a));
 	access = AccessBuf::_downcast (a->_to_value ());
 	ASSERT_TRUE (access);
-	EXPECT_EQ (access->direct ()->size (), 0);
+	EXPECT_EQ (access->size (), 0);
+}
+
+void TestFile::create_temp_file_and_fill (AccessBuf::_ref_type& access)
+{
+	AccessDirect::_ref_type direct;
+	create_temp_file (direct);
+	ASSERT_NO_FATAL_FAILURE (test_write (direct));
+	Access::_ref_type a = temp_file_->open (O_RDWR, 0);
+	access = AccessBuf::_downcast (a->_to_value ());
 }
 
 TEST_F (TestFile, Var)
@@ -241,7 +254,7 @@ TEST_F (TestFile, Mnt)
 TEST_F (TestFile, Direct)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	EXPECT_EQ (fa->size (), 0);
@@ -296,7 +309,7 @@ TEST_F (TestFile, Direct)
 TEST_F (TestFile, Buf)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	uint8_t wbuf [16];
@@ -316,7 +329,7 @@ TEST_F (TestFile, Buf)
 	ASSERT_TRUE (file);
 	fa = AccessBuf::_downcast (file->open (O_RDONLY, 0)->_to_value ());
 	ASSERT_TRUE (fa);
-	EXPECT_EQ (fa->direct ()->size (), 1);
+	EXPECT_EQ (fa->size (), 1);
 	EXPECT_EQ (fa->read (rbuf, 1), 1);
 	EXPECT_EQ (rbuf [0], wbuf [0]);
 	fa->close ();
@@ -326,10 +339,9 @@ TEST_F (TestFile, Buf)
 TEST_F (TestFile, BufSeqRead)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cb = test_file_size ();
 	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
 		size_t buf;
@@ -342,10 +354,9 @@ TEST_F (TestFile, BufSeqRead)
 TEST_F (TestFile, BufSeqReadLarge)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cb = test_file_size ();
 	std::mt19937 rndgen;
 	std::vector <size_t> buf;
@@ -365,49 +376,54 @@ TEST_F (TestFile, BufSeqReadLarge)
 
 TEST_F (TestFile, BufSeqWrite)
 {
-	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
-	ASSERT_TRUE (fa);
+	{
+		AccessBuf::_ref_type fa;
+		ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
+		ASSERT_TRUE (fa);
 
-	size_t cb = test_file_size ();
-	for (size_t off = 0; off < cb; off += sizeof (size_t)) {
-		fa->write (&off, sizeof (size_t));
-		ASSERT_EQ (fa->position (), off + sizeof (size_t));
+		size_t cb = test_file_size ();
+		for (size_t off = 0; off < cb; off += sizeof (size_t)) {
+			fa->write (&off, sizeof (size_t));
+			ASSERT_EQ (fa->position (), off + sizeof (size_t));
+		}
+		fa->close ();
 	}
-	test_read (fa->direct ());
+	ASSERT_NO_FATAL_FAILURE (test_read ());
 }
 
 TEST_F (TestFile, BufSeqWriteLarge)
 {
-	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
-	ASSERT_TRUE (fa);
+	{
+		AccessBuf::_ref_type fa;
+		ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
+		ASSERT_TRUE (fa);
 
-	size_t cb = test_file_size ();
-	std::mt19937 rndgen;
-	std::vector <size_t> buf;
-	for (size_t off = 0; off < cb; ) {
-		size_t block_size = std::uniform_int_distribution <size_t> (1, (cb - off) / sizeof (size_t)) (rndgen);
-		buf.resize (block_size);
-		size_t cb = block_size * sizeof (size_t);
-		size_t off_end = off + cb;
-		for (size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
-			*p = off;
+		size_t cb = test_file_size ();
+		std::mt19937 rndgen;
+		std::vector <size_t> buf;
+		for (size_t off = 0; off < cb; ) {
+			size_t block_size = std::uniform_int_distribution <size_t> (1, (cb - off) / sizeof (size_t)) (rndgen);
+			buf.resize (block_size);
+			size_t cb = block_size * sizeof (size_t);
+			size_t off_end = off + cb;
+			for (size_t* p = buf.data (); off < off_end; ++p, off += sizeof (size_t)) {
+				*p = off;
+			}
+			fa->write (buf.data (), cb);
+			ASSERT_EQ (fa->position (), off_end);
+			ASSERT_EQ (off, off_end);
 		}
-		fa->write (buf.data (), cb);
-		ASSERT_EQ (fa->position (), off_end);
-		ASSERT_EQ (off, off_end);
+		fa->close ();
 	}
-	test_read (fa->direct ());
+	ASSERT_NO_FATAL_FAILURE (test_read ());
 }
 
 TEST_F (TestFile, BufRandomRead)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cnt = test_file_size () / sizeof (size_t);
 
 	std::mt19937 rndgen;
@@ -439,10 +455,9 @@ TEST_F (TestFile, BufRandomRead)
 TEST_F (TestFile, BufRandomWrite)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cnt = test_file_size () / sizeof (size_t);
 
 	std::mt19937 rndgen;
@@ -466,7 +481,9 @@ TEST_F (TestFile, BufRandomWrite)
 		}
 	}
 	
-	ASSERT_NO_FATAL_FAILURE (test_read (fa->direct ()));
+	fa->close ();
+	fa = nullptr;
+	ASSERT_NO_FATAL_FAILURE (test_read ());
 
 	duration = end_time - start_time;
 	std::cout << ((double)i / ((double)(duration) / (double)TimeBase::SECOND)) << " writes per second\n";
@@ -475,10 +492,9 @@ TEST_F (TestFile, BufRandomWrite)
 TEST_F (TestFile, BufRandomReadLarge)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cnt = test_file_size () / sizeof (size_t);
 
 	std::mt19937 rndgen;
@@ -515,10 +531,9 @@ TEST_F (TestFile, BufRandomReadLarge)
 TEST_F (TestFile, BufRandomWriteLarge)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cnt = test_file_size () / sizeof (size_t);
 
 	std::mt19937 rndgen;
@@ -552,16 +567,17 @@ TEST_F (TestFile, BufRandomWriteLarge)
 		}
 	}
 
-	ASSERT_NO_FATAL_FAILURE (test_read (fa->direct ()));
+	fa->close ();
+	fa = nullptr;
+	ASSERT_NO_FATAL_FAILURE (test_read ());
 }
 
 TEST_F (TestFile, BufRandomLarge)
 {
 	AccessBuf::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file_and_fill (fa));
 	ASSERT_TRUE (fa);
 
-	ASSERT_NO_FATAL_FAILURE (test_write (fa->direct ()));
 	size_t cnt = test_file_size () / sizeof (size_t);
 
 	std::mt19937 rndgen;
@@ -606,13 +622,15 @@ TEST_F (TestFile, BufRandomLarge)
 		}
 	}
 
-	ASSERT_NO_FATAL_FAILURE (test_read (fa->direct ()));
+	fa->close ();
+	fa = nullptr;
+	ASSERT_NO_FATAL_FAILURE (test_read ());
 }
 
 TEST_F (TestFile, Size)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	const uint64_t FILE_SIZE = 0x100000;
@@ -711,7 +729,7 @@ TEST_F (TestFile, Directory)
 TEST_F (TestFile, Locator)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	File::_ref_type f = fa->file ();
@@ -767,7 +785,7 @@ void TestFile::random_write (AccessDirect::_ptr_type file, size_t& file_size, st
 	size_t block_size = std::uniform_int_distribution <size_t> (1, max_block_size / sizeof (size_t)) (rndgen);
 	size_t max_offset = std::min (max_file_size / sizeof (size_t) - block_size, file_size / sizeof (size_t));
 	size_t offset = std::uniform_int_distribution <size_t> (0, max_offset) (rndgen);
-	test_write (file, file_size, offset * sizeof (size_t), block_size * sizeof (size_t));
+	ASSERT_NO_FATAL_FAILURE (test_write (file, file_size, offset * sizeof (size_t), block_size * sizeof (size_t)));
 }
 
 void TestFile::random_read (AccessDirect::_ptr_type file, size_t file_size, std::mt19937& rndgen,
@@ -785,7 +803,7 @@ void TestFile::random_read (AccessDirect::_ptr_type file, size_t file_size, std:
 	} else
 		offset = std::uniform_int_distribution <size_t> (0, max_offset - block_size) (rndgen);
 
-	test_read (file, offset * sizeof (size_t), block_size * sizeof (size_t));
+	ASSERT_NO_FATAL_FAILURE (test_read (file, offset * sizeof (size_t), block_size * sizeof (size_t)));
 }
 
 void TestFile::test_write (AccessDirect::_ptr_type file)
@@ -815,10 +833,16 @@ void TestFile::test_read (AccessDirect::_ptr_type file)
 	}
 }
 
+void TestFile::test_read () const
+{
+	Access::_ref_type a = temp_file_->open (O_RDONLY | O_DIRECT, 0);
+	ASSERT_NO_FATAL_FAILURE (test_read (AccessDirect::_narrow (a->_to_object ())));
+}
+
 TEST_F (TestFile, Sequential)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	ASSERT_NO_FATAL_FAILURE (test_write (fa));
@@ -828,7 +852,7 @@ TEST_F (TestFile, Sequential)
 TEST_F (TestFile, RandomRead)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	ASSERT_NO_FATAL_FAILURE (test_write (fa));
@@ -857,7 +881,7 @@ TEST_F (TestFile, RandomRead)
 TEST_F (TestFile, RandomWrite)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	const size_t max_block_size = decide_max_block_size (fa);
@@ -889,7 +913,7 @@ TEST_F (TestFile, RandomWrite)
 TEST_F (TestFile, Random)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 
 	const size_t max_block_size = decide_max_block_size (fa);
@@ -924,7 +948,7 @@ TEST_F (TestFile, Random)
 TEST_F (TestFile, Stat)
 {
 	AccessDirect::_ref_type fa;
-	create_temp_file (fa);
+	ASSERT_NO_FATAL_FAILURE (create_temp_file (fa));
 	ASSERT_TRUE (fa);
 	File::_ref_type file = fa->file ();
 	ASSERT_TRUE (file);
