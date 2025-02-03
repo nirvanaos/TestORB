@@ -189,4 +189,15 @@ TEST_F (TestSystem, ContextType)
 	EXPECT_EQ (Nirvana::the_system->context_type (), System::ContextType::PROCESS);
 }
 
+TEST_F (TestSystem, BindError)
+{
+	BindError::Error err;
+	err.info ().s ("IDL:Test/DbConnectFactory:1.0");
+	err.info ()._d (Nirvana::BindError::Type::ERR_OBJ_NAME);
+	CORBA::Any any;
+	any <<= std::move (err);
+	CORBA::UnknownUserException ex (std::move (any));
+	any.clear ();
+}
+
 }
