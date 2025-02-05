@@ -29,6 +29,7 @@
 #include <deque>
 #include <Nirvana/File.h>
 #include <Nirvana/posix_defs.h>
+#include <Nirvana/POSIX.h>
 #include "IDL/DbConnect.h"
 
 namespace TestORB
@@ -107,7 +108,8 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 10000);
-	int iterations = std::min (std::numeric_limits <int>::max (), 10);
+	int iterations = std::min (std::numeric_limits <int>::max (), 100000);
+	size_t max_concurrent_requests = 100;
 	for (int i = 0; i < iterations; ++i) {
 		Operation op;
 		int32_t id;
@@ -120,45 +122,59 @@ TEST_P (TestDbConnect, Random)
 		} else
 			op = Operation::Select;
 
-		Request rq;
-		rq.op = op;
+		Request newrq;
+		newrq.op = op;
 		switch (op) {
 			case Operation::Set:
-				rq.poller = obj->sendp_set (id, random_string ());
+				newrq.poller = obj->sendp_set (id, random_string ());
+				ASSERT_EQ (newrq.poller->operation_name (), "set");
 				break;
 			case Operation::Del:
-				rq.poller = obj->sendp_del (id);
+				newrq.poller = obj->sendp_del (id);
+				ASSERT_EQ (newrq.poller->operation_name (), "del");
 				break;
 			case Operation::Select:
-				rq.poller = obj->sendp_select ();
+				newrq.poller = obj->sendp_select ();
+				ASSERT_EQ (newrq.poller->operation_name (), "select");
 				break;
 		}
 
-		for (auto it = active_requests.begin (); it != active_requests.end ();) {
-			if (it->poller->is_ready (0)) {
-				Request rq = std::move (*it);
-				it = active_requests.erase (it);
-				switch (it->op) {
-					case Operation::Set:
-						rq.poller->set (0);
-						break;
-					case Operation::Del:
-						rq.poller->del (0);
-						break;
-					case Operation::Select:
-					{
-						NDBC::ResultSet::_ref_type rs;
-						rq.poller->select (0, rs);
-						while (rs->next ()) {
-							;
-						}
-					} break;
-				}
-			} else
-				++it;
+		for (;;) {
+			for (auto it = active_requests.begin (); it != active_requests.end ();) {
+				if (it->poller->is_ready (0)) {
+					Request rq = std::move (*it);
+					it = active_requests.erase (it);
+					std::string opname = rq.poller->operation_name ();
+					switch (rq.op) {
+						case Operation::Set:
+							ASSERT_EQ (opname, "set");
+							rq.poller->set (0);
+							break;
+						case Operation::Del:
+							ASSERT_EQ (opname, "del");
+							rq.poller->del (0);
+							break;
+						case Operation::Select:
+							ASSERT_EQ (opname, "select");
+							{
+								NDBC::ResultSet::_ref_type rs;
+								rq.poller->select (0, rs);
+								while (rs->next ()) {
+									;
+								}
+							}
+							break;
+					}
+				} else
+					++it;
+			}
+			if (active_requests.size () >= max_concurrent_requests)
+				Nirvana::the_posix->sleep (100 * TimeBase::MILLISECOND);
+			else
+				break;
 		}
 
-		active_requests.push_back (std::move (rq));
+		active_requests.push_back (std::move (newrq));
 	}
 
 	while (!active_requests.empty ()) {

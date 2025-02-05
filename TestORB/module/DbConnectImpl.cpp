@@ -84,14 +84,13 @@ public:
 		const IDL::String& user, const IDL::String& password) :
 		connection_ (driver->connect (url, user, password))
 	{
+		connection_->setTimeout (TIMEOUT);
 		create_database ();
 	}
 
 protected:
 	Connection::_ref_type get_connection () const override
 	{
-		if (!connection_->isValid (TIMEOUT))
-			throw CORBA::TIMEOUT ();
 		return connection_;
 	}
 
