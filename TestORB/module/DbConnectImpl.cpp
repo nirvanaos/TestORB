@@ -31,14 +31,22 @@ using namespace NDBC;
 
 namespace Test {
 
-class DbConnectImpl : public servant_traits <DbConnect>::Servant <DbConnectImpl>
+// NOTE: We can't use virtual classes in stateless servant
+
+template <class Impl>
+class DbConnectImpl : public servant_traits <DbConnect>::Servant <Impl>
 {
 public:
-	void create_database () const;
+	void create_database () const
+	{
+		auto conn = static_cast <const Impl&> (*this).get_connection ();
+		Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
+		st->execute ("CREATE TABLE test(id INTEGER PRIMARY KEY, text TEXT)");
+	}
 
 	void set (int32_t id, const IDL::String& text) const
 	{
-		Connection::_ref_type conn = get_connection ();
+		auto conn = static_cast <const Impl&> (*this).get_connection ();
 		PreparedStatement::_ref_type st = conn->prepareStatement (
 			"INSERT OR REPLACE INTO test VALUES(?,?)",
 			ResultSet::Type::TYPE_FORWARD_ONLY, 0);
@@ -49,7 +57,7 @@ public:
 
 	void del (int32_t id) const
 	{
-		Connection::_ref_type conn = get_connection ();
+		auto conn = static_cast <const Impl&> (*this).get_connection ();
 		PreparedStatement::_ref_type st = conn->prepareStatement (
 			"DELETE FROM test WHERE id=?",
 			ResultSet::Type::TYPE_FORWARD_ONLY, 0);
@@ -59,23 +67,14 @@ public:
 
 	ResultSet::_ref_type select () const
 	{
-		Connection::_ref_type conn = get_connection ();
+		auto conn = static_cast <const Impl&> (*this).get_connection ();
 		Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
 		return st->executeQuery ("SELECT * FROM test");
 	}
 
-protected:
-	virtual Connection::_ref_type get_connection () const = 0;
 };
 
-void DbConnectImpl::create_database () const
-{
-	Connection::_ref_type conn = get_connection ();
-	Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
-	st->execute ("CREATE TABLE test(id INTEGER PRIMARY KEY, text TEXT)");
-}
-
-class DbConnectSingle : public DbConnectImpl
+class DbConnectSingle : public DbConnectImpl <DbConnectSingle>
 {
 	static const TimeBase::TimeT TIMEOUT = TimeBase::SECOND * 10;
 
@@ -88,8 +87,10 @@ public:
 		create_database ();
 	}
 
-protected:
-	Connection::_ref_type get_connection () const override
+	~DbConnectSingle ()
+	{}
+
+	Connection::_ptr_type get_connection () const
 	{
 		return connection_;
 	}
@@ -98,7 +99,7 @@ private:
 	Connection::_ref_type connection_;
 };
 
-class DbConnectPool : public DbConnectImpl
+class DbConnectPool : public DbConnectImpl <DbConnectPool>
 {
 public:
 	DbConnectPool (Driver::_ref_type driver, const IDL::String& url,
@@ -108,8 +109,10 @@ public:
 		create_database ();
 	}
 
-protected:
-	Connection::_ref_type get_connection () const override
+	~DbConnectPool ()
+	{}
+
+	Connection::_ref_type get_connection () const
 	{
 		return pool_->getConnection ();
 	}

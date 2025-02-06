@@ -32,9 +32,9 @@ module Test {
 
 interface DbConnect
 {
-	void set (in long id, in string text);
-	void del (in long id);
-	NDBC::ResultSet select ();
+	void set (in long id, in string text) raises (NDBC::SQLException);
+	void del (in long id) raises (NDBC::SQLException);
+	NDBC::ResultSet select () raises (NDBC::SQLException);
 };
 
 interface DbConnectFactory
@@ -45,7 +45,7 @@ interface DbConnectFactory
 	};
 
 	DbConnect create (in Implementation impl, in NDBC::Driver driver, in string url,
-		in string user, in string password);
+		in string user, in string password) raises (NDBC::SQLException);
 };
 
 const DbConnectFactory db_connect_factory;

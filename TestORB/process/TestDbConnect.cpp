@@ -96,10 +96,16 @@ enum class Operation
 struct Request
 {
 	Poller::_ref_type poller;
+	int iteration;
 	Operation op;
 
 	void complete ();
 };
+
+TEST_P (TestDbConnect, Create)
+{
+	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_, "", "");
+}
 
 TEST_P (TestDbConnect, Random)
 {
@@ -111,7 +117,7 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 10000);
 	int iterations = std::min (std::numeric_limits <int>::max (), 100);
-	size_t max_concurrent_requests = 1;
+	size_t max_concurrent_requests = 2;
 
 	for (int i = 0; i < iterations; ++i) {
 		Operation op;
@@ -127,6 +133,7 @@ TEST_P (TestDbConnect, Random)
 
 		Request newrq;
 		newrq.op = op;
+		newrq.iteration = i;
 		switch (op) {
 			case Operation::Set:
 				newrq.poller = obj->sendp_set (id, random_string ());
