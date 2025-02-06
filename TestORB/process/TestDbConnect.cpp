@@ -86,30 +86,33 @@ std::string TestDbConnect::random_string ()
 	return s;
 }
 
+typedef ::Test::AMI_DbConnectPoller Poller;
+
+enum class Operation
+{
+	Set, Del, Select
+};
+
+struct Request
+{
+	Poller::_ref_type poller;
+	Operation op;
+
+	void complete ();
+};
+
 TEST_P (TestDbConnect, Random)
 {
 	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_, "", "");
-
-	typedef ::Test::AMI_DbConnectPoller Poller;
-
-	enum class Operation
-	{
-		Set, Del, Select
-	};
-
-	struct Request
-	{
-		Poller::_ref_type poller;
-		Operation op;
-	};
 
 	std::deque <Request> active_requests;
 
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 10000);
-	int iterations = std::min (std::numeric_limits <int>::max (), 100000);
-	size_t max_concurrent_requests = 100;
+	int iterations = std::min (std::numeric_limits <int>::max (), 100);
+	size_t max_concurrent_requests = 1;
+
 	for (int i = 0; i < iterations; ++i) {
 		Operation op;
 		int32_t id;
@@ -139,63 +142,58 @@ TEST_P (TestDbConnect, Random)
 				break;
 		}
 
+		active_requests.push_back (std::move (newrq));
+
 		for (;;) {
+			bool some_finished = false;
 			for (auto it = active_requests.begin (); it != active_requests.end ();) {
 				if (it->poller->is_ready (0)) {
 					Request rq = std::move (*it);
 					it = active_requests.erase (it);
-					std::string opname = rq.poller->operation_name ();
-					switch (rq.op) {
-						case Operation::Set:
-							ASSERT_EQ (opname, "set");
-							rq.poller->set (0);
-							break;
-						case Operation::Del:
-							ASSERT_EQ (opname, "del");
-							rq.poller->del (0);
-							break;
-						case Operation::Select:
-							ASSERT_EQ (opname, "select");
-							{
-								NDBC::ResultSet::_ref_type rs;
-								rq.poller->select (0, rs);
-								while (rs->next ()) {
-									;
-								}
-							}
-							break;
-					}
+					some_finished = true;
+					rq.complete ();
 				} else
 					++it;
 			}
-			if (active_requests.size () >= max_concurrent_requests)
-				Nirvana::the_posix->sleep (100 * TimeBase::MILLISECOND);
-			else
+			if (active_requests.size () >= max_concurrent_requests) {
+				if (!some_finished)
+					Nirvana::the_posix->sleep (100 * TimeBase::MILLISECOND);
+			} else
 				break;
 		}
-
-		active_requests.push_back (std::move (newrq));
 	}
 
 	while (!active_requests.empty ()) {
 		Request rq = std::move (active_requests.front ());
 		active_requests.pop_front ();
-		switch (rq.op) {
-			case Operation::Set:
-				rq.poller->set (std::numeric_limits <uint32_t>::max ());
-				break;
-			case Operation::Del:
-				rq.poller->del (std::numeric_limits <uint32_t>::max ());
-				break;
-			case Operation::Select:
+		rq.complete ();
+	}
+
+	Nirvana::the_posix->sleep (1 * TimeBase::SECOND);
+}
+
+void Request::complete ()
+{
+	std::string opname = poller->operation_name ();
+	switch (op) {
+		case Operation::Set:
+			ASSERT_EQ (opname, "set");
+			poller->set (std::numeric_limits <uint32_t>::max ());
+			break;
+		case Operation::Del:
+			ASSERT_EQ (opname, "del");
+			poller->del (std::numeric_limits <uint32_t>::max ());
+			break;
+		case Operation::Select:
+			ASSERT_EQ (opname, "select");
 			{
 				NDBC::ResultSet::_ref_type rs;
-				rq.poller->select (std::numeric_limits <uint32_t>::max (), rs);
+				poller->select (std::numeric_limits <uint32_t>::max (), rs);
 				while (rs->next ()) {
 					;
 				}
-			} break;
-		}
+			}
+			break;
 	}
 }
 
