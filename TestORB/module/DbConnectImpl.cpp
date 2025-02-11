@@ -42,6 +42,7 @@ public:
 		auto conn = static_cast <const Impl&> (*this).get_connection ();
 		Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
 		st->execute ("CREATE TABLE test(id INTEGER PRIMARY KEY, text TEXT)");
+		st->close ();
 	}
 
 	void set (int32_t id, const IDL::String& text) const
@@ -53,6 +54,7 @@ public:
 		st->setInt (1, id);
 		st->setString (2, text);
 		st->executeUpdate ();
+		st->close ();
 	}
 
 	void del (int32_t id) const
@@ -63,6 +65,7 @@ public:
 			ResultSet::Type::TYPE_FORWARD_ONLY, 0);
 		st->setInt (1, id);
 		st->executeUpdate ();
+		st->close ();
 	}
 
 	ResultSet::_ref_type select () const
@@ -112,7 +115,20 @@ public:
 	~DbConnectPool ()
 	{}
 
-	Connection::_ref_type get_connection () const
+	class PoolableConnection : public Connection::_ref_type
+	{
+	public:
+		PoolableConnection(Connection::_ref_type&& conn) :
+			Connection::_ref_type (std::move (conn))
+		{}
+
+		~PoolableConnection ()
+		{
+			operator->()->close ();
+		}
+	};
+
+	PoolableConnection get_connection () const
 	{
 		return pool_->getConnection ();
 	}

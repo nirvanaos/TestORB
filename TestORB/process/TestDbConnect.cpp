@@ -116,8 +116,8 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 10000);
-	int iterations = std::min (std::numeric_limits <int>::max (), 100);
-	size_t max_concurrent_requests = 2;
+	int iterations = std::min (std::numeric_limits <int>::max (), 1000);
+	size_t max_concurrent_requests = 100;
 
 	for (int i = 0; i < iterations; ++i) {
 		Operation op;
