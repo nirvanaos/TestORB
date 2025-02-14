@@ -315,4 +315,39 @@ TEST_F (TestSQLite, FindColumn)
 	EXPECT_THROW (rs->findColumn ("blabla"), NDBC::SQLException);
 }
 
+TEST_F (TestSQLite, StatementReuse)
+{
+	static const unsigned ROW_CNT = 10;
+
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+	{
+		PreparedStatement::_ref_type insert;
+		ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+		for (unsigned i = 0; i < ROW_CNT; ++i) {
+			ASSERT_NOSQLEXCEPTION (insert->setString (1, random_string ()));
+			ASSERT_NOSQLEXCEPTION (insert->execute ());
+		}
+		insert->close ();
+	}
+
+	Statement::_ref_type stm = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
+	for (int pass = 0; pass < 2; ++pass) {
+		{
+			ResultSet::_ref_type rs;
+			ASSERT_NOSQLEXCEPTION (rs = stm->executeQuery ("SELECT * FROM test_table"));
+			unsigned cnt = 0;
+			while (rs->next ())
+				++cnt;
+			rs->close ();
+			ASSERT_EQ (cnt, ROW_CNT);
+		}
+		while (stm->getMoreResults ())
+			;
+		stm->getUpdateCount ();
+		stm->clearWarnings ();
+	}
+	stm->close ();
+}
+
 }
