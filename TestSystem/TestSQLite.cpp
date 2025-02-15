@@ -91,6 +91,8 @@ protected:
 	void prepare_insert (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt);
 	void prepare_select (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt);
 
+	static void clear_statement (Statement::_ptr_type stm);
+
 private:
 	File::_ref_type file_;
 	std::string url_;
@@ -332,6 +334,11 @@ TEST_F (TestSQLite, StatementReuse)
 	}
 
 	Statement::_ref_type stm = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
+	
+	stm->executeUpdate ("CREATE TABLE test_table2 (str TEXT)");
+
+	clear_statement (stm);
+
 	for (int pass = 0; pass < 2; ++pass) {
 		{
 			ResultSet::_ref_type rs;
@@ -342,12 +349,17 @@ TEST_F (TestSQLite, StatementReuse)
 			rs->close ();
 			ASSERT_EQ (cnt, ROW_CNT);
 		}
-		while (stm->getMoreResults ())
-			;
-		stm->getUpdateCount ();
-		stm->clearWarnings ();
+		clear_statement (stm);
 	}
 	stm->close ();
+}
+
+void TestSQLite::clear_statement (Statement::_ptr_type stm)
+{
+	while (stm->getMoreResults ())
+		;
+	stm->getUpdateCount ();
+	stm->clearWarnings ();
 }
 
 }
