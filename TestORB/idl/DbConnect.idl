@@ -46,7 +46,7 @@ interface DbConnectFactory
 		ConnectionPoolStateless
 	};
 
-	DbConnect create (in Implementation impl, in NDBC::Driver driver, in string url,
+	DbConnect create (in Implementation impl, in NDBC::Driver driver, in string url_rwc, in string url_ro,
 		in string user, in string password) raises (NDBC::SQLException);
 };
 

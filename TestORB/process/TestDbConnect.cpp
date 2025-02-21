@@ -50,7 +50,9 @@ public:
 		const char PATTERN [] = "testXXXXXX.db";
 		IDL::String file_name = PATTERN;
 		file_ = tmp_dir->mkostemps (file_name, 3, O_DIRECT, 0)->file ();
-		url_ = "file:/var/tmp/" + file_name + "?mode=rwc&journal_mode=WAL";
+		file_name = "file:/var/tmp/" + file_name;
+		url_rwc_ = file_name + "?mode=rwc&journal_mode=WAL";
+		url_ro_ = file_name + "?mode=ro";
 	}
 
 	virtual void TearDown ()
@@ -64,7 +66,7 @@ public:
 	std::string random_string ();
 
 protected:
-	std::string url_;
+	std::string url_rwc_, url_ro_;
 	std::mt19937 rndgen_;
 
 private:
@@ -107,12 +109,12 @@ struct Request
 
 TEST_P (TestDbConnect, Create)
 {
-	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_, "", "");
+	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_rwc_, url_ro_, "", "");
 }
 
 TEST_P (TestDbConnect, Random)
 {
-	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_, "", "");
+	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_rwc_, url_ro_, "", "");
 
 	std::deque <Request> active_requests;
 
@@ -120,7 +122,7 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 10000);
 	int iterations = std::min (std::numeric_limits <int>::max (), 1000);
-	size_t max_concurrent_requests = 3;
+	size_t max_concurrent_requests = 8;
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
