@@ -124,7 +124,7 @@ public:
 
 		~PoolableConnection ()
 		{
-			operator->()->close ();
+			p_->close ();
 		}
 	};
 
@@ -134,7 +134,7 @@ public:
 	}
 
 private:
-	ConnectionPool::_ref_type pool_;
+	const ConnectionPool::_ref_type pool_;
 };
 
 class Static_db_connect_factory :
@@ -147,9 +147,15 @@ public:
 		switch (impl) {
 			default:
 			case Implementation::SingleConnection:
-				return make_stateless <DbConnectSingle> (driver, std::ref (url), std::ref (user),
+				return make_reference <DbConnectSingle> (driver, std::ref (url), std::ref (user),
 					std::ref (password))->_this ();
 			case Implementation::ConnectionPool:
+				return make_reference <DbConnectPool> (driver, std::ref (url), std::ref (user),
+					std::ref (password))->_this ();
+			case Implementation::SingleConnectionStateless:
+				return make_stateless <DbConnectSingle> (driver, std::ref (url), std::ref (user),
+					std::ref (password))->_this ();
+			case Implementation::ConnectionPoolStateless:
 				return make_stateless <DbConnectPool> (driver, std::ref (url), std::ref (user),
 					std::ref (password))->_this ();
 		}

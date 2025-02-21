@@ -41,7 +41,9 @@ interface DbConnectFactory
 {
 	enum Implementation {
 		SingleConnection,
-		ConnectionPool
+		ConnectionPool,
+		SingleConnectionStateless,
+		ConnectionPoolStateless
 	};
 
 	DbConnect create (in Implementation impl, in NDBC::Driver driver, in string url,

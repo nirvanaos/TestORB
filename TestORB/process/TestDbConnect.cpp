@@ -73,7 +73,10 @@ private:
 
 INSTANTIATE_TEST_SUITE_P (Implementations, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::SingleConnection,
-	Test::DbConnectFactory::Implementation::ConnectionPool));
+	Test::DbConnectFactory::Implementation::ConnectionPool,
+	Test::DbConnectFactory::Implementation::SingleConnectionStateless,
+	Test::DbConnectFactory::Implementation::ConnectionPoolStateless
+));
 
 std::string TestDbConnect::random_string ()
 {
@@ -99,7 +102,7 @@ struct Request
 	int iteration;
 	Operation op;
 
-	void complete (bool& exc);
+	void complete (uint32_t timeout, bool& exc);
 };
 
 TEST_P (TestDbConnect, Create)
@@ -117,7 +120,7 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 10000);
 	int iterations = std::min (std::numeric_limits <int>::max (), 1000);
-	size_t max_concurrent_requests = 2;
+	size_t max_concurrent_requests = 3;
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
@@ -160,7 +163,7 @@ TEST_P (TestDbConnect, Random)
 					Request rq = std::move (*it);
 					it = active_requests.erase (it);
 					some_finished = true;
-					rq.complete (exc);
+					rq.complete (0, exc);
 					if (exc)
 						break;
 				} else
@@ -185,28 +188,28 @@ TEST_P (TestDbConnect, Random)
 		Request rq = std::move (active_requests.front ());
 		active_requests.pop_front ();
 		bool exc;
-		rq.complete (exc);
+		rq.complete (10000, exc);
 	}
 }
 
-void Request::complete (bool& exc)
+void Request::complete (uint32_t timeout, bool& exc)
 {
 	std::string opname = poller->operation_name ();
 	try {
 		switch (op) {
 			case Operation::Set:
 				EXPECT_EQ (opname, "set");
-				poller->set (std::numeric_limits <uint32_t>::max ());
+				poller->set (timeout);
 				break;
 			case Operation::Del:
 				EXPECT_EQ (opname, "del");
-				poller->del (std::numeric_limits <uint32_t>::max ());
+				poller->del (timeout);
 				break;
 			case Operation::Select:
 				EXPECT_EQ (opname, "select");
 				{
 					NDBC::ResultSet::_ref_type rs;
-					poller->select (std::numeric_limits <uint32_t>::max (), rs);
+					poller->select (timeout, rs);
 					while (rs->next ()) {
 						;
 					}
