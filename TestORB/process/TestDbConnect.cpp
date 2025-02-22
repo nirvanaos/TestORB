@@ -222,6 +222,9 @@ void Request::complete (uint32_t timeout, bool& exc)
 	} catch (const NDBC::SQLException& ex) {
 		ADD_FAILURE () << ex.error ().sqlState ();
 		exc = true;
+	} catch (const CORBA::SystemException& ex) {
+		ADD_FAILURE () << ex.what ();
+		exc = true;
 	}
 }
 
