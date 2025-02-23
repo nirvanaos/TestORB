@@ -101,7 +101,7 @@ private:
 
 void TestSQLite::create_test_table (Connection::_ref_type& conn) const
 {
-	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc&journal_mode=WAL", conn));
+	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
 	Statement::_ref_type stmt;
 	ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY));
 	ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT)"));

@@ -51,7 +51,7 @@ public:
 		IDL::String file_name = PATTERN;
 		file_ = tmp_dir->mkostemps (file_name, 3, O_DIRECT, 0)->file ();
 		file_name = "file:/var/tmp/" + file_name;
-		url_rwc_ = file_name + "?mode=rwc&journal_mode=WAL";
+		url_rwc_ = file_name + "?mode=rwc";
 		url_ro_ = file_name + "?mode=ro";
 	}
 

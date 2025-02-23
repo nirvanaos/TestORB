@@ -39,7 +39,7 @@ class DbConnectImpl : public servant_traits <DbConnect>::Servant <Impl>
 public:
 	void create_database () const
 	{
-		auto conn = static_cast <const Impl&> (*this).get_connection (true);
+		auto conn = static_cast <const Impl&> (*this).get_connection_rw ();
 		Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
 		st->execute ("CREATE TABLE test(id INTEGER PRIMARY KEY, text TEXT)");
 		st->close ();
@@ -47,7 +47,7 @@ public:
 
 	void set (int32_t id, const IDL::String& text) const
 	{
-		auto conn = static_cast <const Impl&> (*this).get_connection (true);
+		auto conn = static_cast <const Impl&> (*this).get_connection_rw ();
 		PreparedStatement::_ref_type st = conn->prepareStatement (
 			"INSERT OR REPLACE INTO test VALUES(?,?)",
 			ResultSet::Type::TYPE_FORWARD_ONLY, 0);
@@ -59,7 +59,7 @@ public:
 
 	void del (int32_t id) const
 	{
-		auto conn = static_cast <const Impl&> (*this).get_connection (true);
+		auto conn = static_cast <const Impl&> (*this).get_connection_rw ();
 		PreparedStatement::_ref_type st = conn->prepareStatement (
 			"DELETE FROM test WHERE id=?",
 			ResultSet::Type::TYPE_FORWARD_ONLY, 0);
@@ -70,7 +70,7 @@ public:
 
 	ResultSet::_ref_type select () const
 	{
-		auto conn = static_cast <const Impl&> (*this).get_connection (false);
+		auto conn = static_cast <const Impl&> (*this).get_connection_ro ();
 		Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
 		return st->executeQuery ("SELECT * FROM test");
 	}
@@ -95,23 +95,34 @@ public:
 	~DbConnectSingle ()
 	{}
 
-	Connection::_ptr_type get_connection (bool rw) const
+	Connection::_ptr_type get_connection_rw () const
 	{
-		return rw ? connection_rw_ : connection_ro_;
+		return connection_rw_;
+	}
+
+	Connection::_ptr_type get_connection_ro () const
+	{
+		return connection_ro_;
 	}
 
 private:
-	Connection::_ref_type connection_rw_, connection_ro_;
+	const Connection::_ref_type connection_rw_, connection_ro_;
 };
 
 class DbConnectPool : public DbConnectImpl <DbConnectPool>
 {
+	static const TimeBase::TimeT TIMEOUT = TimeBase::SECOND * 10;
+
 public:
 	DbConnectPool (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
-		pool_rw_ (the_manager->createConnectionPool (driver, url_rwc, user, password, 0)),
+		connection_rw_ (
+//			driver->connect (url_rwc, user, password)
+			the_manager->createConnectionPool (driver, url_rwc, user, password, 0)->getConnection ()
+		),
 		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 0))
 	{
+		connection_rw_->setTimeout (TIMEOUT);
 		create_database ();
 	}
 
@@ -131,13 +142,19 @@ public:
 		}
 	};
 
-	PoolableConnection get_connection (bool rw) const
+	Connection::_ptr_type get_connection_rw () const
 	{
-		return (rw ? pool_rw_ : pool_ro_)->getConnection ();
+		return connection_rw_;
+	}
+
+	PoolableConnection get_connection_ro () const
+	{
+		return pool_ro_->getConnection ();
 	}
 
 private:
-	const ConnectionPool::_ref_type pool_rw_, pool_ro_;
+	const Connection::_ref_type connection_rw_;
+	const ConnectionPool::_ref_type pool_ro_;
 };
 
 class Static_db_connect_factory :
