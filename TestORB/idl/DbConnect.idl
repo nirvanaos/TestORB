@@ -34,16 +34,16 @@ interface DbConnect
 {
 	void set (in long id, in string text) raises (NDBC::SQLException);
 	void del (in long id) raises (NDBC::SQLException);
-	NDBC::ResultSet select () raises (NDBC::SQLException);
+	void select () raises (NDBC::SQLException);
 };
 
 interface DbConnectFactory
 {
 	enum Implementation {
-		SingleConnection,
-		ConnectionPool,
-		SingleConnectionStateless,
-		ConnectionPoolStateless
+		Single,
+		WriterReader,
+		SingleWriterPoolReader,
+		Pool
 	};
 
 	DbConnect create (in Implementation impl, in NDBC::Driver driver, in string url_rwc, in string url_ro,

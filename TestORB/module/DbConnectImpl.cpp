@@ -68,31 +68,57 @@ public:
 		st->close ();
 	}
 
-	ResultSet::_ref_type select () const
+	void select () const
 	{
 		auto conn = static_cast <const Impl&> (*this).get_connection_ro ();
 		Statement::_ref_type st = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
-		return st->executeQuery ("SELECT * FROM test");
+		ResultSet::_ref_type rs = st->executeQuery ("SELECT * FROM test");
+		while (rs->next ()) {
+			;
+		}
 	}
 
 };
 
 class DbConnectSingle : public DbConnectImpl <DbConnectSingle>
 {
-	static const TimeBase::TimeT TIMEOUT = TimeBase::SECOND * 10;
-
 public:
 	DbConnectSingle (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
-		connection_rw_ (driver->connect (url_rwc, user, password)),
-		connection_ro_ (driver->connect (url_ro, user, password))
+		connection_ (driver->connect (url_rwc, user, password))
 	{
-		connection_rw_->setTimeout (TIMEOUT);
-		connection_ro_->setTimeout (TIMEOUT);
 		create_database ();
 	}
 
 	~DbConnectSingle ()
+	{}
+
+	Connection::_ptr_type get_connection_rw () const
+	{
+		return connection_;
+	}
+
+	Connection::_ptr_type get_connection_ro () const
+	{
+		return connection_;
+	}
+
+private:
+	const Connection::_ref_type connection_;
+};
+
+class DbConnectWriterReader : public DbConnectImpl <DbConnectWriterReader>
+{
+public:
+	DbConnectWriterReader (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
+		const IDL::String& user, const IDL::String& password) :
+		connection_rw_ (driver->connect (url_rwc, user, password)),
+		connection_ro_ (driver->connect (url_ro, user, password))
+	{
+		create_database ();
+	}
+
+	~DbConnectWriterReader ()
 	{}
 
 	Connection::_ptr_type get_connection_rw () const
@@ -109,38 +135,36 @@ private:
 	const Connection::_ref_type connection_rw_, connection_ro_;
 };
 
-class DbConnectPool : public DbConnectImpl <DbConnectPool>
+class PoolableConnection : public Connection::_ref_type
 {
-	static const TimeBase::TimeT TIMEOUT = TimeBase::SECOND * 10;
-
 public:
-	DbConnectPool (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
+	PoolableConnection (Connection::_ref_type&& conn) :
+		Connection::_ref_type (std::move (conn))
+	{}
+
+	~PoolableConnection ()
+	{
+		p_->close ();
+	}
+};
+
+class DbConnectSingleWriterPoolReader : public DbConnectImpl <DbConnectSingleWriterPoolReader>
+{
+public:
+	DbConnectSingleWriterPoolReader (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
 		connection_rw_ (
 //			driver->connect (url_rwc, user, password)
+// Use poolable connection with poolable statements
 			the_manager->createConnectionPool (driver, url_rwc, user, password, 0)->getConnection ()
 		),
 		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 0))
 	{
-		connection_rw_->setTimeout (TIMEOUT);
 		create_database ();
 	}
 
-	~DbConnectPool ()
+	~DbConnectSingleWriterPoolReader ()
 	{}
-
-	class PoolableConnection : public Connection::_ref_type
-	{
-	public:
-		PoolableConnection(Connection::_ref_type&& conn) :
-			Connection::_ref_type (std::move (conn))
-		{}
-
-		~PoolableConnection ()
-		{
-			p_->close ();
-		}
-	};
 
 	Connection::_ptr_type get_connection_rw () const
 	{
@@ -157,6 +181,34 @@ private:
 	const ConnectionPool::_ref_type pool_ro_;
 };
 
+class DbConnectPool : public DbConnectImpl <DbConnectPool>
+{
+public:
+	DbConnectPool (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
+		const IDL::String& user, const IDL::String& password) :
+		pool_rw_ (the_manager->createConnectionPool (driver, url_rwc, user, password, 0)),
+		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 0))
+	{
+		create_database ();
+	}
+
+	~DbConnectPool ()
+	{}
+
+	PoolableConnection get_connection_rw () const
+	{
+		return pool_rw_->getConnection ();
+	}
+
+	PoolableConnection get_connection_ro () const
+	{
+		return pool_ro_->getConnection ();
+	}
+
+private:
+	const ConnectionPool::_ref_type pool_rw_, pool_ro_;
+};
+
 class Static_db_connect_factory :
 	public servant_traits <DbConnectFactory>::ServantStatic <Static_db_connect_factory>
 {
@@ -167,16 +219,16 @@ public:
 	{
 		switch (impl) {
 			default:
-			case Implementation::SingleConnection:
-				return make_reference <DbConnectSingle> (driver, std::ref (url_rwc), std::ref (url_ro),
-					std::ref (user), std::ref (password))->_this ();
-			case Implementation::ConnectionPool:
-				return make_reference <DbConnectPool> (driver, std::ref (url_rwc), std::ref (url_ro),
-					std::ref (user), std::ref (password))->_this ();
-			case Implementation::SingleConnectionStateless:
+			case Implementation::Single:
 				return make_stateless <DbConnectSingle> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
-			case Implementation::ConnectionPoolStateless:
+			case Implementation::WriterReader:
+				return make_stateless <DbConnectWriterReader> (driver, std::ref (url_rwc), std::ref (url_ro),
+					std::ref (user), std::ref (password))->_this ();
+			case Implementation::SingleWriterPoolReader:
+				return make_stateless <DbConnectSingleWriterPoolReader> (driver, std::ref (url_rwc), std::ref (url_ro),
+					std::ref (user), std::ref (password))->_this ();
+			case Implementation::Pool:
 				return make_stateless <DbConnectPool> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
 		}
