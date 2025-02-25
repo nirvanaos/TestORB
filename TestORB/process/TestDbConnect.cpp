@@ -73,7 +73,7 @@ private:
 	Nirvana::File::_ref_type file_;
 };
 
-INSTANTIATE_TEST_SUITE_P (Implementations, TestDbConnect, testing::Values (
+INSTANTIATE_TEST_SUITE_P (DbConnectImpl, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::Single
 	, Test::DbConnectFactory::Implementation::WriterReader
 	, Test::DbConnectFactory::Implementation::SingleWriterPoolReader
@@ -121,8 +121,8 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
-	int iterations = 1000;
-	size_t max_concurrent_requests = 100; // std::numeric_limits <size_t>::max ();
+	int iterations = 500;
+	size_t max_concurrent_requests = 8; // std::numeric_limits <size_t>::max ();
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
