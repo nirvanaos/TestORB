@@ -104,7 +104,7 @@ struct Request
 	int iteration;
 	Operation op;
 
-	void complete (uint32_t timeout, bool& exc);
+	bool complete (uint32_t timeout, bool& exc);
 };
 
 TEST_P (TestDbConnect, Create)
@@ -122,7 +122,7 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
 	int iterations = 500;
-	size_t max_concurrent_requests = 8; // std::numeric_limits <size_t>::max ();
+	size_t max_concurrent_requests = 20; // std::numeric_limits <size_t>::max ();
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
@@ -165,7 +165,7 @@ TEST_P (TestDbConnect, Random)
 					Request rq = std::move (*it);
 					it = active_requests.erase (it);
 					some_finished = true;
-					rq.complete (0, exc);
+					EXPECT_TRUE (rq.complete (0, exc));
 					if (exc)
 						break;
 				} else
@@ -187,14 +187,17 @@ TEST_P (TestDbConnect, Random)
 	}
 
 	while (!active_requests.empty ()) {
-		Request rq = std::move (active_requests.front ());
-		active_requests.pop_front ();
-		bool exc;
-		rq.complete (10000, exc);
+		for (auto it = active_requests.begin (); it != active_requests.end ();) {
+			bool exc;
+			if (it->complete (5000, exc))
+				it = active_requests.erase (it);
+			else
+				++it;
+		}
 	}
 }
 
-void Request::complete (uint32_t timeout, bool& exc)
+bool Request::complete (uint32_t timeout, bool& exc)
 {
 	std::string opname = poller->operation_name ();
 	try {
@@ -215,10 +218,16 @@ void Request::complete (uint32_t timeout, bool& exc)
 	} catch (const NDBC::SQLException& ex) {
 		ADD_FAILURE () << ex.error ().sqlState ();
 		exc = true;
+	} catch (const CORBA::TIMEOUT& ex) {
+		if (ex.minor () == MAKE_OMG_MINOR (1))
+			return false;
+		ADD_FAILURE () << ex.what ();
+		exc = true;
 	} catch (const CORBA::SystemException& ex) {
 		ADD_FAILURE () << ex.what ();
 		exc = true;
 	}
+	return true;
 }
 
 }
