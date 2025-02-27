@@ -189,10 +189,12 @@ TEST_P (TestDbConnect, Random)
 	while (!active_requests.empty ()) {
 		for (auto it = active_requests.begin (); it != active_requests.end ();) {
 			bool exc;
-			if (it->complete (5000, exc))
+			if (it->complete (10000, exc))
 				it = active_requests.erase (it);
-			else
+			else {
+				ADD_FAILURE () << "Timeout!";
 				++it;
+			}
 		}
 	}
 }
