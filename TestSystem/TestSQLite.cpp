@@ -91,6 +91,8 @@ protected:
 	void prepare_insert (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt);
 	void prepare_select (Connection::_ptr_type conn, PreparedStatement::_ref_type& stmt);
 
+	static void clear_statement (Statement::_ptr_type stm);
+
 private:
 	File::_ref_type file_;
 	std::string url_;
@@ -99,7 +101,7 @@ private:
 
 void TestSQLite::create_test_table (Connection::_ref_type& conn) const
 {
-	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc&journal_mode=WAL", conn));
+	ASSERT_NO_FATAL_FAILURE (connect ("?mode=rwc", conn));
 	Statement::_ref_type stmt;
 	ASSERT_NOSQLEXCEPTION (stmt = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY));
 	ASSERT_NOSQLEXCEPTION (stmt->executeUpdate ("CREATE TABLE test_table (id INTEGER PRIMARY KEY AUTOINCREMENT, str TEXT)"));
@@ -313,6 +315,51 @@ TEST_F (TestSQLite, FindColumn)
 	EXPECT_EQ (rs->findColumn ("id"), 1);
 	EXPECT_EQ (rs->findColumn ("str"), 2);
 	EXPECT_THROW (rs->findColumn ("blabla"), NDBC::SQLException);
+}
+
+TEST_F (TestSQLite, StatementReuse)
+{
+	static const unsigned ROW_CNT = 10;
+
+	Connection::_ref_type conn;
+	ASSERT_NO_FATAL_FAILURE (create_test_table (conn));
+	{
+		PreparedStatement::_ref_type insert;
+		ASSERT_NO_FATAL_FAILURE (prepare_insert (conn, insert));
+		for (unsigned i = 0; i < ROW_CNT; ++i) {
+			ASSERT_NOSQLEXCEPTION (insert->setString (1, random_string ()));
+			ASSERT_NOSQLEXCEPTION (insert->execute ());
+		}
+		insert->close ();
+	}
+
+	Statement::_ref_type stm = conn->createStatement (ResultSet::Type::TYPE_FORWARD_ONLY);
+	
+	stm->executeUpdate ("CREATE TABLE test_table2 (str TEXT)");
+
+	clear_statement (stm);
+
+	for (int pass = 0; pass < 2; ++pass) {
+		{
+			ResultSet::_ref_type rs;
+			ASSERT_NOSQLEXCEPTION (rs = stm->executeQuery ("SELECT * FROM test_table"));
+			unsigned cnt = 0;
+			while (rs->next ())
+				++cnt;
+			rs->close ();
+			ASSERT_EQ (cnt, ROW_CNT);
+		}
+		clear_statement (stm);
+	}
+	stm->close ();
+}
+
+void TestSQLite::clear_statement (Statement::_ptr_type stm)
+{
+	while (stm->getMoreResults ())
+		;
+	stm->getUpdateCount ();
+	stm->clearWarnings ();
 }
 
 }

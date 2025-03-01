@@ -982,4 +982,47 @@ TEST_F (TestFile, MkDir)
 	tmp_dir->unbind (name);
 }
 
+TEST_F (TestFile, Lock)
+{
+	AccessDirect::_ref_type fa0;
+	create_temp_file (fa0);
+	AccessDirect::_ref_type fa1 = AccessDirect::_narrow (
+		temp_file_->open (O_RDWR | O_DIRECT, 0)->_to_object ());
+	AccessDirect::_ref_type fa2 = AccessDirect::_narrow (
+		temp_file_->open (O_RDWR | O_DIRECT, 0)->_to_object ());
+
+	for (LockType level = LockType::LOCK_NONE; level <= LockType::LOCK_EXCLUSIVE;
+		level = (LockType)((int)level + 1)) {
+		ASSERT_EQ (fa0->lock (FileLock (0, 0, level), level, 0), level);
+		FileLock fl (0, 0, LockType::LOCK_EXCLUSIVE);
+		fa1->get_lock (fl);
+		ASSERT_EQ (fl.type (), level);
+	}
+	
+	for (LockType level = LockType::LOCK_EXCLUSIVE; level > LockType::LOCK_NONE;) {
+		level = (LockType)((int)level - 1);
+		ASSERT_EQ (fa0->lock (FileLock (0, 0, level), level, 0), level);
+		FileLock fl (0, 0, LockType::LOCK_EXCLUSIVE);
+		fa1->get_lock (fl);
+		ASSERT_EQ (fl.type (), level);
+	}
+	
+	FileLock none (0, 0, LockType::LOCK_NONE);
+	FileLock shared (0, 0, LockType::LOCK_SHARED);
+	FileLock pending (0, 0, LockType::LOCK_PENDING);
+	FileLock exclusive (0, 0, LockType::LOCK_EXCLUSIVE);
+
+	ASSERT_EQ (fa0->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_SHARED);
+	ASSERT_EQ (fa1->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_SHARED);
+	ASSERT_EQ (fa1->lock (none, LockType::LOCK_NONE, 0), LockType::LOCK_NONE);
+	
+	ASSERT_EQ (fa1->lock (exclusive, LockType::LOCK_PENDING, 0), LockType::LOCK_PENDING);
+	ASSERT_EQ (fa2->lock (pending, LockType::LOCK_PENDING, 0), LockType::LOCK_NONE);
+
+	ASSERT_EQ (fa2->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_NONE);
+	ASSERT_EQ (fa0->lock (none, LockType::LOCK_NONE, 0), LockType::LOCK_NONE);
+	ASSERT_EQ (fa0->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_NONE);
+	ASSERT_EQ (fa1->lock (exclusive, LockType::LOCK_PENDING, 0), LockType::LOCK_EXCLUSIVE);
+}
+
 }
