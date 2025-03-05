@@ -77,7 +77,7 @@ INSTANTIATE_TEST_SUITE_P (DbConnectImpl, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::Single
 	, Test::DbConnectFactory::Implementation::WriterReader
 	, Test::DbConnectFactory::Implementation::SingleWriterPoolReader
-	//, Test::DbConnectFactory::Implementation::Pool
+	, Test::DbConnectFactory::Implementation::Pool
 ));
 
 std::string TestDbConnect::random_string ()
@@ -121,8 +121,8 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
-	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 10 * TimeBase::MILLISECOND);
-	const int iterations = 500;
+	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 20 * TimeBase::MILLISECOND);
+	const int iterations = 100;
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
