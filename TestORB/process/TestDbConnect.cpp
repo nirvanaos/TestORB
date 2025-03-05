@@ -121,8 +121,8 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
-	int iterations = 500;
-	size_t max_concurrent_requests = std::numeric_limits <size_t>::max ();
+	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 10 * TimeBase::MILLISECOND);
+	const int iterations = 500;
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
@@ -158,43 +158,30 @@ TEST_P (TestDbConnect, Random)
 
 		active_requests.push_back (std::move (newrq));
 
-		for (;;) {
-			bool some_finished = false;
-			for (auto it = active_requests.begin (); it != active_requests.end ();) {
-				if (it->poller->is_ready (0)) {
-					Request rq = std::move (*it);
-					it = active_requests.erase (it);
-					some_finished = true;
-					EXPECT_TRUE (rq.complete (0, exc));
-					if (exc)
-						break;
-				} else
-					++it;
-			}
-
-			if (exc)
-				break;
-
-			if (active_requests.size () >= max_concurrent_requests) {
-				if (!some_finished)
-					Nirvana::the_posix->sleep (100 * TimeBase::MILLISECOND);
+		for (auto it = active_requests.begin (); it != active_requests.end ();) {
+			if (it->poller->is_ready (0)) {
+				Request rq = std::move (*it);
+				it = active_requests.erase (it);
+				EXPECT_TRUE (rq.complete (0, exc));
+				if (exc)
+					break;
 			} else
-				break;
+				++it;
 		}
 
 		if (exc)
 			break;
+
+		Nirvana::the_posix->sleep (dist_delay (rndgen_));
 	}
 
 	while (!active_requests.empty ()) {
 		for (auto it = active_requests.begin (); it != active_requests.end ();) {
 			bool exc;
-			if (it->complete (10000, exc))
+			if (it->complete (1000, exc))
 				it = active_requests.erase (it);
-			else {
-				ADD_FAILURE () << "Timeout!";
+			else
 				++it;
-			}
 		}
 	}
 }

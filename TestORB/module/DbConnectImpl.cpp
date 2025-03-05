@@ -156,7 +156,7 @@ public:
 		const IDL::String& user, const IDL::String& password) :
 		connection_rw_ (
 			the_manager->createConnectionPool (driver, url_rwc, user, password, 0, 1)->getConnection ()),
-		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 100, 1000000))
+		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 100, 100))
 	{
 		create_database ();
 	}
