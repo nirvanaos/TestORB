@@ -1009,6 +1009,7 @@ TEST_F (TestFile, Lock)
 	
 	FileLock none (0, 0, LockType::LOCK_NONE);
 	FileLock shared (0, 0, LockType::LOCK_SHARED);
+	FileLock reserved (0, 0, LockType::LOCK_RESERVED);
 	FileLock pending (0, 0, LockType::LOCK_PENDING);
 	FileLock exclusive (0, 0, LockType::LOCK_EXCLUSIVE);
 
@@ -1016,10 +1017,14 @@ TEST_F (TestFile, Lock)
 	ASSERT_EQ (fa1->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_SHARED);
 	ASSERT_EQ (fa1->lock (none, LockType::LOCK_NONE, 0), LockType::LOCK_NONE);
 	
+	ASSERT_EQ (fa1->lock (reserved, LockType::LOCK_RESERVED, 0), LockType::LOCK_RESERVED);
+	ASSERT_EQ (fa2->lock (pending, LockType::LOCK_SHARED, 0), LockType::LOCK_SHARED);
+	ASSERT_EQ (fa2->lock (none, LockType::LOCK_NONE, 0), LockType::LOCK_NONE);
+
 	ASSERT_EQ (fa1->lock (exclusive, LockType::LOCK_PENDING, 0), LockType::LOCK_PENDING);
 	ASSERT_EQ (fa2->lock (pending, LockType::LOCK_PENDING, 0), LockType::LOCK_NONE);
-
 	ASSERT_EQ (fa2->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_NONE);
+
 	ASSERT_EQ (fa0->lock (none, LockType::LOCK_NONE, 0), LockType::LOCK_NONE);
 	ASSERT_EQ (fa0->lock (shared, LockType::LOCK_SHARED, 0), LockType::LOCK_NONE);
 	ASSERT_EQ (fa1->lock (exclusive, LockType::LOCK_PENDING, 0), LockType::LOCK_EXCLUSIVE);

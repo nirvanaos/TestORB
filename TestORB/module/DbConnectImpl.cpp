@@ -151,14 +151,12 @@ public:
 class DbConnectSingleWriterPoolReader : public DbConnectImpl <DbConnectSingleWriterPoolReader>
 {
 public:
-	DbConnectSingleWriterPoolReader (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
+	DbConnectSingleWriterPoolReader (Driver::_ref_type driver,
+		const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
 		connection_rw_ (
-//			driver->connect (url_rwc, user, password)
-// Use poolable connection with poolable statements
-			the_manager->createConnectionPool (driver, url_rwc, user, password, 0)->getConnection ()
-		),
-		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 0))
+			the_manager->createConnectionPool (driver, url_rwc, user, password, 0, 1)->getConnection ()),
+		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 100, 1000000))
 	{
 		create_database ();
 	}
@@ -186,8 +184,8 @@ class DbConnectPool : public DbConnectImpl <DbConnectPool>
 public:
 	DbConnectPool (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
-		pool_rw_ (the_manager->createConnectionPool (driver, url_rwc, user, password, 0)),
-		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 0))
+		pool_rw_ (the_manager->createConnectionPool (driver, url_rwc, user, password, 3, 3)),
+		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 5, 5))
 	{
 		create_database ();
 	}
@@ -220,16 +218,16 @@ public:
 		switch (impl) {
 			default:
 			case Implementation::Single:
-				return make_stateless <DbConnectSingle> (driver, std::ref (url_rwc), std::ref (url_ro),
+				return make_reference <DbConnectSingle> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
 			case Implementation::WriterReader:
-				return make_stateless <DbConnectWriterReader> (driver, std::ref (url_rwc), std::ref (url_ro),
+				return make_reference <DbConnectWriterReader> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
 			case Implementation::SingleWriterPoolReader:
-				return make_stateless <DbConnectSingleWriterPoolReader> (driver, std::ref (url_rwc), std::ref (url_ro),
+				return make_reference <DbConnectSingleWriterPoolReader> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
 			case Implementation::Pool:
-				return make_stateless <DbConnectPool> (driver, std::ref (url_rwc), std::ref (url_ro),
+				return make_reference <DbConnectPool> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
 		}
 	}

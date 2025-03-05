@@ -122,7 +122,7 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
 	int iterations = 500;
-	size_t max_concurrent_requests = 20; // std::numeric_limits <size_t>::max ();
+	size_t max_concurrent_requests = std::numeric_limits <size_t>::max ();
 
 	for (int i = 0; i < iterations; ++i) {
 		bool exc = false;
