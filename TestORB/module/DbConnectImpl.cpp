@@ -155,8 +155,8 @@ public:
 		const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
 		connection_rw_ (
-			the_manager->createConnectionPool (driver, url_rwc, user, password, 0, 1)->getConnection ()),
-		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 100, 100))
+			the_manager->createConnectionPool (driver, url_rwc, user, password, 0, 1, 0)->getConnection ()),
+		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 100, 100, 0))
 	{
 		create_database ();
 	}
@@ -184,8 +184,8 @@ class DbConnectPool : public DbConnectImpl <DbConnectPool>
 public:
 	DbConnectPool (Driver::_ref_type driver, const IDL::String& url_rwc, const IDL::String& url_ro,
 		const IDL::String& user, const IDL::String& password) :
-		pool_rw_ (the_manager->createConnectionPool (driver, url_rwc, user, password, 3, 3)),
-		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 5, 5))
+		pool_rw_ (the_manager->createConnectionPool (driver, url_rwc, user, password, 3, 3, 0)),
+		pool_ro_ (the_manager->createConnectionPool (driver, url_ro, user, password, 5, 5, 0))
 	{
 		create_database ();
 	}
