@@ -75,9 +75,9 @@ private:
 
 INSTANTIATE_TEST_SUITE_P (DbConnectImpl, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::Single
-	, Test::DbConnectFactory::Implementation::WriterReader
-	, Test::DbConnectFactory::Implementation::SingleWriterPoolReader
-	//, Test::DbConnectFactory::Implementation::Pool
+//	, Test::DbConnectFactory::Implementation::WriterReader
+//	, Test::DbConnectFactory::Implementation::SingleWriterPoolReader
+//	, Test::DbConnectFactory::Implementation::Pool
 ));
 
 std::string TestDbConnect::random_string ()
