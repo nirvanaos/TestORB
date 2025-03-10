@@ -43,7 +43,11 @@ interface DbConnectFactory
 		Single,
 		WriterReader,
 		SingleWriterPoolReader,
-		Pool
+		Pool,
+		SingleStateless,
+		WriterReaderStateless,
+		SingleWriterPoolReaderStateless,
+		PoolStateless
 	};
 
 	DbConnect create (in Implementation impl, in NDBC::Driver driver, in string url_rwc, in string url_ro,

@@ -229,6 +229,19 @@ public:
 			case Implementation::Pool:
 				return make_reference <DbConnectPool> (driver, std::ref (url_rwc), std::ref (url_ro),
 					std::ref (user), std::ref (password))->_this ();
+
+			case Implementation::SingleStateless:
+				return make_stateless <DbConnectSingle> (driver, std::ref (url_rwc), std::ref (url_ro),
+					std::ref (user), std::ref (password))->_this ();
+			case Implementation::WriterReaderStateless:
+				return make_stateless <DbConnectWriterReader> (driver, std::ref (url_rwc), std::ref (url_ro),
+					std::ref (user), std::ref (password))->_this ();
+			case Implementation::SingleWriterPoolReaderStateless:
+				return make_stateless <DbConnectSingleWriterPoolReader> (driver, std::ref (url_rwc), std::ref (url_ro),
+					std::ref (user), std::ref (password))->_this ();
+			case Implementation::PoolStateless:
+				return make_stateless <DbConnectPool> (driver, std::ref (url_rwc), std::ref (url_ro),
+					std::ref (user), std::ref (password))->_this ();
 		}
 	}
 };

@@ -35,9 +35,20 @@
 namespace TestORB
 {
 
+/// Test for DB connections and asynchronous calls.
+/// Also may be considered as a stress test for core.
 class TestDbConnect : public ::testing::TestWithParam<Test::DbConnectFactory::Implementation>
 {
 public:
+	// A number of transactions in each test
+	static const int TRANSACTION_COUNT = 200;
+
+	// Average time interval between transactions
+	static const TimeBase::TimeT TRANSACTION_INTERVAL = 10 * TimeBase::MILLISECOND;
+
+	// Poll timeout, ms
+	static const unsigned POLL_TIMEOUT = 20;
+
 	virtual void SetUp ()
 	{
 		// Code here will be called immediately after the constructor (right
@@ -75,9 +86,20 @@ private:
 
 INSTANTIATE_TEST_SUITE_P (DbConnectImpl, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::Single
-//	, Test::DbConnectFactory::Implementation::WriterReader
-//	, Test::DbConnectFactory::Implementation::SingleWriterPoolReader
-//	, Test::DbConnectFactory::Implementation::Pool
+	,
+	Test::DbConnectFactory::Implementation::WriterReader
+	,
+	Test::DbConnectFactory::Implementation::SingleWriterPoolReader
+//	,
+//	Test::DbConnectFactory::Implementation::Pool
+	,
+	Test::DbConnectFactory::Implementation::SingleStateless
+	,
+	Test::DbConnectFactory::Implementation::WriterReaderStateless
+	,
+	Test::DbConnectFactory::Implementation::SingleWriterPoolReaderStateless
+//	,
+//	Test::DbConnectFactory::Implementation::PoolStateless
 ));
 
 std::string TestDbConnect::random_string ()
@@ -121,10 +143,9 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_write (0.2);
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
-	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 20 * TimeBase::MILLISECOND);
-	const int iterations = 100;
+	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 2 * TRANSACTION_INTERVAL);
 
-	for (int i = 0; i < iterations; ++i) {
+	for (int i = 0; i < TRANSACTION_COUNT; ++i) {
 		bool exc = false;
 		Operation op;
 		int32_t id;
@@ -137,6 +158,8 @@ TEST_P (TestDbConnect, Random)
 			id = dist_id (rndgen_);
 		} else
 			op = Operation::Select;
+
+		Nirvana::SteadyTime issue_time = Nirvana::the_posix->steady_clock ();
 		
 		Request newrq;
 		newrq.op = op;
@@ -172,13 +195,16 @@ TEST_P (TestDbConnect, Random)
 		if (exc)
 			break;
 
-		Nirvana::the_posix->sleep (dist_delay (rndgen_));
+		Nirvana::SteadyTime next_time = issue_time + dist_delay (rndgen_);
+		Nirvana::SteadyTime cur_time = Nirvana::the_posix->steady_clock ();
+		if (next_time > cur_time)
+			Nirvana::the_posix->sleep (next_time - cur_time);
 	}
 
 	while (!active_requests.empty ()) {
 		for (auto it = active_requests.begin (); it != active_requests.end ();) {
 			bool exc;
-			if (it->complete (1000, exc))
+			if (it->complete (POLL_TIMEOUT, exc))
 				it = active_requests.erase (it);
 			else
 				++it;
