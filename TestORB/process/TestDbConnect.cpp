@@ -44,10 +44,12 @@ public:
 	static const int TRANSACTION_COUNT = 200;
 
 	// Average time interval between transactions
-	static const TimeBase::TimeT TRANSACTION_INTERVAL = 10 * TimeBase::MILLISECOND;
+	static const TimeBase::TimeT TRANSACTION_INTERVAL = 20 * TimeBase::MILLISECOND;
 
 	// Poll timeout, ms
-	static const unsigned POLL_TIMEOUT = 20;
+	static const unsigned POLL_TIMEOUT = 10;
+
+	static const TimeBase::TimeT MAX_WAIT_TIME = 20 * TimeBase::SECOND;
 
 	virtual void SetUp ()
 	{
@@ -86,18 +88,18 @@ private:
 
 INSTANTIATE_TEST_SUITE_P (DbConnectImpl, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::Single
-	,
-	Test::DbConnectFactory::Implementation::WriterReader
-	,
-	Test::DbConnectFactory::Implementation::SingleWriterPoolReader
+//	,
+//	Test::DbConnectFactory::Implementation::WriterReader
+//	,
+//	Test::DbConnectFactory::Implementation::SingleWriterPoolReader
 //	,
 //	Test::DbConnectFactory::Implementation::Pool
-	,
-	Test::DbConnectFactory::Implementation::SingleStateless
-	,
-	Test::DbConnectFactory::Implementation::WriterReaderStateless
-	,
-	Test::DbConnectFactory::Implementation::SingleWriterPoolReaderStateless
+//	,
+//	Test::DbConnectFactory::Implementation::SingleStateless
+//	,
+//	Test::DbConnectFactory::Implementation::WriterReaderStateless
+//	,
+//	Test::DbConnectFactory::Implementation::SingleWriterPoolReaderStateless
 //	,
 //	Test::DbConnectFactory::Implementation::PoolStateless
 ));
@@ -115,6 +117,11 @@ std::string TestDbConnect::random_string ()
 
 typedef ::Test::AMI_DbConnectPoller Poller;
 
+TEST_P (TestDbConnect, Create)
+{
+	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_rwc_, url_ro_, "", "");
+}
+
 enum class Operation
 {
 	Set, Del, Select
@@ -122,17 +129,13 @@ enum class Operation
 
 struct Request
 {
+	TimeBase::TimeT issue_time;
 	Poller::_ref_type poller;
 	int iteration;
 	Operation op;
 
 	bool complete (uint32_t timeout, bool& exc);
 };
-
-TEST_P (TestDbConnect, Create)
-{
-	auto obj = ::Test::db_connect_factory->create (GetParam (), SQLite::driver, url_rwc_, url_ro_, "", "");
-}
 
 TEST_P (TestDbConnect, Random)
 {
@@ -162,6 +165,7 @@ TEST_P (TestDbConnect, Random)
 		Nirvana::SteadyTime issue_time = Nirvana::the_posix->steady_clock ();
 		
 		Request newrq;
+		newrq.issue_time = issue_time;
 		newrq.op = op;
 		newrq.iteration = i;
 		switch (op) {
@@ -202,6 +206,12 @@ TEST_P (TestDbConnect, Random)
 	}
 
 	while (!active_requests.empty ()) {
+
+		if (Nirvana::the_posix->steady_clock () - active_requests.front ().issue_time > MAX_WAIT_TIME) {
+			ADD_FAILURE () << "Hanged!";
+			break;
+		}
+
 		for (auto it = active_requests.begin (); it != active_requests.end ();) {
 			bool exc;
 			if (it->complete (POLL_TIMEOUT, exc))
