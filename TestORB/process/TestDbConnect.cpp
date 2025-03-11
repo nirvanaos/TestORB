@@ -47,7 +47,7 @@ public:
 	static const TimeBase::TimeT TRANSACTION_INTERVAL = 20 * TimeBase::MILLISECOND;
 
 	// Poll timeout, ms
-	static const unsigned POLL_TIMEOUT = 10;
+	static const unsigned POLL_TIMEOUT = 100;
 
 	static const TimeBase::TimeT MAX_WAIT_TIME = 20 * TimeBase::SECOND;
 
@@ -88,20 +88,20 @@ private:
 
 INSTANTIATE_TEST_SUITE_P (DbConnectImpl, TestDbConnect, testing::Values (
 	Test::DbConnectFactory::Implementation::Single
-//	,
-//	Test::DbConnectFactory::Implementation::WriterReader
-//	,
-//	Test::DbConnectFactory::Implementation::SingleWriterPoolReader
-//	,
-//	Test::DbConnectFactory::Implementation::Pool
-//	,
-//	Test::DbConnectFactory::Implementation::SingleStateless
-//	,
-//	Test::DbConnectFactory::Implementation::WriterReaderStateless
-//	,
-//	Test::DbConnectFactory::Implementation::SingleWriterPoolReaderStateless
-//	,
-//	Test::DbConnectFactory::Implementation::PoolStateless
+	,
+	Test::DbConnectFactory::Implementation::WriterReader
+	,
+	Test::DbConnectFactory::Implementation::SingleWriterPoolReader
+	,
+	Test::DbConnectFactory::Implementation::Pool
+	,
+	Test::DbConnectFactory::Implementation::SingleStateless
+	,
+	Test::DbConnectFactory::Implementation::WriterReaderStateless
+	,
+	Test::DbConnectFactory::Implementation::SingleWriterPoolReaderStateless
+	,
+	Test::DbConnectFactory::Implementation::PoolStateless
 ));
 
 std::string TestDbConnect::random_string ()
