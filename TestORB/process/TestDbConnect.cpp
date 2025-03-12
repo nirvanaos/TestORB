@@ -30,6 +30,7 @@
 #include <Nirvana/File.h>
 #include <Nirvana/posix_defs.h>
 #include <Nirvana/POSIX.h>
+#include <Nirvana/System.h>
 #include "IDL/DbConnect.h"
 
 namespace TestORB
@@ -49,7 +50,7 @@ public:
 	// Poll timeout, ms
 	static const unsigned POLL_TIMEOUT = 100;
 
-	static const TimeBase::TimeT MAX_WAIT_TIME = 20 * TimeBase::SECOND;
+	static const TimeBase::TimeT MAX_WAIT_TIME = 1 * TimeBase::MINUTE;
 
 	virtual void SetUp ()
 	{
@@ -74,6 +75,7 @@ public:
 		// before the destructor).
 
 		file_->remove ();
+		Nirvana::the_system->deadline_policy_async (Nirvana::System::DEADLINE_POLICY_INHERIT);
 	}
 
 	std::string random_string ();
@@ -147,6 +149,7 @@ TEST_P (TestDbConnect, Random)
 	std::bernoulli_distribution dist_set (0.5);
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
 	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 2 * TRANSACTION_INTERVAL);
+	std::uniform_int_distribution <Nirvana::DeadlineTime> dist_deadline (1 * TimeBase::SECOND, 10 * TimeBase::SECOND);
 
 	for (int i = 0; i < TRANSACTION_COUNT; ++i) {
 		bool exc = false;
@@ -161,6 +164,8 @@ TEST_P (TestDbConnect, Random)
 			id = dist_id (rndgen_);
 		} else
 			op = Operation::Select;
+
+		Nirvana::the_system->deadline_policy_async (dist_deadline (rndgen_));
 
 		Nirvana::SteadyTime issue_time = Nirvana::the_posix->steady_clock ();
 		
