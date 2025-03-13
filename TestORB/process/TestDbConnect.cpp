@@ -150,6 +150,7 @@ TEST_P (TestDbConnect, Random)
 	std::uniform_int_distribution <int32_t> dist_id (1, 1000);
 	std::uniform_int_distribution <TimeBase::TimeT> dist_delay (0, 2 * TRANSACTION_INTERVAL);
 	std::uniform_int_distribution <Nirvana::DeadlineTime> dist_deadline (1 * TimeBase::SECOND, 10 * TimeBase::SECOND);
+	std::bernoulli_distribution dist_background (0.5);
 
 	for (int i = 0; i < TRANSACTION_COUNT; ++i) {
 		bool exc = false;
@@ -165,7 +166,12 @@ TEST_P (TestDbConnect, Random)
 		} else
 			op = Operation::Select;
 
-		Nirvana::the_system->deadline_policy_async (dist_deadline (rndgen_));
+		Nirvana::System::DeadlinePolicy dp;
+		if (dist_background (rndgen_))
+			dp = Nirvana::System::DEADLINE_POLICY_INHERIT;
+		else
+			dp = dist_deadline (rndgen_);
+		Nirvana::the_system->deadline_policy_async (dp);
 
 		Nirvana::SteadyTime issue_time = Nirvana::the_posix->steady_clock ();
 		
