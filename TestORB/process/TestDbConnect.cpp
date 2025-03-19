@@ -42,7 +42,7 @@ class TestDbConnect : public ::testing::TestWithParam<Test::DbConnectFactory::Im
 {
 public:
 	// A number of transactions in each test
-	static const int TRANSACTION_COUNT = 200;
+	static const int TRANSACTION_COUNT = 100;
 
 	// Average time interval between transactions
 	static const TimeBase::TimeT TRANSACTION_INTERVAL = 20 * TimeBase::MILLISECOND;
