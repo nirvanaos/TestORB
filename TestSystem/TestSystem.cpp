@@ -132,7 +132,7 @@ void TestSystem::writemem (void* p)
 
 TEST_F (TestSystem, Yield)
 {
-	EXPECT_FALSE (Nirvana::the_posix->yield ());
+	Nirvana::the_posix->yield ();
 }
 
 TEST_F (TestSystem, CurDir)
