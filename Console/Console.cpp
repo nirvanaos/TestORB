@@ -25,7 +25,7 @@
 */
 #include <Nirvana/Nirvana.h>
 #include <Nirvana/File.h>
-#include <fnctl.h>
+#include <fcntl.h>
 #include <unistd.h>
 
 using namespace Nirvana;
