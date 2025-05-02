@@ -25,7 +25,7 @@
 */
 #include <Nirvana/Nirvana.h>
 #include <Nirvana/Fixed.h>
-#include <Nirvana/signal.h>
+#include <Nirvana/signal_defs.h>
 #include <gtest/gtest.h>
 #include <sstream>
 

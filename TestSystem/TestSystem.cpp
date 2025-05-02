@@ -28,7 +28,7 @@
 #include <Nirvana/POSIX.h>
 #include <Nirvana/File.h>
 #include <Nirvana/filesystem.h>
-#include <Nirvana/signal.h>
+#include <Nirvana/signal_defs.h>
 
 using namespace Nirvana;
 
