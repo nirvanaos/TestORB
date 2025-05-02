@@ -28,7 +28,7 @@
 #include <I1_static.h>
 #include "IDL/Test_I3_factory.h"
 #include <gtest/gtest.h>
-#include <signal.h>
+#include <Nirvana/signal.h>
 
 using namespace CORBA;
 using namespace Test;

@@ -29,7 +29,7 @@
 #include "IDL/Test_I2.h"
 #include "IDL/Test_V3.h"
 #include "IDL/RecursiveStruct.h"
-#include <signal.h>
+#include <Nirvana/signal.h>
 
 using namespace CORBA;
 using namespace Test;
