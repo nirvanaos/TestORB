@@ -69,6 +69,9 @@ protected:
 		// before the destructor).
 		if (temp_file_)
 			temp_file_->remove ();
+
+		if (temp_dir_)
+			temp_dir_->remove ();
 	}
 
 	void create_temp_file (unsigned flags, Access::_ref_type& access);
