@@ -200,4 +200,9 @@ TEST_F (TestSystem, BindError)
 	any.clear ();
 }
 
+TEST_F (TestSystem, SystemClock)
+{
+	auto t = Nirvana::the_posix->system_clock ();
+}
+
 }
