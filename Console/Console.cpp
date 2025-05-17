@@ -25,8 +25,8 @@
 */
 #include <Nirvana/Nirvana.h>
 #include <Nirvana/File.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <Nirvana/POSIX.h>
+#include <Nirvana/posix_defs.h>
 
 using namespace Nirvana;
 
@@ -60,7 +60,7 @@ int main (int argc, char* argv [])
 	}
 
 	static const char test [] = "Test console write()\n";
-	write (1, test, sizeof (test) - 1);
+	the_posix->write (1, test, sizeof (test) - 1);
 
 	return 0;
 }
