@@ -1,5 +1,0 @@
-[wrap-file]
-directory = sdk
-# source_url = file://c/0work/Nirvana/Work/sdk/sdk.tar.xz
-source_filename = sdk-1.0.tar.xz
-# source_hash = f4bc04922b126d938bf66762b225e444103605499ab86b13253e2531e424b18c

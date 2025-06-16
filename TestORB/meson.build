@@ -1,2 +1,0 @@
-subdir ('idl')
-subdir ('module')
