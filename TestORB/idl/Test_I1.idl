@@ -60,6 +60,8 @@ typedef MyStruct StructArray [3];
 typedef fixed <8, 2> Fixed_8_2;
 const fixed fixed_const = 1.234D;
 typedef long LongArray [3][4];
+typedef boolean BoolArray [3];
+typedef boolean BoolArray2 [3][4];
 
 struct StructFixLen
 {
@@ -96,6 +98,8 @@ interface I1
 	float float_op (in float in_f, out float out_f, inout float inout_f);
 	double double_op (in double in_f, out double out_f, inout double inout_f);
 	long double long_double_op (in long double in_f, out long double out_f, inout long double inout_f);
+	BoolArray bool_array_op (in BoolArray in_ar, out BoolArray out_ar, inout BoolArray inout_ar);
+	BoolArray2 bool_array_op2 (in BoolArray2 in_ar, out BoolArray2 out_ar, inout BoolArray2 inout_ar);
 };
 
 const I1 I1_static;

@@ -83,6 +83,8 @@ public:
 	static float float_op (float in_f, float& out_f, float& inout_f);
 	static CORBA::Double double_op (CORBA::Double in_f, CORBA::Double& out_f, CORBA::Double& inout_f);
 	static CORBA::LongDouble long_double_op (const CORBA::LongDouble& in_f, CORBA::LongDouble& out_f, CORBA::LongDouble& inout_f);
+	static BoolArray bool_array_op (const BoolArray& in_ar, BoolArray& out_ar, BoolArray& inout_ar);
+	static BoolArray2 bool_array_op2 (const BoolArray2& in_ar, BoolArray2& out_ar, BoolArray2& inout_ar);
 };
 
 }
