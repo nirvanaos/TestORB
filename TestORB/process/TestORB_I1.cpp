@@ -211,6 +211,11 @@ void test_interface (I1::_ptr_type p)
 		EXPECT_EQ (123.L, out);
 		EXPECT_EQ (123.L, inout);
 	}
+
+	{ // Boolean array
+		BoolArray out { false, true, false }, inout { true, false, true }, in { true, true, true };
+		BoolArray ret = p->bool_array_op (in, out, inout);
+	}
 }
 
 void test_performance (I1::_ptr_type p)

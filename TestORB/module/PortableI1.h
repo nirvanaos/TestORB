@@ -178,6 +178,16 @@ public:
 		return ImplI1::long_double_op (in_f, out_f, inout_f);
 	}
 
+	virtual BoolArray bool_array_op (const BoolArray& in_ar, BoolArray& out_ar, BoolArray& inout_ar)
+	{
+		return ImplI1::bool_array_op (in_ar, out_ar, inout_ar);
+	}
+
+	virtual BoolArray2 bool_array_op2 (const BoolArray2& in_ar, BoolArray2& out_ar, BoolArray2& inout_ar)
+	{
+		return ImplI1::bool_array_op2 (in_ar, out_ar, inout_ar);
+	}
+
 private:
 	int32_t addendum_;
 };

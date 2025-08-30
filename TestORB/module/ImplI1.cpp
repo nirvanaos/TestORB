@@ -182,4 +182,20 @@ LongDouble ImplI1::long_double_op (const LongDouble& in_f, LongDouble& out_f, Lo
 	return tmp;
 }
 
+BoolArray ImplI1::bool_array_op (const BoolArray& in_ar, BoolArray& out_ar, BoolArray& inout_ar)
+{
+	BoolArray tmp (inout_ar);
+	out_ar = in_ar;
+	inout_ar = in_ar;
+	return tmp;
+}
+
+BoolArray2 ImplI1::bool_array_op2 (const BoolArray2& in_ar, BoolArray2& out_ar, BoolArray2& inout_ar)
+{
+	BoolArray2 tmp (inout_ar);
+	out_ar = in_ar;
+	inout_ar = in_ar;
+	return tmp;
+}
+
 }
