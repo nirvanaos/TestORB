@@ -1,4 +1,4 @@
-target_sources(TestModule PRIVATE
+target_sources (TestModule PRIVATE
 	comp_factory.cpp
 	DbConnectImpl.cpp
 	I1_factory_dynamic.cpp
@@ -21,3 +21,7 @@ target_sources(TestModule PRIVATE
 	ImplV3.cpp
 	PingPongImpl.cpp
 )
+
+# Causes 'section type conflict'
+# target_precompile_headers (TestModule PRIVATE 
+#	${CMAKE_CURRENT_SOURCE_DIR}/pch.h)
