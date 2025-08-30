@@ -28,7 +28,7 @@
 #pragma once
 
 #include <CORBA/CORBA.h>
-#include "IDL/Test_I1.h"
+#include "idl/Test_I1.h"
 
 namespace TestORB {
 

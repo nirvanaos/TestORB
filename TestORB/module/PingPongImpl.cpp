@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include "pch.h"
-#include "IDL/PingPong_s.h"
+#include "idl/PingPong_s.h"
 #include <CORBA/CosEventChannelAdmin.h>
 #include <Nirvana/Domains.h>
 

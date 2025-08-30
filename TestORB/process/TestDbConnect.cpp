@@ -31,7 +31,7 @@
 #include <Nirvana/posix_defs.h>
 #include <Nirvana/POSIX.h>
 #include <Nirvana/System.h>
-#include "IDL/DbConnect.h"
+#include "idl/DbConnect.h"
 
 namespace TestORB
 {

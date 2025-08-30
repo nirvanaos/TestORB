@@ -30,7 +30,7 @@
 #include "PortableI1.h"
 #include "PortableI2.h"
 #include "ImplI3.h"
-#include "IDL/Test_I3_s.h"
+#include "idl/Test_I3_s.h"
 
 namespace Test {
 

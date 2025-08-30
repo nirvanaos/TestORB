@@ -26,8 +26,8 @@
 #include "pch.h"
 #include "TestORB_I1.h"
 #include <I1_static.h>
-#include "IDL/Test_Comp.h"
-#include "IDL/Test_I1_factory.h"
+#include "idl/Test_Comp.h"
+#include "idl/Test_I1_factory.h"
 #include <gtest/gtest.h>
 
 using namespace CORBA;

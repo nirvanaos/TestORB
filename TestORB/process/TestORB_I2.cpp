@@ -25,10 +25,10 @@
 */
 #include "pch.h"
 #include <gtest/gtest.h>
-#include "IDL/Test_I1.h"
-#include "IDL/Test_I2.h"
-#include "IDL/Test_V3.h"
-#include "IDL/RecursiveStruct.h"
+#include "idl/Test_I1.h"
+#include "idl/Test_I2.h"
+#include "idl/Test_V3.h"
+#include "idl/RecursiveStruct.h"
 #include <Nirvana/signal_defs.h>
 
 using namespace CORBA;

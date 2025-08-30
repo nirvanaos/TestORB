@@ -28,7 +28,7 @@
 #pragma once
 
 #include <CORBA/Server.h>
-#include "IDL/Test_Comp_s.h"
+#include "idl/Test_Comp_s.h"
 #include "DynamicI1.h"
 #include "PortableI1.h"
 

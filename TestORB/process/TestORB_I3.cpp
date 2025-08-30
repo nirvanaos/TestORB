@@ -26,7 +26,7 @@
 #include "pch.h"
 #include "TestORB_I1.h"
 #include <I1_static.h>
-#include "IDL/Test_I3_factory.h"
+#include "idl/Test_I3_factory.h"
 #include <gtest/gtest.h>
 #include <Nirvana/signal_defs.h>
 

@@ -29,7 +29,7 @@
 // Union.idl contains only declaration for interface Test::I1.
 // This file must be successfully compiled without include "Test_I1.h"
 
-#include "IDL/Union.h"
+#include "idl/Union.h"
 
 using namespace CORBA;
 using namespace Test;

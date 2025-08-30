@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include "pch.h"
-#include "IDL/Test_V3_s.h"
+#include "idl/Test_V3_s.h"
 #include "ImplI2.h"
 #include "PortableI2.h"
 

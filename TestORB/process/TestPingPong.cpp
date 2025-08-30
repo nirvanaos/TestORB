@@ -25,7 +25,7 @@
 */
 #include "pch.h"
 #include <gtest/gtest.h>
-#include "IDL/PingPong.h"
+#include "idl/PingPong.h"
 
 using namespace CORBA;
 using namespace Test;

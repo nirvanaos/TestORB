@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include "pch.h"
-#include "IDL/Test_AVT_s.h"
+#include "idl/Test_AVT_s.h"
 
 namespace Test {
 

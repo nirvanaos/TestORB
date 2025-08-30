@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include "pch.h"
-#include "IDL/DbConnect_s.h"
+#include "idl/DbConnect_s.h"
 
 using namespace CORBA;
 using namespace NDBC;

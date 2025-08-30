@@ -24,7 +24,7 @@
 *  popov.nirvana@gmail.com
 */
 #include "pch.h"
-#include "IDL/Test_I3_factory_s.h"
+#include "idl/Test_I3_factory_s.h"
 #include "PortableI3.h"
 
 using namespace CORBA;

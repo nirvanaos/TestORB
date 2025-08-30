@@ -25,7 +25,7 @@
 */
 #include "pch.h"
 #include <Nirvana/Domains.h>
-#include "IDL/Test_I2_s.h"
+#include "idl/Test_I2_s.h"
 
 using namespace Nirvana;
 using namespace CORBA;

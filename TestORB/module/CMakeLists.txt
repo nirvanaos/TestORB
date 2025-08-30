@@ -1,7 +1,3 @@
-idl_generate(OUT_VAR GENERATED_FILES IDL_FILES ${IDL_FILES})
-
-add_library(TestModule SHARED ${GENERATED_FILES})
-
 target_sources(TestModule PRIVATE
 	comp_factory.cpp
 	DbConnectImpl.cpp
@@ -25,27 +21,3 @@ target_sources(TestModule PRIVATE
 	ImplV3.cpp
 	PingPongImpl.cpp
 )
-
-target_include_directories (TestModule PRIVATE ${NIRVANA_INCLUDES}
-	${CMAKE_CURRENT_BINARY_DIR}
-	${CMAKE_CURRENT_SOURCE_DIR}/../include
-)
-
-target_link_libraries (TestModule PRIVATE ${NIRVANA_LIBS})
-
-target_compile_options (TestModule PRIVATE
-	"-nostdinc"
-	"-U_WIN32"
-	"-D_LIBCPP_MSVCRT_LIKE"
-	"-D_LIBCPP_OBJECT_FORMAT_COFF"
-	"--target=${NIRVANA_TARGET_TRIPLE}"
-	"-fsized-deallocation"
-	"-fshort-wchar"
-)
-
-if(${NIRVANA_TARGET_ARCH} STREQUAL "x64")
-	target_compile_options (TestModule PRIVATE "-mlzcnt")
-endif()
-
-target_compile_definitions (TestModule PRIVATE NIRVANA_MODULE)
-target_link_options(TestModule PRIVATE "LINKER:/nodefaultlib" "LINKER:/noentry")
