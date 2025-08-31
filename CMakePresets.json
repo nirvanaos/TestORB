@@ -1,0 +1,63 @@
+{
+  "version": 7,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 7
+  },
+	"configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "toolchainFile" : "$penv{NIRVANA_SDK}/cmake/nirvana.cmake",
+      "generator" : "Ninja"
+		},
+    {
+      "name": "x64",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "NIRVANA_TARGET_PLATFORM": "x64"
+      }
+    },
+    {
+      "name": "x86",
+      "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "NIRVANA_TARGET_PLATFORM": "x86"
+      }
+    },
+    {
+      "inherits": "x64",
+      "name": "x64-debug",
+      "displayName": "x64 Debug",
+      "binaryDir": "${sourceDir}/build/x64/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "inherits": "x86",
+      "name": "x86-debug",
+      "displayName": "x86 Debug",
+      "binaryDir": "${sourceDir}/build/x86/debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+	],
+  "buildPresets": [
+    {
+      "name": "x64-debug",
+      "displayName": "x64 Debug",
+      "configurePreset": "x64-debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "x86-debug",
+      "displayName": "x86 Debug",
+      "configurePreset": "x86-debug",
+      "configuration": "Debug"
+    }
+  ]
+}
