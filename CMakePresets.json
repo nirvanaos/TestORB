@@ -9,40 +9,22 @@
       "name": "base",
       "hidden": true,
       "toolchainFile" : "$penv{NIRVANA_SDK}/cmake/nirvana.cmake",
-      "generator" : "Ninja"
+      "generator" : "Ninja Multi-Config"
 		},
     {
-      "name": "x64",
       "inherits": "base",
-      "hidden": true,
+      "name": "x64",
+      "binaryDir": "build/x64",
       "cacheVariables": {
         "NIRVANA_TARGET_PLATFORM": "x64"
       }
     },
     {
-      "name": "x86",
       "inherits": "base",
-      "hidden": true,
+      "name": "x86",
+      "binaryDir": "build/x86",
       "cacheVariables": {
         "NIRVANA_TARGET_PLATFORM": "x86"
-      }
-    },
-    {
-      "inherits": "x64",
-      "name": "x64-debug",
-      "displayName": "x64 Debug",
-      "binaryDir": "${sourceDir}/build/x64/debug",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "inherits": "x86",
-      "name": "x86-debug",
-      "displayName": "x86 Debug",
-      "binaryDir": "${sourceDir}/build/x86/debug",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
       }
     }
 	],
@@ -50,13 +32,13 @@
     {
       "name": "x64-debug",
       "displayName": "x64 Debug",
-      "configurePreset": "x64-debug",
+      "configurePreset": "x64",
       "configuration": "Debug"
     },
     {
       "name": "x86-debug",
       "displayName": "x86 Debug",
-      "configurePreset": "x86-debug",
+      "configurePreset": "x86",
       "configuration": "Debug"
     }
   ]
