@@ -5,7 +5,7 @@ set (CMAKE_CONFIGURATION_TYPES Debug Release)
 
 project (TestORB CXX)
 
-include (NirvanaModule)
+include (NirvanaSDK)
 
 add_subdirectory (Console)
 add_subdirectory (TestFixed)
