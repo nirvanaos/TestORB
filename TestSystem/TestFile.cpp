@@ -160,6 +160,17 @@ void TestFile::create_temp_file_and_fill (AccessBuf::_ref_type& access)
 	access = AccessBuf::_downcast (a->_to_value ());
 }
 
+TEST_F (TestFile, StandardDirectories)
+{
+	static const char* const dirs [] = { "/etc", "/home", "/mnt", "/sbin", "/tmp", "/var" };
+	for (const char* d : dirs) {
+		Object::_ref_type obj = naming_service_->resolve_str (d);
+		ASSERT_TRUE (obj);
+		Dir::_ref_type dir = Dir::_narrow (obj);
+		ASSERT_TRUE (dir);
+	}
+}
+
 TEST_F (TestFile, Var)
 {
 	// Obtain "var" directory object
