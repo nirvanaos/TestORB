@@ -131,7 +131,7 @@ class Static_I2_factory_V3 :
 public:
 	static
 #ifdef LEGACY_CORBA_CPP
-		I2_var
+		I2_ptr
 #else
 		I2::_ref_type
 #endif
