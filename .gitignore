@@ -2,6 +2,4 @@ build/
 /subprojects/packagecache/
 /subprojects/packagefiles/
 /subprojects/sdk/
-/TestORB/module/IDL/
-/TestORB/process/IDL/
 /.vscode/

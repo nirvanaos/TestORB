@@ -23,15 +23,14 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
-#include <gtest/gtest.h>
+#include "TestORB.h"
 #include <random>
 #include <deque>
 #include <Nirvana/File.h>
 #include <Nirvana/posix_defs.h>
 #include <Nirvana/POSIX.h>
 #include <Nirvana/System.h>
-#include "idl/DbConnect.h"
+#include <idl/DbConnect.h>
 
 namespace TestORB
 {

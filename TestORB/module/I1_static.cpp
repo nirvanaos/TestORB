@@ -23,7 +23,6 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
 #include "I1_static.h"
 #include "ImplI1.h"
 #include "idl/Test_I1_s.h"

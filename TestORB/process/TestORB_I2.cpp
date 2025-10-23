@@ -23,12 +23,11 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
-#include <gtest/gtest.h>
-#include "idl/Test_I1.h"
-#include "idl/Test_I2.h"
-#include "idl/Test_V3.h"
-#include "idl/RecursiveStruct.h"
+#include "TestORB.h"
+#include <idl/Test_I1.h>
+#include <idl/Test_I2.h>
+#include <idl/Test_V3.h>
+#include <idl/RecursiveStruct.h>
 #include <Nirvana/signal_defs.h>
 
 using namespace CORBA;

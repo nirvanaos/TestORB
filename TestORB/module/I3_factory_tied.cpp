@@ -23,7 +23,6 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
 #include "ImplI1.h"
 #include "ImplI2.h"
 #include "ImplI3.h"

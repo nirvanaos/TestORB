@@ -23,8 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
-#include "idl/DbConnect_s.h"
+#include <CORBA/Server.h>
+#include <idl/DbConnect_s.h>
 
 using namespace CORBA;
 using namespace NDBC;

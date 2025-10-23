@@ -27,7 +27,7 @@
 #define NIRVANA_TESTORB_TESTORB_H_
 #pragma once
 
-#include <Nirvana/Nirvana.h>
+#include <CORBA/CORBA.h>
 #include <gtest/gtest.h>
 
 namespace TestORB {
