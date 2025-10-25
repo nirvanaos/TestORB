@@ -7,6 +7,7 @@ target_sources (TestProcess PRIVATE
   TestORB.cpp
   TestPingPong.cpp
   TestUnion.cpp
+  main.cpp
 )
 
 # Causes 'section type conflict'

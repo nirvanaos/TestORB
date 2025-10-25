@@ -11,4 +11,5 @@ nirvana_test (TestFixed)
 target_sources (TestFixed PRIVATE
   TestDecimal.cpp
   TestFixed.cpp
+  main.cpp
 )

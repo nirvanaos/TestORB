@@ -16,6 +16,7 @@ target_sources (TestSystem PRIVATE
   TestNamingService.cpp
   TestSQLite.cpp
   TestSystem.cpp
+  main.cpp
 )
 
 target_precompile_headers (TestSystem PRIVATE pch.h)

@@ -27,6 +27,7 @@
 #include <Nirvana/File.h>
 #include <Nirvana/POSIX.h>
 #include <Nirvana/posix_defs.h>
+#include <Nirvana/nirvana_process.h>
 
 using namespace Nirvana;
 

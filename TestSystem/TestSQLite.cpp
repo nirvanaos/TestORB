@@ -23,7 +23,8 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include "pch.h"
+#include <Nirvana/Nirvana.h>
+#include <gtest/gtest.h>
 #include <Nirvana/File.h>
 #include <Nirvana/NDBC.h>
 #include <Nirvana/posix_defs.h>

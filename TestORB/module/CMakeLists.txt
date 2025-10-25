@@ -20,6 +20,7 @@ target_sources (TestModule PRIVATE
 	ImplV2.cpp
 	ImplV3.cpp
 	PingPongImpl.cpp
+	module.cpp
 )
 
 # Causes 'section type conflict'
