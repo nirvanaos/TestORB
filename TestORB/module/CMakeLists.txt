@@ -23,6 +23,4 @@ target_sources (TestModule PRIVATE
 	module.cpp
 )
 
-# Causes 'section type conflict'
-# target_precompile_headers (TestModule PRIVATE 
-#	${CMAKE_CURRENT_SOURCE_DIR}/pch.h)
+target_precompile_headers (TestModule PRIVATE <CORBA/Server.h>)

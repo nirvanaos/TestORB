@@ -10,6 +10,4 @@ target_sources (TestProcess PRIVATE
   main.cpp
 )
 
-# Causes 'section type conflict'
-#target_precompile_headers (TestProcess PRIVATE 
-#	${CMAKE_CURRENT_SOURCE_DIR}/pch.h)
+target_precompile_headers (TestProcess PRIVATE <CORBA/CORBA.h>)
