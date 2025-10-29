@@ -23,7 +23,6 @@
 * Send comments and/or bug reports to:
 *  popov.nirvana@gmail.com
 */
-#include <Nirvana/Nirvana.h>
 #include "TestORB.h"
 #include <idl/Test_I1.h>
 #include <idl/Test_I3.h>

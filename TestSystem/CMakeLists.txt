@@ -19,4 +19,4 @@ target_sources (TestSystem PRIVATE
   main.cpp
 )
 
-target_precompile_headers (TestSystem PRIVATE pch.h)
+target_precompile_headers (TestSystem PRIVATE <Nirvana/Nirvana.h>)
