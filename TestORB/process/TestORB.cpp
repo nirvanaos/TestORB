@@ -53,6 +53,20 @@ TEST_F (TestORB, UserException)
 {
 	::Test::MyException e;
 	EXPECT_THROW (e._raise (), ::Test::MyException);
+
+	{
+		Any any;
+		any <<= e;
+		::Test::MyException e1;
+		ASSERT_TRUE (any >>= e1);
+	}
+
+	{
+		Any any;
+		any <<= std::move (e);
+		::Test::MyException e1;
+		ASSERT_TRUE (std::move (any) >>= e1);
+	}
 }
 
 TEST_F (TestORB, Environment)
@@ -528,6 +542,35 @@ TEST_F (TestORB, Any)
 		EXPECT_TRUE (a >>= en1);
 		EXPECT_EQ (en, en1);
 	}
+#ifndef LEGACY_CORBA_CPP
+	{
+		MyStruct st;
+		st.ws_member (L"test");
+		a <<= st;
+		EXPECT_FALSE (st.ws_member ().empty ());
+		MyStruct st1;
+		a >>= st1;
+		EXPECT_EQ (st1.ws_member (), L"test");
+	}
+	{
+		MyStruct st;
+		st.ws_member (L"test");
+		a <<= std::move (st);
+		EXPECT_TRUE (st.ws_member ().empty ());
+		MyStruct st1;
+		std::move (a) >>= st1;
+		EXPECT_EQ (st1.ws_member (), L"test");
+	}
+#else
+	{
+		MyStruct st;
+		st.ws_member = L"test";
+		a <<= st;
+		MyStruct st1;
+		a >>= st1;
+		EXPECT_EQ (st1.ws_member, L"test");
+	}
+#endif
 }
 
 #ifndef LEGACY_CORBA_CPP
