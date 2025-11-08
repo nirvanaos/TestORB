@@ -63,8 +63,19 @@ TEST_F (TestShell, Spawn)
 {
 	SpawnFiles files;
 	the_shell->get_spawn_files (files);
-	int ret = the_shell->spawn (StringSeq { "ChildProcess.nex" }, files);
+	Process::_ref_type process = the_shell->spawn (StringSeq { "ChildProcess.nex" }, files);
+	process->wait (std::numeric_limits <TimeBase::TimeT>::max ());
+	int32_t ret;
+	process->get_exit_code (ret);
 	EXPECT_EQ (ret, 0);
 }
-
+/*
+TEST_F (TestShell, Abort)
+{
+	SpawnFiles files;
+	the_shell->get_spawn_files (files);
+	int ret = the_shell->spawn (StringSeq { "ChildProcess.nex", "abort"}, files);
+	EXPECT_EQ (ret, -3);
+}
+*/
 }
